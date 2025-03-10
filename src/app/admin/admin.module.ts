@@ -15,11 +15,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { VehiclesComponent } from './vehicles/vehicles.component'; // Import the standalone component
 import { AdminRoutingModule } from '../app.routes';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
-    declarations: [
-
-    ],
     imports: [
         CommonModule,
         AdminRoutingModule,
@@ -28,7 +26,6 @@ import { AdminRoutingModule } from '../app.routes';
         MatIconModule,
         MatToolbarModule,
         MatButtonModule,
-        VehiclesComponent,
         AdminLayoutComponent,
         DashboardComponent,
         ReservationsComponent,
@@ -36,7 +33,9 @@ import { AdminRoutingModule } from '../app.routes';
         PaymentsExpensesComponent,
         UserManagementComponent,
         SidebarComponent,
-        HeaderComponent
+        HeaderComponent,
+        LoginComponent,
+        VehiclesComponent // Import the standalone component here
     ]
 })
 export class AdminModule { }

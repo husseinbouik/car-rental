@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
     import { ClientsComponent } from './admin/clients/clients.component';
     import { PaymentsExpensesComponent } from './admin/payments-expenses/payments-expenses.component';
     import { UserManagementComponent } from './admin/user-management/user-management.component';
+    import { LoginComponent } from './admin/login/login.component';
 
  export   const routes: Routes = [
       {
@@ -19,7 +20,8 @@ import { NgModule } from '@angular/core';
           { path: 'clients', component: ClientsComponent },
           { path: 'payments', component: PaymentsExpensesComponent },
           { path: 'user-management', component: UserManagementComponent },
-          { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+          { path: 'login', component: LoginComponent },
+          { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
       }
     ];
