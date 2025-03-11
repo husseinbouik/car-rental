@@ -1,35 +1,35 @@
-<div class="sidebar d-flex flex-column p-3 bg-dark text-white vh-100">
-  <a class="navbar-brand text-white text-center mb-3" href="#">Admin Panel</a>
-  
-  <ul class="nav nav-pills flex-column mb-auto">
-    <li class="nav-item">
-      <a routerLink="/dashboard" class="nav-link text-white" [class.active]="isActive('/dashboard')">
-        📊 Dashboard
+<div class="sidebar flex flex-col p-3 bg-[var(--background-color)] text-gray-900 h-screen">
+  <a class="text-xl font-bold text-center mb-4" href="#">Admin Panel</a>
+
+  <ul class="space-y-2">
+    <li>
+      <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faChartLine"></fa-icon> Dashboard
       </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/vehicles" class="nav-link text-white" [class.active]="isActive('/vehicles')">
-        🚗 Vehicles
+    <li>
+      <a routerLink="/vehicles" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faCar"></fa-icon> Vehicles
       </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/reservations" class="nav-link text-white" [class.active]="isActive('/reservations')">
-        📅 Reservations
+    <li>
+      <a routerLink="/reservations" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faCalendarAlt"></fa-icon> Reservations
       </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/clients" class="nav-link text-white" [class.active]="isActive('/clients')">
-        👥 Clients
+    <li>
+      <a routerLink="/clients" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faUsers"></fa-icon> Clients
       </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/payments" class="nav-link text-white" [class.active]="isActive('/payments')">
-        💰 Payments & Expenses
+    <li>
+      <a routerLink="/payments" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faCreditCard"></fa-icon> Payments & Expenses
       </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/user-management" class="nav-link text-white" [class.active]="isActive('/user-management')">
-        🔧 User Management
+    <li>
+      <a routerLink="/user-management" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
+        <fa-icon [icon]="faUserCog"></fa-icon> User Management
       </a>
     </li>
   </ul>

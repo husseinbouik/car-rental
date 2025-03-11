@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faChartLine, faCar, faCalendarAlt, faUsers, faCreditCard, faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule ,
+    FontAwesomeModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
+  faChartLine = faChartLine;
+  faCar = faCar;
+  faCalendarAlt = faCalendarAlt;
+  faUsers = faUsers;
+  faCreditCard = faCreditCard;
+  faUserCog = faUserCog;
   constructor(private router: Router) {}
 
   isActive(route: string): boolean {

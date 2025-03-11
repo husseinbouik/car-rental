@@ -1,9 +1,1 @@
-.sidebar .nav-link {
-  padding: 10px;
-  border-radius: 5px;
-}
 
-.sidebar .nav-link.active {
-  background-color: #0d6efd; /* Bootstrap primary color */
-  font-weight: bold;
-}
