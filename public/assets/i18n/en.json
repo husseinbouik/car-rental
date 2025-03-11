@@ -1,0 +1,10 @@
+{
+  "SIDEBAR": {
+    "DASHBOARD": "Dashboard",
+    "VEHICLES": "Vehicles",
+    "RESERVATIONS": "Reservations",
+    "CLIENTS": "Clients",
+    "PAYMENTS": "Payments & Expenses",
+    "USER_MANAGEMENT": "User Management"
+  }
+}

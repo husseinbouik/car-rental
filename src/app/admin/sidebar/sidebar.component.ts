@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartLine, faCar, faCalendarAlt, faUsers, faCreditCard, faUserCog } from '@fortawesome/free-solid-svg-icons';
-
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-sidebar',
   imports: [RouterModule ,
-    FontAwesomeModule],
+    FontAwesomeModule,TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })

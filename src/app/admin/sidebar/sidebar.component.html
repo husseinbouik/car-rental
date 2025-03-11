@@ -3,33 +3,33 @@
 
   <ul class="space-y-2">
     <li>
-      <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faChartLine"></fa-icon> Dashboard
+      <a routerLink="/dashboard" routerLinkActive="active">
+        <fa-icon [icon]="faChartLine"></fa-icon> {{ 'SIDEBAR.DASHBOARD' | translate }}
       </a>
     </li>
     <li>
-      <a routerLink="/vehicles" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faCar"></fa-icon> Vehicles
+      <a routerLink="/vehicles" routerLinkActive="active">
+        <fa-icon [icon]="faCar"></fa-icon> {{ 'SIDEBAR.VEHICLES' | translate }}
       </a>
     </li>
     <li>
-      <a routerLink="/reservations" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faCalendarAlt"></fa-icon> Reservations
+      <a routerLink="/reservations" routerLinkActive="active">
+        <fa-icon [icon]="faCalendarAlt"></fa-icon> {{ 'SIDEBAR.RESERVATIONS' | translate }}
       </a>
     </li>
     <li>
-      <a routerLink="/clients" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faUsers"></fa-icon> Clients
+      <a routerLink="/clients" routerLinkActive="active">
+        <fa-icon [icon]="faUsers"></fa-icon> {{ 'SIDEBAR.CLIENTS' | translate }}
       </a>
     </li>
     <li>
-      <a routerLink="/payments" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faCreditCard"></fa-icon> Payments & Expenses
+      <a routerLink="/payments" routerLinkActive="active">
+        <fa-icon [icon]="faCreditCard"></fa-icon> {{ 'SIDEBAR.PAYMENTS' | translate }}
       </a>
     </li>
     <li>
-      <a routerLink="/user-management" routerLinkActive="active" class="sidebar-item flex items-center gap-2 px-4 py-2 rounded-md text-gray-900 hover:text-[var(--primary-color)]">
-        <fa-icon [icon]="faUserCog"></fa-icon> User Management
+      <a routerLink="/user-management" routerLinkActive="active">
+        <fa-icon [icon]="faUserCog"></fa-icon> {{ 'SIDEBAR.USER_MANAGEMENT' | translate }}
       </a>
     </li>
   </ul>
