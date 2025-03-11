@@ -1,20 +1,11 @@
-<mat-sidenav-container class="example-container" [autosize]="true">
-  <mat-sidenav #sidenav mode="side" opened="true">
+<div class="d-flex">
+  <div class="flex-shrink-0">
     <app-sidebar></app-sidebar>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <app-header (toggleSidenav)="sidenav.toggle()"></app-header>
-    <div class="content">
+  </div>
+  <div class="flex-grow-1">
+    <app-navbar></app-navbar>
+    <div class="container mt-3">
       <router-outlet></router-outlet>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<style>
-.example-container {
-  height: 100vh; /* Full viewport height */
-}
-.content {
-  padding: 16px;
-}
-</style>
+  </div>
+</div>

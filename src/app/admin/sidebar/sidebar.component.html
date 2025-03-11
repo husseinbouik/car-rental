@@ -1,0 +1,36 @@
+<div class="sidebar d-flex flex-column p-3 bg-dark text-white vh-100">
+  <a class="navbar-brand text-white text-center mb-3" href="#">Admin Panel</a>
+  
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a routerLink="/dashboard" class="nav-link text-white" [class.active]="isActive('/dashboard')">
+        📊 Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/vehicles" class="nav-link text-white" [class.active]="isActive('/vehicles')">
+        🚗 Vehicles
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/reservations" class="nav-link text-white" [class.active]="isActive('/reservations')">
+        📅 Reservations
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/clients" class="nav-link text-white" [class.active]="isActive('/clients')">
+        👥 Clients
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/payments" class="nav-link text-white" [class.active]="isActive('/payments')">
+        💰 Payments & Expenses
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/user-management" class="nav-link text-white" [class.active]="isActive('/user-management')">
+        🔧 User Management
+      </a>
+    </li>
+  </ul>
+</div>

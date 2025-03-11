@@ -1,0 +1,22 @@
+.navbar {
+  background: #3b82f6; /* Bright blue */
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.user-name {
+  font-weight: bold;
+}

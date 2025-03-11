@@ -6,16 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ReservationsComponent } from './reservations/reservations.component';
-import { ClientsComponent } from './clients/clients.component';
-import { PaymentsExpensesComponent } from './payments-expenses/payments-expenses.component';
-import { UserManagementComponent } from './user-management/user-management.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { HeaderComponent } from './components/header/header.component';
-import { VehiclesComponent } from './vehicles/vehicles.component'; // Import the standalone component
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { NavbarComponent } from './navbar/navbar.component';
 import { AdminRoutingModule } from '../app.routes';
-import { LoginComponent } from './login/login.component';
 
 @NgModule({
     imports: [
@@ -27,15 +20,8 @@ import { LoginComponent } from './login/login.component';
         MatToolbarModule,
         MatButtonModule,
         AdminLayoutComponent,
-        DashboardComponent,
-        ReservationsComponent,
-        ClientsComponent,
-        PaymentsExpensesComponent,
-        UserManagementComponent,
         SidebarComponent,
-        HeaderComponent,
-        LoginComponent,
-        VehiclesComponent // Import the standalone component here
+        NavbarComponent,
     ]
 })
 export class AdminModule { }
