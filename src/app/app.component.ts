@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoginComponent } from './admin/login/login.component';
 
 @Component({
   selector: 'app-root',
