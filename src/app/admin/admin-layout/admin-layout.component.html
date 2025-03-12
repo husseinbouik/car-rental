@@ -1,4 +1,4 @@
-<div class="flex h-screen">
+<div *ngIf="!isLoginPage()" class="flex h-screen">
   <!-- Sidebar -->
   <div class="flex-shrink-0">
     <app-sidebar [isCollapsed]="isSidebarCollapsed"></app-sidebar>
@@ -14,4 +14,9 @@
       <router-outlet></router-outlet>
     </div>
   </div>
+</div>
+
+<!-- If on the login page, show only login content -->
+<div *ngIf="isLoginPage()">
+  <router-outlet></router-outlet>
 </div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import {Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { NavbarComponent } from "../navbar/navbar.component";
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -14,8 +14,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 })
 export class AdminLayoutComponent {
   isSidebarCollapsed = false;
+  constructor(private router: Router) {}
 
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+  isLoginPage(): boolean {
+    return this.router.url.includes('/login'); // Modify if your login route is different
   }
 }
