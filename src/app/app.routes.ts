@@ -21,7 +21,7 @@ import { NgModule } from '@angular/core';
           { path: 'payments', component: PaymentsExpensesComponent },
           { path: 'user-management', component: UserManagementComponent },
           { path: 'login', component: LoginComponent },
-          { path: '', redirectTo: 'login', pathMatch: 'full' }
+          { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
       }
     ];

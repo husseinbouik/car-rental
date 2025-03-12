@@ -13,14 +13,14 @@ import { TranslateModule } from '@ngx-translate/core';
 export class AppComponent {
   title = 'car-rental';
 
-  constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang('en');  // Default language
-    this.translate.use('en');  // Use English initially
-  }
-   // Function to switch language
-   switchLanguage(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const lang = target.value;
-    this.translate.use(lang);
-  }
+  // constructor(private translate: TranslateService) {
+  //   this.translate.setDefaultLang('en');  // Default language
+  //   this.translate.use('en');  // Use English initially
+  // }
+  //  // Function to switch language
+  //  switchLanguage(event: Event) {
+  //   const target = event.target as HTMLSelectElement;
+  //   const lang = target.value;
+  //   this.translate.use(lang);
+  // }
 }

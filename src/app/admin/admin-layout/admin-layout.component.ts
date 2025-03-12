@@ -12,4 +12,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent {
+  isSidebarCollapsed = false;
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+}

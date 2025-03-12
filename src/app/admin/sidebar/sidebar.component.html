@@ -1,35 +1,46 @@
-<div class="sidebar flex flex-col p-3 bg-[var(--background-color)] text-gray-900 h-screen">
-  <a class="text-xl font-bold text-center mb-4" href="#">CarRental</a>
+<div class="sidebar flex flex-col p-3 bg-[var(--background-color)] text-gray-900 h-screen transition-all duration-300 ease-in-out"
+     [ngClass]="{'w-64': !isCollapsed, 'w-16': isCollapsed}">
+
+  <!-- Toggle Button -->
+  <button class="text-xl font-bold text-center mb-4" (click)="toggleCollapse()">
+    {{ isCollapsed ? 'C' : 'CarRental' }}
+  </button>
 
   <ul class="space-y-2">
     <li>
-      <a routerLink="/dashboard" routerLinkActive="active">
-        <fa-icon [icon]="faChartLine"></fa-icon> {{ 'SIDEBAR.DASHBOARD' | translate }}
+      <a routerLink="/dashboard" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faChartLine"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
       </a>
     </li>
     <li>
-      <a routerLink="/vehicles" routerLinkActive="active">
-        <fa-icon [icon]="faCar"></fa-icon> {{ 'SIDEBAR.VEHICLES' | translate }}
+      <a routerLink="/vehicles" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faCar"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.VEHICLES' | translate }}</span>
       </a>
     </li>
     <li>
-      <a routerLink="/reservations" routerLinkActive="active">
-        <fa-icon [icon]="faCalendarAlt"></fa-icon> {{ 'SIDEBAR.RESERVATIONS' | translate }}
+      <a routerLink="/reservations" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faCalendarAlt"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.RESERVATIONS' | translate }}</span>
       </a>
     </li>
     <li>
-      <a routerLink="/clients" routerLinkActive="active">
-        <fa-icon [icon]="faUsers"></fa-icon> {{ 'SIDEBAR.CLIENTS' | translate }}
+      <a routerLink="/clients" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faUsers"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.CLIENTS' | translate }}</span>
       </a>
     </li>
     <li>
-      <a routerLink="/payments" routerLinkActive="active">
-        <fa-icon [icon]="faCreditCard"></fa-icon> {{ 'SIDEBAR.PAYMENTS' | translate }}
+      <a routerLink="/payments" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faCreditCard"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.PAYMENTS' | translate }}</span>
       </a>
     </li>
     <li>
-      <a routerLink="/user-management" routerLinkActive="active">
-        <fa-icon [icon]="faUserCog"></fa-icon> {{ 'SIDEBAR.USER_MANAGEMENT' | translate }}
+      <a routerLink="/user-management" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
+        <fa-icon [icon]="faUserCog"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.USER_MANAGEMENT' | translate }}</span>
       </a>
     </li>
   </ul>
