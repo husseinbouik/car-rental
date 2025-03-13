@@ -38,12 +38,12 @@ export class SidebarComponent {
 
 
   sidebarItems = [
-    { label: 'SIDEBAR.DASHBOARD', icon: this.faChartLine, link: '/dashboard' },
-    { label: 'SIDEBAR.VEHICLES', icon: this.faCar, link: '/vehicles' },
-    { label: 'SIDEBAR.RESERVATIONS', icon: this.faCalendarAlt, link: '/reservations' },
-    { label: 'SIDEBAR.CLIENTS', icon: this.faUsers, link: '/clients' },
-    { label: 'SIDEBAR.PAYMENTS', icon: this.faCreditCard, link: '/payments' },
-    { label: 'SIDEBAR.USER_MANAGEMENT', icon: this.faUserCog, link: '/user-management' },
+    { label: 'SIDEBAR.DASHBOARD', icon: this.faChartLine, link: '/admin/dashboard' },
+    { label: 'SIDEBAR.VEHICLES', icon: this.faCar, link: '/admin/vehicles' },
+    { label: 'SIDEBAR.RESERVATIONS', icon: this.faCalendarAlt, link: '/admin/reservations' },
+    { label: 'SIDEBAR.CLIENTS', icon: this.faUsers, link: '/admin/clients' },
+    { label: 'SIDEBAR.PAYMENTS', icon: this.faCreditCard, link: '/admin/payments' },
+    { label: 'SIDEBAR.USER_MANAGEMENT', icon: this.faUserCog, link: '/admin/user-management' },
   ];
 
   isSidebarOpen = true;

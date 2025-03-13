@@ -13,7 +13,7 @@ import { LoginComponent } from './features/admin/login/login.component';
 })
 export class AppComponent {
   title = 'car-rental';
-
+  
   // constructor(private translate: TranslateService) {
   //   this.translate.setDefaultLang('en');  // Default language
   //   this.translate.use('en');  // Use English initially
