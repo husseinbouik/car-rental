@@ -9,6 +9,8 @@ import {
   faUserCog,
   faBars,
   faTimes,
+  faChevronRight,
+  faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -30,28 +32,21 @@ export class SidebarComponent {
   faUserCog = faUserCog;
   faBars = faBars;
   faTimes = faTimes;
+  faChevronLeft = faChevronLeft;
+  faChevronRight = faChevronRight;
 
-  isSidebarOpen = true;
+
+
   sidebarItems = [
-    {
-      label: 'SIDEBAR.DASHBOARD',
-      icon: this.faChartLine,
-      link: '/dashboard',
-    },
+    { label: 'SIDEBAR.DASHBOARD', icon: this.faChartLine, link: '/dashboard' },
     { label: 'SIDEBAR.VEHICLES', icon: this.faCar, link: '/vehicles' },
-    {
-      label: 'SIDEBAR.RESERVATIONS',
-      icon: this.faCalendarAlt,
-      link: '/reservations',
-    },
+    { label: 'SIDEBAR.RESERVATIONS', icon: this.faCalendarAlt, link: '/reservations' },
     { label: 'SIDEBAR.CLIENTS', icon: this.faUsers, link: '/clients' },
     { label: 'SIDEBAR.PAYMENTS', icon: this.faCreditCard, link: '/payments' },
-    {
-      label: 'SIDEBAR.USER_MANAGEMENT',
-      icon: this.faUserCog,
-      link: '/user-management',
-    },
+    { label: 'SIDEBAR.USER_MANAGEMENT', icon: this.faUserCog, link: '/user-management' },
   ];
+
+  isSidebarOpen = true;
 
 
   toggleCollapse() {

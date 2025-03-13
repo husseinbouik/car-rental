@@ -1,47 +1,22 @@
-<div class="sidebar flex flex-col p-3 bg-[var(--background-color)] text-gray-900 h-screen transition-all duration-300 ease-in-out"
+<div class="sidebar relative flex flex-col p-3 bg-[var(--background-color)] text-[var(--text-color)] h-screen transition-all duration-300 ease-in-out"
      [ngClass]="{'w-64': !isCollapsed, 'w-16': isCollapsed}">
-
   <!-- Toggle Button -->
-  <button class="text-xl font-bold text-center mb-4" (click)="toggleCollapse()">
-    {{ isCollapsed ? 'C' : 'CarRental' }}
+  <button class="flex items-center justify-center mb-4 text-[var(--text-color)]" (click)="toggleCollapse()">
+    <span *ngIf="!isCollapsed" class="text-lg font-bold mr-2">CarRental</span>
+    <fa-icon [icon]="isCollapsed ? faChevronRight : faChevronLeft" class="text-lg text-[var(--text-color)]"></fa-icon>
   </button>
 
   <ul class="space-y-2">
-    <li>
-      <a routerLink="/dashboard" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faChartLine"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/vehicles" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faCar"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.VEHICLES' | translate }}</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/reservations" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faCalendarAlt"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.RESERVATIONS' | translate }}</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/clients" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faUsers"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.CLIENTS' | translate }}</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/payments" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faCreditCard"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.PAYMENTS' | translate }}</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/user-management" routerLinkActive="active" class="flex items-center p-2 hover:bg-gray-200 rounded">
-        <fa-icon [icon]="faUserCog"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-2">{{ 'SIDEBAR.USER_MANAGEMENT' | translate }}</span>
+    <li *ngFor="let item of sidebarItems">
+      <a [routerLink]="item.link"  routerLinkActive="active"    [routerLinkActiveOptions]="{exact: true}"
+
+      class="flex items-center p-2   rounded group">
+
+        <fa-icon [icon]="item.icon" class="text-lg"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-2 ">{{ item.label | translate }}</span>
+        <span *ngIf="isCollapsed" class="absolute left-full ml-2 whitespace-nowrap bg-gray-800 text-white px-2 py-1 rounded invisible group-hover:visible">{{ item.label | translate }}</span>
       </a>
     </li>
   </ul>
+
 </div>
