@@ -5,9 +5,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { NavbarComponent } from './navbar/navbar.component';
+import { AdminLayoutComponent } from '../core/layout/admin-layout/admin-layout.component';
+import { SidebarComponent } from '../core/layout/sidebar/sidebar.component';
+import { NavbarComponent } from '../core/layout/navbar/navbar.component';
 import { AdminRoutingModule } from '../app.routes';
 
 @NgModule({
