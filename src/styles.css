@@ -3,9 +3,10 @@
 
 :root {
   --primary-color: #00AFF0;
-  --background-color: #f8f9fa;
+  --background-color: #d3d3d3;
   --text-color: #344054;
-  --hover-color: #e2e8f0; /* Light gray for light mode */
+  --hover-color: #e2e8f0;
+  --seconday-background-color: #f7fafc;
 
 }
 
@@ -25,6 +26,7 @@ body {
 
 body.dark-mode {
   --background-color: #1a202c;
+  --seconday-background-color: #282a2f;
   --text-color: #ffffff;
   --hover-color: #374151; /* Dark gray for dark mode */
 

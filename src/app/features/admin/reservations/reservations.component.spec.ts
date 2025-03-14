@@ -8,7 +8,7 @@ describe('ReservationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReservationsComponent]
+      declarations: [ReservationsComponent]
     })
     .compileComponents();
 

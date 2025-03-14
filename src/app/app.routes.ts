@@ -4,7 +4,6 @@ import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.co
 import { LoginComponent } from './features/admin/login/login.component';
 
 export   const routes: Routes = [
-  { path: 'login', component: LoginComponent }, // Login route
 
   {
     path: 'admin',
@@ -17,7 +16,6 @@ export   const routes: Routes = [
     ],
   },
 
-  { path: '', redirectTo: 'admin/dashboard', pathMatch: 'full' }, // Redirect to Admin Dashboard
   { path: '**', redirectTo: 'admin/dashboard' }, // Handle 404
 ];
 

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-reservations',
-  imports: [],
+  standalone: false,
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.css'
 })

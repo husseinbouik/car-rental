@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-payments-expenses',
-  imports: [],
+  standalone: false,
   templateUrl: './payments-expenses.component.html',
   styleUrl: './payments-expenses.component.css'
 })

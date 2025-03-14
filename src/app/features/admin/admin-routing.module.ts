@@ -8,6 +8,7 @@ import { ReservationsComponent } from './reservations/reservations.component';
 import { ClientsComponent } from './clients/clients.component';
 import { PaymentsExpensesComponent } from './payments-expenses/payments-expenses.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -15,10 +16,18 @@ const routes: Routes = [
   { path: 'clients', component: ClientsComponent },
   { path: 'payments', component: PaymentsExpensesComponent },
   { path: 'user-management', component: UserManagementComponent },
+  { path: 'login', component: LoginComponent},
 
-  { path: 'vehicles', component: VehiclesListComponent },
-  { path: 'vehicles/create', component: VehicleCreateComponent },
-  { path: 'vehicles/:id', component: VehicleDetailsComponent },
+
+
+
+
+
+
+  { path: 'vehicles', loadChildren: () => import('./vehicles/vehicles.module').then(m => m.VehiclesModule) },
+  { path: 'reservations', loadChildren: () => import('./reservations/reservations.module').then(m => m.ReservationsModule) },
+  { path: 'user-management', loadChildren: () => import('./user-management/user-management.module').then(m => m.UserManagementModule) },
+  { path: 'payments-expenses', loadChildren: () => import('./payments-expenses/payments-expenses.module').then(m => m.PaymentsExpensesModule) },
 ];
 
 @NgModule({
