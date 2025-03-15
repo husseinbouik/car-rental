@@ -5,10 +5,16 @@
       placeholder="Search vehicles..."
       class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
 
-    <button (click)="exportToExcel()"
-      class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
-      <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
-    </button>
+    <div class="flex space-x-4">
+      <button (click)="exportToExcel()"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+        <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
+      </button>
+      <button (click)="createVehicle()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
+        <i class="fa-solid fa-plus text-lg mr-2"></i> Create Vehicle
+      </button>
+    </div>
   </div>
 
   <!-- Table -->
@@ -25,22 +31,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b  transition">
+        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b transition">
           <td class="py-3 px-4">{{ vehicle.id }}</td>
           <td class="py-3 px-4">{{ vehicle.make }}</td>
           <td class="py-3 px-4">{{ vehicle.model }}</td>
           <td class="py-3 px-4">{{ vehicle.year }}</td>
           <td class="py-3 px-4">{{ vehicle.type }}</td>
-            <td class="py-3 px-4 text-center">
-              <div class="flex justify-center space-x-2">
+          <td class="py-3 px-4 text-center">
+            <div class="flex justify-center space-x-2">
               <button (click)="editVehicle(vehicle)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center">
                 <i class="fa-solid fa-edit"></i>
               </button>
               <button (click)="deleteVehicle(vehicle)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center">
                 <i class="fa-solid fa-trash"></i>
               </button>
-              </div>
-            </td>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -6,12 +6,11 @@ import { VehicleDetailsComponent } from './vehicle-details/vehicle-details.compo
 
 const routes: Routes = [
   { path: '', component: VehiclesListComponent },
-  { path: 'vehicles/create', component: VehicleCreateComponent },
-  { path: 'vehicles/:id', component: VehicleDetailsComponent },
-  {path : 'vehicles/:id/edit', component: VehicleCreateComponent},
-  {path : 'vehicles/:id/details', component: VehicleDetailsComponent}
+  { path: 'create', component: VehicleCreateComponent },
+  { path: ':id', component: VehicleDetailsComponent },
+  {path : 'edit/:id', component: VehicleCreateComponent},
+  {path : ':id/details', component: VehicleDetailsComponent}
 ];
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

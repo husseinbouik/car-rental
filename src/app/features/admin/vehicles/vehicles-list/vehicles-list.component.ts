@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Vehicle } from '../vehicle.model';
 import { VehicleService } from '../vehicle.service';
 import * as XLSX from 'xlsx';
@@ -19,7 +20,7 @@ export class VehiclesListComponent implements OnInit {
   itemsPerPage: number = 5;
   totalPages: number = 1;
 
-  constructor(private vehicleService: VehicleService) {}
+  constructor(private vehicleService: VehicleService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -97,11 +98,28 @@ export class VehiclesListComponent implements OnInit {
     XLSX.writeFile(workbook, "vehicles.xlsx");
   }
 
-  editVehicle(vehicle: Vehicle): void {
-    console.log('Edit:', vehicle);
+  // Navigate to the create vehicle page
+  createVehicle(): void {
+    this.router.navigate(['admin/vehicles/create']);
   }
 
+  // Navigate to the edit vehicle page
+  editVehicle(vehicle: Vehicle): void {
+    this.router.navigate(['admin/vehicles/edit', vehicle.id]);
+  }
+
+  // Delete a vehicle
   deleteVehicle(vehicle: Vehicle): void {
-    console.log('Delete:', vehicle);
+    if (confirm('Are you sure you want to delete this vehicle?')) {
+      this.vehicleService.deleteVehicle(vehicle.id).subscribe({
+        next: () => {
+          console.log('Vehicle deleted successfully');
+          this.loadVehicles(); // Refresh the list
+        },
+        error: (error) => {
+          console.error('Error deleting vehicle:', error);
+        }
+      });
+    }
   }
 }
