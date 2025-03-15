@@ -1,1 +1,67 @@
-<p>vehicles-list works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <!-- Header Controls: Search & Export -->
+  <div class="flex justify-between items-center mb-4">
+    <input type="text" [(ngModel)]="searchTerm" (input)="filterVehicles()"
+      placeholder="Search vehicles..."
+      class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+
+    <button (click)="exportToExcel()"
+      class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+      <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-200 rounded-lg shadow-md">
+      <thead>
+        <tr class="bg-gray-100 text-gray-700 text-left">
+          <th class="py-3 px-4 border-b">ID</th>
+          <th class="py-3 px-4 border-b">Make</th>
+          <th class="py-3 px-4 border-b">Model</th>
+          <th class="py-3 px-4 border-b">Year</th>
+          <th class="py-3 px-4 border-b">Type</th>
+          <th class="py-3 px-4 border-b text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b hover:bg-gray-50 transition">
+          <td class="py-3 px-4">{{ vehicle.id }}</td>
+          <td class="py-3 px-4">{{ vehicle.make }}</td>
+          <td class="py-3 px-4">{{ vehicle.model }}</td>
+          <td class="py-3 px-4">{{ vehicle.year }}</td>
+          <td class="py-3 px-4">{{ vehicle.type }}</td>
+          <td class="py-3 px-4 text-center">
+            <button (click)="editVehicle(vehicle)" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 flex items-center">
+              <i class="fa-solid fa-edit mr-2"></i>
+            </button>
+            <button (click)="deleteVehicle(vehicle)" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 flex items-center">
+              <i class="fa-solid fa-trash mr-2"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center mt-4">
+    <button (click)="prevPage()" [disabled]="currentPage === 1"
+      class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <div class="mx-4 flex space-x-2">
+      <button *ngFor="let page of getPages()" (click)="goToPage(page)"
+        [class.bg-blue-500]="page === currentPage" [class.text-white]="page === currentPage"
+        class="px-4 py-2 border rounded-lg hover:bg-blue-500 hover:text-white">
+        {{ page }}
+      </button>
+    </div>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+      class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

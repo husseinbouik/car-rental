@@ -10,34 +10,28 @@ import { SidebarComponent } from '../../core/layout/sidebar/sidebar.component';
 import { NavbarComponent } from '../../core/layout/navbar/navbar.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ReservationsComponent } from './reservations/reservations.component';
-import { ClientsComponent } from './clients/clients.component';
-import { PaymentsExpensesComponent } from './payments-expenses/payments-expenses.component';
-import { UserManagementComponent } from './user-management/user-management.component';
-import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
-import { VehicleDetailsComponent } from './vehicles/vehicle-details/vehicle-details.component';
-import { VehicleCreateComponent } from './vehicles/vehicle-create/vehicle-create.component';
+import { LoginComponent } from './login/login.component';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AdminRoutingModule,
-        MatSidenavModule,
-        MatListModule,
-        MatIconModule,
-        MatToolbarModule,
-        MatButtonModule,
-        AdminLayoutComponent,
-        SidebarComponent,
-        NavbarComponent,
-        DashboardComponent,
-        ReservationsComponent,
-        ClientsComponent,
-        PaymentsExpensesComponent,
-        UserManagementComponent,
-        VehiclesListComponent,
-        VehicleDetailsComponent,
-        VehicleCreateComponent,
-    ]
+  declarations: [
+    LoginComponent,
+    DashboardComponent,
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatButtonModule,
+    FormsModule,
+    AdminLayoutComponent,
+    SidebarComponent,
+    NavbarComponent,
+    FontAwesomeModule
+  ]
 })
 export class AdminModule { }

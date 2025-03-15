@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-vehicle-create',
-  imports: [],
+    standalone: false,
+
   templateUrl: './vehicle-create.component.html',
   styleUrl: './vehicle-create.component.css'
 })

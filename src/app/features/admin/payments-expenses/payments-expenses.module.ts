@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PaymentsExpensesRoutingModule } from './payments-expenses-routing.module';
-import { PaymentsExpensesComponent } from './payments-expenses.component';
+import { PaymentsExpensesListComponent } from './payments-expenses-list/payments-expenses-list.component';
 
 
 @NgModule({
   declarations: [
-    PaymentsExpensesComponent
+    PaymentsExpensesListComponent
   ],
   imports: [
     CommonModule,

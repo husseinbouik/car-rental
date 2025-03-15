@@ -42,7 +42,7 @@ export class SidebarComponent {
     { label: 'SIDEBAR.VEHICLES', icon: this.faCar, link: '/admin/vehicles' },
     { label: 'SIDEBAR.RESERVATIONS', icon: this.faCalendarAlt, link: '/admin/reservations' },
     { label: 'SIDEBAR.CLIENTS', icon: this.faUsers, link: '/admin/clients' },
-    { label: 'SIDEBAR.PAYMENTS', icon: this.faCreditCard, link: '/admin/payments' },
+    { label: 'SIDEBAR.PAYMENTS', icon: this.faCreditCard, link: '/admin/payments-expenses' },
     { label: 'SIDEBAR.USER_MANAGEMENT', icon: this.faUserCog, link: '/admin/user-management' },
   ];
 
