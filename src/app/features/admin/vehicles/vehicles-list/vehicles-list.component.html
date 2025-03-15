@@ -14,8 +14,8 @@
   <!-- Table -->
   <div class="overflow-x-auto">
     <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-200 rounded-lg shadow-md">
-      <thead>
-        <tr class="bg-gray-100 text-gray-700 text-left">
+      <thead class="">
+        <tr class="bg-[var(--seconday-background-color)] text-[var(--text-color)] text-left">
           <th class="py-3 px-4 border-b">ID</th>
           <th class="py-3 px-4 border-b">Make</th>
           <th class="py-3 px-4 border-b">Model</th>
@@ -25,20 +25,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b hover:bg-gray-50 transition">
+        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b  transition">
           <td class="py-3 px-4">{{ vehicle.id }}</td>
           <td class="py-3 px-4">{{ vehicle.make }}</td>
           <td class="py-3 px-4">{{ vehicle.model }}</td>
           <td class="py-3 px-4">{{ vehicle.year }}</td>
           <td class="py-3 px-4">{{ vehicle.type }}</td>
-          <td class="py-3 px-4 text-center">
-            <button (click)="editVehicle(vehicle)" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 flex items-center">
-              <i class="fa-solid fa-edit mr-2"></i>
-            </button>
-            <button (click)="deleteVehicle(vehicle)" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 flex items-center">
-              <i class="fa-solid fa-trash mr-2"></i>
-            </button>
-          </td>
+            <td class="py-3 px-4 text-center">
+              <div class="flex justify-center space-x-2">
+              <button (click)="editVehicle(vehicle)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+              <button (click)="deleteVehicle(vehicle)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+              </div>
+            </td>
         </tr>
       </tbody>
     </table>
