@@ -7,8 +7,7 @@ import { MOCK_CLIENTS } from './mock-clients';
   providedIn: 'root'
 })
 export class ClientService {
-  constructor() {}
-
+  // Use mock data instead of HTTP requests
   getClients(): Observable<Client[]> {
     return of(MOCK_CLIENTS);
   }
@@ -19,8 +18,7 @@ export class ClientService {
   }
 
   createClient(client: Client): Observable<Client> {
-    const newId = Math.max(...MOCK_CLIENTS.map(c => c.id)) + 1;
-    const newClient = { ...client, id: newId };
+    const newClient = { ...client, id: Math.max(...MOCK_CLIENTS.map(c => c.id)) + 1 };
     MOCK_CLIENTS.push(newClient);
     return of(newClient);
   }

@@ -1,1 +1,96 @@
-<p>client-details works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Client Details</h2>
+
+  <!-- Display Client Details -->
+  <div *ngIf="client" class="space-y-4">
+    <!-- ID -->
+    <div>
+      <label class="block text-sm font-medium">ID:</label>
+      <p class="mt-1">{{ client?.id }}</p>
+    </div>
+
+    <!-- CIN -->
+    <div>
+      <label class="block text-sm font-medium">CIN:</label>
+      <p class="mt-1">{{ client?.cin }}</p>
+    </div>
+
+    <!-- Name -->
+    <div>
+      <label class="block text-sm font-medium">Name:</label>
+      <p class="mt-1">{{ client?.cname }}</p>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label class="block text-sm font-medium">Address:</label>
+      <p class="mt-1">{{ client?.adresse }}</p>
+    </div>
+
+    <!-- Phone -->
+    <div>
+      <label class="block text-sm font-medium">Phone:</label>
+      <p class="mt-1">{{ client?.tel }}</p>
+    </div>
+
+    <!-- Nationality -->
+    <div>
+      <label class="block text-sm font-medium">Nationality:</label>
+      <p class="mt-1">{{ client?.nationalite }}</p>
+    </div>
+
+    <!-- CIN Delivre Le -->
+    <div>
+      <label class="block text-sm font-medium">CIN Delivre Le:</label>
+      <p class="mt-1">{{ client?.cin_delivre_le }}</p>
+    </div>
+
+    <!-- Permis Delivre Au -->
+    <div>
+      <label class="block text-sm font-medium">Permis Delivre Au:</label>
+      <p class="mt-1">{{ client?.permis_delivre_au }}</p>
+    </div>
+
+    <!-- Permis Delivre Le -->
+    <div>
+      <label class="block text-sm font-medium">Permis Delivre Le:</label>
+      <p class="mt-1">{{ client?.permis_delivre_le }}</p>
+    </div>
+
+    <!-- Adresse Etranger -->
+    <div>
+      <label class="block text-sm font-medium">Adresse Etranger:</label>
+      <p class="mt-1">{{ client?.adresse_etranger }}</p>
+    </div>
+
+    <!-- Delivre Le Passeport -->
+    <div>
+      <label class="block text-sm font-medium">Delivre Le Passeport:</label>
+      <p class="mt-1">{{ client?.delivre_le_passeport }}</p>
+    </div>
+
+    <!-- Passeport -->
+    <div>
+      <label class="block text-sm font-medium">Passeport:</label>
+      <p class="mt-1">{{ client?.passeport }}</p>
+    </div>
+
+    <!-- Permis -->
+    <div>
+      <label class="block text-sm font-medium">Permis:</label>
+      <p class="mt-1">{{ client?.permis }}</p>
+    </div>
+  </div>
+
+  <!-- Display if Client is not found -->
+  <div *ngIf="!client" class="text-red-500">
+    <p>Client not found.</p>
+  </div>
+
+  <!-- Go Back Button -->
+  <div class="mt-6">
+    <button (click)="goBack()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      Go Back
+    </button>
+  </div>
+</div>

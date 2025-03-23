@@ -1,7 +1,15 @@
 export interface Client {
   id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
+  cin_delivre_le: string;
+  permis_delivre_au: string;
+  permis_delivre_le: string;
+  adresse: string;
+  adresse_etranger: string;
+  cin: string;
+  cname: string;
+  delivre_le_passeport: string;
+  nationalite: string;
+  passeport: string;
+  permis: string;
+  tel: string;
 }

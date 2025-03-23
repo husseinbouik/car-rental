@@ -1,1 +1,56 @@
-<p>clients-list works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Clients</h2>
+
+  <!-- Search and Create Button -->
+  <div class="flex justify-between items-center mb-4">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search clients..."
+      class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+
+    <button (click)="createClient()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      Create Client
+    </button>
+  </div>
+
+  <!-- Clients Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-200 rounded-lg shadow-md">
+      <thead>
+        <tr class="text-left">
+          <th class="py-3 px-4 border-b">ID</th>
+          <th class="py-3 px-4 border-b">CIN</th>
+          <th class="py-3 px-4 border-b">Name</th>
+          <th class="py-3 px-4 border-b">Address</th>
+          <th class="py-3 px-4 border-b">Phone</th>
+          <th class="py-3 px-4 border-b">Nationality</th>
+          <th class="py-3 px-4 border-b">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of clients" class="border-b transition">
+          <td class="py-3 px-4">{{ client.id }}</td>
+          <td class="py-3 px-4">{{ client.cin }}</td>
+          <td class="py-3 px-4">{{ client.cname }}</td>
+          <td class="py-3 px-4">{{ client.adresse }}</td>
+          <td class="py-3 px-4">{{ client.tel }}</td>
+          <td class="py-3 px-4">{{ client.nationalite }}</td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex justify-center space-x-2">
+              <!-- View Details Button -->
+              <button (click)="viewDetails(client)" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <!-- Edit Button -->
+              <button (click)="editClient(client)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+              <!-- Delete Button -->
+              <button (click)="deleteClient(client)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
