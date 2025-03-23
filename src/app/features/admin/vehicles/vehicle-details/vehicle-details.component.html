@@ -1,1 +1,84 @@
-<p>vehicle-details works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Voiture Details</h2>
+
+  <!-- Display Voiture Details -->
+  <div *ngIf="voiture" class="space-y-4">
+    <!-- ID -->
+    <div>
+      <label class="block text-sm font-medium">ID:</label>
+      <p class="mt-1">{{ voiture.id }}</p>
+    </div>
+
+    <!-- Marque -->
+    <div>
+      <label class="block text-sm font-medium">Marque:</label>
+      <p class="mt-1">{{ voiture.marque }}</p>
+    </div>
+
+    <!-- Modele -->
+    <div>
+      <label class="block text-sm font-medium">Modele:</label>
+      <p class="mt-1">{{ voiture.modele }}</p>
+    </div>
+
+    <!-- Matricule -->
+    <div>
+      <label class="block text-sm font-medium">Matricule:</label>
+      <p class="mt-1">{{ voiture.matricule }}</p>
+    </div>
+
+    <!-- Type -->
+    <div>
+      <label class="block text-sm font-medium">Type:</label>
+      <p class="mt-1">{{ voiture.type }}</p>
+    </div>
+
+    <!-- Prix de Base -->
+    <div>
+      <label class="block text-sm font-medium">Prix de Base:</label>
+      <p class="mt-1">{{ voiture.prixDeBase }}</p>
+    </div>
+
+    <!-- Capacite -->
+    <div>
+      <label class="block text-sm font-medium">Capacite:</label>
+      <p class="mt-1">{{ voiture.capacite }}</p>
+    </div>
+
+    <!-- Carburant -->
+    <div>
+      <label class="block text-sm font-medium">Carburant:</label>
+      <p class="mt-1">{{ voiture.carburant }}</p>
+    </div>
+
+    <!-- Couleur -->
+    <div>
+      <label class="block text-sm font-medium">Couleur:</label>
+      <p class="mt-1">{{ voiture.couleur }}</p>
+    </div>
+
+    <!-- Est Automate -->
+    <div>
+      <label class="block text-sm font-medium">Est Automate:</label>
+      <p class="mt-1">{{ voiture.estAutomate ? 'Yes' : 'No' }}</p>
+    </div>
+
+    <!-- Vname -->
+    <div>
+      <label class="block text-sm font-medium">Vname:</label>
+      <p class="mt-1">{{ voiture.vname }}</p>
+    </div>
+  </div>
+
+  <!-- Display if Voiture is not found -->
+  <div *ngIf="!voiture" class="text-red-500">
+    <p>Voiture not found.</p>
+  </div>
+
+  <!-- Go Back Button -->
+  <div class="mt-6">
+    <button (click)="goBack()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      Go Back
+    </button>
+  </div>
+</div>

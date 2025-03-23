@@ -1,7 +1,43 @@
-import { Vehicle } from './vehicle.model';
+import { Voiture } from './vehicle.model'; // Update the import to use Voiture
 
-export const MOCK_VEHICLES: Vehicle[] = [
-  { id: 1, make: 'Toyota', model: 'Camry', year: 2023, type: 'Sedan' },
-  { id: 2, make: 'Honda', model: 'CR-V', year: 2024, type: 'SUV' },
-  { id: 3, make: 'Ford', model: 'F-150', year: 2022, type: 'Truck' },
+export const MOCK_VEHICLES: Voiture[] = [
+  {
+    id: 1,
+    marque: 'Toyota',
+    modele: 'Camry',
+    matricule: 'ABC-123',
+    type: 'Sedan',
+    prixDeBase: 25000,
+    capacite: 5,
+    carburant: 'Essence',
+    couleur: 'Blanc',
+    estAutomate: true,
+    vname: 'Camry 2023'
+  },
+  {
+    id: 2,
+    marque: 'Honda',
+    modele: 'CR-V',
+    matricule: 'XYZ-456',
+    type: 'SUV',
+    prixDeBase: 30000,
+    capacite: 5,
+    carburant: 'Essence',
+    couleur: 'Noir',
+    estAutomate: false,
+    vname: 'CR-V 2024'
+  },
+  {
+    id: 3,
+    marque: 'Ford',
+    modele: 'F-150',
+    matricule: 'DEF-789',
+    type: 'Truck',
+    prixDeBase: 40000,
+    capacite: 3,
+    carburant: 'Diesel',
+    couleur: 'Rouge',
+    estAutomate: true,
+    vname: 'F-150 2022'
+  }
 ];

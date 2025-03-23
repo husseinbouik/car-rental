@@ -1,29 +1,36 @@
 import { VehicleService } from './../vehicle.service';
 import { Component, Inject } from '@angular/core';
-import { Vehicle } from '../vehicle.model';
+import { Voiture } from '../vehicle.model'; // Update the import
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-create',
-    standalone: false,
-
+  standalone: false,
   templateUrl: './vehicle-create.component.html',
   styleUrl: './vehicle-create.component.css'
 })
 export class VehicleCreateComponent {
-  vehicle: Vehicle = {
+  voiture: Voiture = {
     id: 0,
-    make: '',
-    model: '',
-    year: 0,
-    type: ''
+    marque: '',
+    modele: '',
+    matricule: '',
+    type: '',
+    prixDeBase: 0,
+    capacite: 0,
+    carburant: '',
+    couleur: '',
+    estAutomate: false,
+    vname: ''
   };
-  constructor(private VehicleService: VehicleService, @Inject(Router) private router: Router) {}
+
+  constructor(private vehicleService: VehicleService, @Inject(Router) private router: Router) {}
+
   onSubmit(): void {
-    this.VehicleService.createVehicle(this.vehicle).subscribe({
+    this.vehicleService.createVehicle(this.voiture).subscribe({
       next: (response) => {
         console.log('Vehicle created successfully:', response);
-        this.router.navigate(['/admin/vehicles']);
+        this.router.navigate(['/admin/vehicles']); // Update the navigation route
       },
       error: (error) => {
         console.error('Error creating vehicle:', error);

@@ -1,7 +1,7 @@
 <div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
   <!-- Header Controls: Search & Export -->
   <div class="flex justify-between items-center mb-4">
-    <input type="text" [(ngModel)]="searchTerm" (input)="filterVehicles()"
+    <input type="text" [(ngModel)]="searchTerm" (input)="filterVoitures()"
       placeholder="Search vehicles..."
       class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
 
@@ -10,7 +10,7 @@
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
         <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
       </button>
-      <button (click)="createVehicle()"
+      <button (click)="createVoiture()"
         class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
         <i class="fa-solid fa-plus text-lg mr-2"></i> Create Vehicle
       </button>
@@ -23,26 +23,36 @@
       <thead class="">
         <tr class="bg-[var(--seconday-background-color)] text-[var(--text-color)] text-left">
           <th class="py-3 px-4 border-b">ID</th>
-          <th class="py-3 px-4 border-b">Make</th>
-          <th class="py-3 px-4 border-b">Model</th>
-          <th class="py-3 px-4 border-b">Year</th>
+          <th class="py-3 px-4 border-b">Marque</th>
+          <th class="py-3 px-4 border-b">Modele</th>
+          <th class="py-3 px-4 border-b">Matricule</th>
           <th class="py-3 px-4 border-b">Type</th>
+          <th class="py-3 px-4 border-b">Prix de Base</th>
           <th class="py-3 px-4 border-b text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of paginatedVehicles" class="border-b transition">
-          <td class="py-3 px-4">{{ vehicle.id }}</td>
-          <td class="py-3 px-4">{{ vehicle.make }}</td>
-          <td class="py-3 px-4">{{ vehicle.model }}</td>
-          <td class="py-3 px-4">{{ vehicle.year }}</td>
-          <td class="py-3 px-4">{{ vehicle.type }}</td>
+        <tr *ngFor="let voiture of paginatedVoitures" class="border-b transition">
+          <td class="py-3 px-4">{{ voiture.id }}</td>
+          <td class="py-3 px-4">{{ voiture.marque }}</td>
+          <td class="py-3 px-4">{{ voiture.modele }}</td>
+          <td class="py-3 px-4">{{ voiture.matricule }}</td>
+          <td class="py-3 px-4">{{ voiture.type }}</td>
+          <td class="py-3 px-4">{{ voiture.prixDeBase }}</td>
           <td class="py-3 px-4 text-center">
             <div class="flex justify-center space-x-2">
-              <button (click)="editVehicle(vehicle)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center">
+              <!-- View Details Button -->
+              <button (click)="viewDetails(voiture)" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600 flex items-center justify-center">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+
+              <!-- Edit Button -->
+              <button (click)="editVoiture(voiture)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center">
                 <i class="fa-solid fa-edit"></i>
               </button>
-              <button (click)="deleteVehicle(vehicle)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center">
+
+              <!-- Delete Button -->
+              <button (click)="deleteVoiture(voiture)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>

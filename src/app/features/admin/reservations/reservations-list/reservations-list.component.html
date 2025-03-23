@@ -1,1 +1,62 @@
-<p>reservations-list works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Reservations</h2>
+
+  <!-- Search and Create Button -->
+  <div class="flex justify-between items-center mb-4">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search reservations..."
+      class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+
+    <button (click)="createReservation()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      Create Reservation
+    </button>
+  </div>
+
+  <!-- Reservations Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-200 rounded-lg shadow-md">
+      <thead>
+        <tr class="text-left">
+          <th class="py-3 px-4 border-b">ID</th>
+          <th class="py-3 px-4 border-b">Acompte</th>
+          <th class="py-3 px-4 border-b">Date Début</th>
+          <th class="py-3 px-4 border-b">Date Fin</th>
+          <th class="py-3 px-4 border-b">Montant Total</th>
+          <th class="py-3 px-4 border-b">Statut</th>
+          <th class="py-3 px-4 border-b">Client ID</th>
+          <th class="py-3 px-4 border-b">Conducteur Secondaire ID</th>
+          <th class="py-3 px-4 border-b">Voiture ID</th>
+          <th class="py-3 px-4 border-b text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations" class="border-b transition">
+          <td class="py-3 px-4">{{ reservation.id }}</td>
+          <td class="py-3 px-4">{{ reservation.acompte }}</td>
+          <td class="py-3 px-4">{{ reservation.date_debut }}</td>
+          <td class="py-3 px-4">{{ reservation.date_fin }}</td>
+          <td class="py-3 px-4">{{ reservation.montant_total }}</td>
+          <td class="py-3 px-4">{{ reservation.statut }}</td>
+          <td class="py-3 px-4">{{ reservation.client_id }}</td>
+          <td class="py-3 px-4">{{ reservation.conducteur_secondaire_id }}</td>
+          <td class="py-3 px-4">{{ reservation.voiture_id }}</td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex justify-center space-x-2">
+              <!-- View Details Button -->
+              <button (click)="viewDetails(reservation)" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <!-- Edit Button -->
+              <button (click)="editReservation(reservation)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+              <!-- Delete Button -->
+              <button (click)="deleteReservation(reservation)" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

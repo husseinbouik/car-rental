@@ -7,8 +7,7 @@ import { MOCK_RESERVATIONS } from './mock-reservations';
   providedIn: 'root'
 })
 export class ReservationService {
-  constructor() {}
-
+  // Use mock data instead of HTTP requests
   getReservations(): Observable<Reservation[]> {
     return of(MOCK_RESERVATIONS);
   }
@@ -19,8 +18,7 @@ export class ReservationService {
   }
 
   createReservation(reservation: Reservation): Observable<Reservation> {
-    const newId = Math.max(...MOCK_RESERVATIONS.map(r => r.id)) + 1;
-    const newReservation = { ...reservation, id: newId };
+    const newReservation = { ...reservation, id: Math.max(...MOCK_RESERVATIONS.map(r => r.id)) + 1 };
     MOCK_RESERVATIONS.push(newReservation);
     return of(newReservation);
   }

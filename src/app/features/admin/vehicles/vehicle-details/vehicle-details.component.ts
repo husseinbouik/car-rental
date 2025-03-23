@@ -1,30 +1,29 @@
 import { VehicleService } from './../vehicle.service';
 import { Component, OnInit } from '@angular/core';
-import { Vehicle } from '../vehicle.model';
+import { Voiture } from '../vehicle.model'; // Update the import
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-details',
-    standalone: false,
-
+  standalone: false,
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
 })
 export class VehicleDetailsComponent implements OnInit {
-  vehicle: Vehicle | undefined;
+  voiture: Voiture | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private VehicleService: VehicleService
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.VehicleService.getVehicleById(+id).subscribe({
-        next: (vehicle) => {
-          this.vehicle = vehicle;
+      this.vehicleService.getVehicleById(+id).subscribe({
+        next: (voiture) => {
+          this.voiture = voiture;
         },
         error: (error) => {
           console.error('Error fetching vehicle details:', error);
@@ -34,6 +33,6 @@ export class VehicleDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/vehicles']);
+    this.router.navigate(['/admin/vehicles']); 
   }
 }

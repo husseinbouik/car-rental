@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Vehicle } from './vehicle.model';
-import { MOCK_VEHICLES } from './mock-vehicles';
+import { Voiture } from './vehicle.model'; // Update the import to use Voiture
+import { MOCK_VEHICLES } from './mock-vehicles'; // Update the import to use MOCK_VEHICLES
 
 @Injectable({
   providedIn: 'root'
@@ -11,32 +11,32 @@ export class VehicleService {
   constructor() {}
 
   // Fetch all vehicles
-  getVehicles(): Observable<Vehicle[]> {
-    return of(MOCK_VEHICLES);
+  getVehicles(): Observable<Voiture[]> {
+    return of(MOCK_VEHICLES); // Return the updated mock data
   }
 
   // Fetch a single vehicle by ID
-  getVehicleById(id: number): Observable<Vehicle | undefined> {
-    const vehicle = MOCK_VEHICLES.find(v => v.id === id);
-    return of(vehicle); // Return the found vehicle or undefined if not found
+  getVehicleById(id: number): Observable<Voiture | undefined> {
+    const voiture = MOCK_VEHICLES.find(v => v.id === id);
+    return of(voiture); // Return the found vehicle or undefined if not found
   }
 
   // Create a new vehicle
-  createVehicle(vehicle: Vehicle): Observable<Vehicle> {
+  createVehicle(voiture: Voiture): Observable<Voiture> {
     // Generate a new ID for the vehicle
     const newId = Math.max(...MOCK_VEHICLES.map(v => v.id)) + 1;
-    const newVehicle = { ...vehicle, id: newId };
-    MOCK_VEHICLES.push(newVehicle); // Add the new vehicle to the mock data
-    return of(newVehicle); // Return the newly created vehicle
+    const newVoiture = { ...voiture, id: newId };
+    MOCK_VEHICLES.push(newVoiture); // Add the new vehicle to the mock data
+    return of(newVoiture); // Return the newly created vehicle
   }
 
   // Update an existing vehicle
-  updateVehicle(vehicle: Vehicle): Observable<Vehicle> {
-    const index = MOCK_VEHICLES.findIndex(v => v.id === vehicle.id);
+  updateVehicle(voiture: Voiture): Observable<Voiture> {
+    const index = MOCK_VEHICLES.findIndex(v => v.id === voiture.id);
     if (index !== -1) {
-      MOCK_VEHICLES[index] = vehicle; // Update the vehicle in the mock data
+      MOCK_VEHICLES[index] = voiture; // Update the vehicle in the mock data
     }
-    return of(vehicle); // Return the updated vehicle
+    return of(voiture); // Return the updated vehicle
   }
 
   // Delete a vehicle by ID

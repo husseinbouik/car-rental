@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'create', component: VehicleCreateComponent },
   { path: ':id', component: VehicleDetailsComponent },
   {path : 'edit/:id', component: VehicleCreateComponent},
-  {path : ':id/details', component: VehicleDetailsComponent}
+  {path : 'details/:id', component: VehicleDetailsComponent}
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

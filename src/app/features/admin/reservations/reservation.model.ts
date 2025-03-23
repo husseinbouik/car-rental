@@ -1,8 +1,11 @@
 export interface Reservation {
   id: number;
-  vehicleId: number;
-  clientId: number;
-  startDate: Date;
-  endDate: Date;
-  status: string; // e.g., "Pending", "Confirmed", "Cancelled"
+  acompte: number;
+  date_debut: string; // Use string for simplicity (ISO format: 'YYYY-MM-DDTHH:mm:ss')
+  date_fin: string;
+  montant_total: number;
+  statut: string;
+  client_id: number;
+  conducteur_secondaire_id: number;
+  voiture_id: number;
 }

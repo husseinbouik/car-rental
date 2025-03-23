@@ -1,1 +1,72 @@
-<p>reservation-details works!</p>
+<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Reservation Details</h2>
+
+  <!-- Display Reservation Details -->
+  <div *ngIf="reservation" class="space-y-4">
+    <!-- ID -->
+    <div>
+      <label class="block text-sm font-medium">ID:</label>
+      <p class="mt-1">{{ reservation?.id }}</p>
+    </div>
+
+    <!-- Acompte -->
+    <div>
+      <label class="block text-sm font-medium">Acompte:</label>
+      <p class="mt-1">{{ reservation?.acompte }}</p>
+    </div>
+
+    <!-- Date Début -->
+    <div>
+      <label class="block text-sm font-medium">Date Début:</label>
+      <p class="mt-1">{{ reservation?.date_debut | date: 'medium' }}</p>
+    </div>
+
+    <!-- Date Fin -->
+    <div>
+      <label class="block text-sm font-medium">Date Fin:</label>
+      <p class="mt-1">{{ reservation?.date_fin | date: 'medium' }}</p>
+    </div>
+
+    <!-- Montant Total -->
+    <div>
+      <label class="block text-sm font-medium">Montant Total:</label>
+      <p class="mt-1">{{ reservation?.montant_total }}</p>
+    </div>
+
+    <!-- Statut -->
+    <div>
+      <label class="block text-sm font-medium">Statut:</label>
+      <p class="mt-1">{{ reservation?.statut }}</p>
+    </div>
+
+    <!-- Client ID -->
+    <div>
+      <label class="block text-sm font-medium">Client ID:</label>
+      <p class="mt-1">{{ reservation?.client_id }}</p>
+    </div>
+
+    <!-- Conducteur Secondaire ID -->
+    <div>
+      <label class="block text-sm font-medium">Conducteur Secondaire ID:</label>
+      <p class="mt-1">{{ reservation?.conducteur_secondaire_id }}</p>
+    </div>
+
+    <!-- Voiture ID -->
+    <div>
+      <label class="block text-sm font-medium">Voiture ID:</label>
+      <p class="mt-1">{{ reservation?.voiture_id }}</p>
+    </div>
+  </div>
+
+  <!-- Display if Reservation is not found -->
+  <div *ngIf="!reservation" class="text-red-500">
+    <p>Reservation not found.</p>
+  </div>
+
+  <!-- Go Back Button -->
+  <div class="mt-6">
+    <button (click)="goBack()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      Go Back
+    </button>
+  </div>
+</div>

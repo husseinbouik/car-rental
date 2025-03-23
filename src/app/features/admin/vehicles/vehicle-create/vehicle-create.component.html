@@ -1,33 +1,88 @@
 <div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Create New Vehicle</h2>
+  <h2 class="text-2xl font-bold mb-4">Create New Voiture</h2>
   <form (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Marque -->
     <div>
-      <label for="make" class="block text-sm font-medium">Make</label>
-      <input type="text" id="make" [(ngModel)]="vehicle.make" name="make"
+      <label for="marque" class="block text-sm font-medium">Marque</label>
+      <input type="text" id="marque" [(ngModel)]="voiture.marque" name="marque"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         required>
     </div>
+
+    <!-- Modele -->
     <div>
-      <label for="model" class="block text-sm font-medium">Model</label>
-      <input type="text" id="model" [(ngModel)]="vehicle.model" name="model"
+      <label for="modele" class="block text-sm font-medium">Modele</label>
+      <input type="text" id="modele" [(ngModel)]="voiture.modele" name="modele"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         required>
     </div>
+
+    <!-- Matricule -->
     <div>
-      <label for="year" class="block text-sm font-medium">Year</label>
-      <input type="number" id="year" [(ngModel)]="vehicle.year" name="year"
+      <label for="matricule" class="block text-sm font-medium">Matricule</label>
+      <input type="text" id="matricule" [(ngModel)]="voiture.matricule" name="matricule"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         required>
     </div>
+
+    <!-- Type -->
     <div>
       <label for="type" class="block text-sm font-medium">Type</label>
-      <input type="text" id="type" [(ngModel)]="vehicle.type" name="type"
+      <input type="text" id="type" [(ngModel)]="voiture.type" name="type"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         required>
     </div>
+
+    <!-- Prix de Base -->
+    <div>
+      <label for="prixDeBase" class="block text-sm font-medium">Prix de Base</label>
+      <input type="number" id="prixDeBase" [(ngModel)]="voiture.prixDeBase" name="prixDeBase"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        required>
+    </div>
+
+    <!-- Capacite -->
+    <div>
+      <label for="capacite" class="block text-sm font-medium">Capacite</label>
+      <input type="number" id="capacite" [(ngModel)]="voiture.capacite" name="capacite"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        required>
+    </div>
+
+    <!-- Carburant -->
+    <div>
+      <label for="carburant" class="block text-sm font-medium">Carburant</label>
+      <input type="text" id="carburant" [(ngModel)]="voiture.carburant" name="carburant"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        required>
+    </div>
+
+    <!-- Couleur -->
+    <div>
+      <label for="couleur" class="block text-sm font-medium">Couleur</label>
+      <input type="text" id="couleur" [(ngModel)]="voiture.couleur" name="couleur"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        required>
+    </div>
+
+    <!-- Est Automate -->
+    <div>
+      <label for="estAutomate" class="block text-sm font-medium">Est Automate</label>
+      <input type="checkbox" id="estAutomate" [(ngModel)]="voiture.estAutomate" name="estAutomate"
+        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+    </div>
+
+    <!-- Vname -->
+    <div>
+      <label for="vname" class="block text-sm font-medium">Vname</label>
+      <input type="text" id="vname" [(ngModel)]="voiture.vname" name="vname"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+    </div>
+
+    <!-- Submit Button -->
     <div class="flex justify-end">
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-        Create Vehicle
+        Create Voiture
       </button>
     </div>
   </form>

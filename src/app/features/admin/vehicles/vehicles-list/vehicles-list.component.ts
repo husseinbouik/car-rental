@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Vehicle } from '../vehicle.model';
+import { Voiture } from '../vehicle.model'; // Update the import
 import { VehicleService } from '../vehicle.service';
 import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-vehicles-list',
-  standalone: false,
+  standalone:false,
   templateUrl: './vehicles-list.component.html',
   styleUrls: ['./vehicles-list.component.css']
 })
 export class VehiclesListComponent implements OnInit {
-  vehicles: Vehicle[] = [];
-  paginatedVehicles: Vehicle[] = [];
+  voitures: Voiture[] = []; // Update the type to Voiture
+  paginatedVoitures: Voiture[] = []; // Update the type to Voiture
   searchTerm: string = '';
 
   // Pagination settings
@@ -23,32 +23,32 @@ export class VehiclesListComponent implements OnInit {
   constructor(private vehicleService: VehicleService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadVehicles();
+    this.loadVoitures(); // Update the method name
   }
 
-  loadVehicles(): void {
-    this.vehicleService.getVehicles().subscribe(vehicles => {
-      this.vehicles = vehicles;
+  loadVoitures(): void { // Update the method name
+    this.vehicleService.getVehicles().subscribe(voitures => {
+      this.voitures = voitures;
       this.updatePagination();
     });
   }
 
-  filterVehicles(): void {
-    const filtered = this.vehicles.filter(vehicle =>
-      vehicle.make.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.model.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.type.toLowerCase().includes(this.searchTerm.toLowerCase())
+  filterVoitures(): void { // Update the method name
+    const filtered = this.voitures.filter(voiture =>
+      voiture.marque?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      voiture.modele?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      voiture.type?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
 
-    this.vehicles = this.searchTerm ? filtered : this.vehicles;
+    this.voitures = this.searchTerm ? filtered : this.voitures;
     this.currentPage = 1;
     this.updatePagination();
   }
 
   updatePagination(): void {
-    this.totalPages = Math.ceil(this.vehicles.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.voitures.length / this.itemsPerPage);
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.paginatedVehicles = this.vehicles.slice(startIndex, startIndex + this.itemsPerPage);
+    this.paginatedVoitures = this.voitures.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   prevPage(): void {
@@ -92,29 +92,31 @@ export class VehiclesListComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    const worksheet = XLSX.utils.json_to_sheet(this.vehicles);
+    const worksheet = XLSX.utils.json_to_sheet(this.voitures);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Vehicles");
-    XLSX.writeFile(workbook, "vehicles.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Voitures");
+    XLSX.writeFile(workbook, "voitures.xlsx");
   }
 
   // Navigate to the create vehicle page
-  createVehicle(): void {
+  createVoiture(): void { // Update the method name
     this.router.navigate(['admin/vehicles/create']);
   }
-
+  viewDetails(voiture: Voiture): void {
+    this.router.navigate(['/admin/vehicles/details', voiture.id]);
+  }
   // Navigate to the edit vehicle page
-  editVehicle(vehicle: Vehicle): void {
-    this.router.navigate(['admin/vehicles/edit', vehicle.id]);
+  editVoiture(voiture: Voiture): void { // Update the method name
+    this.router.navigate(['admin/vehicles/edit', voiture.id]);
   }
 
   // Delete a vehicle
-  deleteVehicle(vehicle: Vehicle): void {
+  deleteVoiture(voiture: Voiture): void { // Update the method name
     if (confirm('Are you sure you want to delete this vehicle?')) {
-      this.vehicleService.deleteVehicle(vehicle.id).subscribe({
+      this.vehicleService.deleteVehicle(voiture.id).subscribe({
         next: () => {
           console.log('Vehicle deleted successfully');
-          this.loadVehicles(); // Refresh the list
+          this.loadVoitures(); // Refresh the list
         },
         error: (error) => {
           console.error('Error deleting vehicle:', error);
