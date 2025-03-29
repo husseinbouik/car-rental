@@ -4,10 +4,11 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoginComponent } from './features/admin/login/login.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,TranslateModule,   FormsModule],
+  imports: [RouterOutlet,TranslateModule,   FormsModule , HttpClientModule],
 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

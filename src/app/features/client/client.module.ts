@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientRoutingModule } from './client-routing.module';
@@ -14,7 +15,9 @@ import { AdminLayoutComponent } from '../../core/layout/admin-layout/admin-layou
 import { NavbarComponent } from '../../core/layout/navbar/navbar.component';
 import { SidebarComponent } from '../../core/layout/sidebar/sidebar.component';
 import { AdminRoutingModule } from '../admin/admin-routing.module';
+import { RouterModule } from '@angular/router';
 
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -36,7 +39,10 @@ import { AdminRoutingModule } from '../admin/admin-routing.module';
     AdminLayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    FontAwesomeModule
-  ]
+    FontAwesomeModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule
+  ],
 })
 export class ClientModule { }

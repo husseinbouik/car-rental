@@ -1,42 +1,78 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'; // Import the Router
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import Reactive Forms modules
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { SignupService } from './signup.service';
 
 @Component({
   selector: 'app-signup',
   standalone: false,
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css'
+  styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-    fullName = '';
-    email = '';
-    password = '';
-    confirmPassword = '';
+  signupForm: FormGroup;
+  isLoading = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null; // Add success message property
 
-    signupForm: FormGroup; // Using Reactive Forms for validation
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private signupService: SignupService
+  ) {
+    this.signupForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    });
 
-    constructor(private router: Router, private fb: FormBuilder) { // Inject Router and FormBuilder
-        this.signupForm = this.fb.group({
-            fullName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]], // Example password validation
-            confirmPassword: ['', Validators.required]
-        }, { validator: this.passwordMatchValidator }); // Custom validator for password matching
-    }
+    this.signupForm.setValidators(this.passwordMatchValidator);
+  }
 
+  passwordMatchValidator(form: AbstractControl) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { mismatch: true };
+  }
 
-    passwordMatchValidator(g: FormGroup) {
-        return g.get('password')?.value === g.get('confirmPassword')?.value
-           ? null : { 'mismatch': true };
-     }
+  onSubmit() {
+    if (this.signupForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = null;
+      this.successMessage = null;
 
+      const { username, password, email } = this.signupForm.value;
 
-    onSubmit() {
-        if (this.signupForm.valid) {
+      this.signupService.register({ username, password, email }).subscribe({
+        next: (response) => {
+          this.isLoading = false;
 
-            this.router.navigate(['/login']); 
+          // Use the message from the backend response
+          this.successMessage = response.message || "Inscription réussie! Redirection vers la page de connexion...";
+
+          // Navigate after 3 seconds
+          setTimeout(() => {
+            this.router.navigate(['/login'], { state: { registrationSuccess: true } });
+          }, 3000);
+        },
+        error: (error) => {
+          this.isLoading = false;
+
+          // Ensure error is in JSON format before parsing
+          if (error.error && error.error.message) {
+            this.errorMessage = error.error.message;
+          } else {
+            this.errorMessage = 'Échec de l\'inscription. Veuillez réessayer.';
+          }
+
+          if (error.status === 409) {
+            this.errorMessage = 'Cet utilisateur existe déjà.';
+          }
         }
-
+      });
     }
+  }
+
+
 }
