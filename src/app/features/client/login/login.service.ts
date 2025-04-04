@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class LoginService {
 
-  private apiUrl = environment.apiBaseUrl; // Make sure the base URL is correct
+  private apiUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +23,31 @@ export class LoginService {
       password: password,
     };
 
-    // POST request to the login endpoint
-    return this.http.post(`${this.apiUrl}/auth/login`, loginPayload, { headers });
+    return this.http.post(`${this.apiUrl}/auth/login`, loginPayload, { headers }).pipe(
+      tap((response: any) => {
+        // Adjust the property name based on your backend's response
+        const token = response.token || response.access_token || response.jwt;
+
+        if (token) {
+          localStorage.setItem('access_token', token);
+          console.log('JWT saved to localStorage');
+        } else {
+          console.warn('No token found in the login response');
+        }
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('access_token');
+    console.log('Logged out and token removed');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 }

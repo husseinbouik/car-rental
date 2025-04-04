@@ -13,25 +13,35 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = ''; // For displaying error messages
   isLoading: boolean = false; // To show loading indicator
+  successMessage: string = '';
 
   constructor(private loginService: LoginService, private router: Router) {}
 
   onSubmit() {
     this.isLoading = true;
-    this.errorMessage = ''; // Reset any previous error messages
+    this.errorMessage = '';
+    this.successMessage = '';
 
-    // Call the login service
     this.loginService.login(this.username, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        // Assuming the token is returned in response.token
-        localStorage.setItem('authToken', response.token); // Store the JWT token
-        this.router.navigate(['/dashboard']); // Redirect to dashboard or another protected route
+
+        // Store the JWT token
+        localStorage.setItem('authToken', response.token);
+
+        // Show success message
+        this.successMessage = 'Connexion réussie ! Redirection en cours...';
+
+        // Delay navigation for 2 seconds
+        setTimeout(() => {
+          this.router.navigate(['/admin/dashboard']); // Replace with your actual route
+        }, 2000);
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Login failed, please try again.'; // Show error message
+        this.errorMessage = error.error?.message || 'Échec de la connexion, veuillez réessayer.';
       }
     });
   }
+
 }
