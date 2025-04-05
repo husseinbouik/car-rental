@@ -14,6 +14,9 @@ export class VehicleService {
 
   // Function to get authentication headers
   private getAuthHeaders() {
+    console.log(localStorage.getItem('access_token'));
+
+
     return {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`

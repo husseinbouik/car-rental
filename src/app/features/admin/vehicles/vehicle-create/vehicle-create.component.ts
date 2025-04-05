@@ -1,15 +1,15 @@
 import { VehicleService } from './../vehicle.service';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Voiture } from '../vehicle.model'; // Update the import
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-create',
   standalone: false,
   templateUrl: './vehicle-create.component.html',
-  styleUrl: './vehicle-create.component.css'
+  styleUrls: ['./vehicle-create.component.css']
 })
-export class VehicleCreateComponent {
+export class VehicleCreateComponent implements OnInit {
   voiture: Voiture = {
     id: 0,
     marque: '',
@@ -23,17 +23,61 @@ export class VehicleCreateComponent {
     estAutomate: false,
     vname: ''
   };
+  isEditMode: boolean = false;
 
-  constructor(private vehicleService: VehicleService, @Inject(Router) private router: Router) {}
+  constructor(
+    private vehicleService: VehicleService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    const vehicleId = this.route.snapshot.paramMap.get('id');
+    if (vehicleId) {
+      this.isEditMode = true;
+      this.loadVehicle(Number(vehicleId));
+    }
+  }
+
+  loadVehicle(id: number): void {
+    this.vehicleService.getVehicleById(id).subscribe({
+      next: (vehicle) => {
+        this.voiture = vehicle;
+      },
+      error: (error) => {
+        console.error('Error loading vehicle:', error);
+      }
+    });
+  }
 
   onSubmit(): void {
+    if (this.isEditMode) {
+      this.updateVehicle();
+    } else {
+      this.createVehicle();
+    }
+  }
+
+  createVehicle(): void {
     this.vehicleService.createVehicle(this.voiture).subscribe({
       next: (response) => {
         console.log('Vehicle created successfully:', response);
-        this.router.navigate(['/admin/vehicles']); // Update the navigation route
+        this.router.navigate(['/admin/vehicles']);
       },
       error: (error) => {
         console.error('Error creating vehicle:', error);
+      }
+    });
+  }
+
+  updateVehicle(): void {
+    this.vehicleService.updateVehicle(this.voiture).subscribe({
+      next: (response) => {
+        console.log('Vehicle updated successfully:', response);
+        this.router.navigate(['/admin/vehicles']);
+      },
+      error: (error) => {
+        console.error('Error updating vehicle:', error);
       }
     });
   }
