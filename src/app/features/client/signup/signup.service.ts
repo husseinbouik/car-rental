@@ -17,6 +17,7 @@ export class SignupService {
     password: string;
     email: string;
     fullName?: string;
+    roles?: string[]; // optional roles
   }): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -25,7 +26,8 @@ export class SignupService {
     const payload = {
       username: userData.username,
       password: userData.password,
-      email: userData.email
+      email: userData.email,
+      roles: userData.roles || ['ROLE_CLIENT'] // default to ROLE_CLIENT if not provided
     };
 
     return this.http.post(`${this.apiUrl}/auth/register`, payload, { headers })
@@ -33,15 +35,12 @@ export class SignupService {
         catchError((error: HttpErrorResponse) => {
           let errorMessage = 'Registration failed';
 
-          // Handle server-side errors
           if (error.error) {
-            // Try to parse as JSON first
             if (typeof error.error === 'string') {
               try {
                 const parsedError = JSON.parse(error.error);
                 errorMessage = parsedError.message || errorMessage;
               } catch (e) {
-                // If not JSON, use the raw error text
                 errorMessage = error.error;
               }
             } else if (typeof error.error === 'object') {
@@ -49,13 +48,12 @@ export class SignupService {
             }
           }
 
-          // Handle HTTP status codes
           switch (error.status) {
             case 400:
-              errorMessage = errorMessage || 'Invalid request data';
+              errorMessage = 'Invalid data, please check your input';
               break;
             case 409:
-              errorMessage = errorMessage || 'User already exists';
+              errorMessage = 'User already exists';
               break;
             case 500:
               errorMessage = 'Server error, please try again later';
