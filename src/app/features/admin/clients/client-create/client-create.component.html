@@ -1,5 +1,7 @@
 <div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Create New Client</h2>
+  <h2 class="text-2xl font-bold mb-4">
+    {{ isEditMode ? 'Edit Client' : 'Create New Client' }}
+  </h2>
 
   <!-- Client Form -->
   <form (ngSubmit)="onSubmit()" class="space-y-4">
@@ -46,35 +48,35 @@
     <!-- CIN Delivre Le -->
     <div>
       <label for="cin_delivre_le" class="block text-sm font-medium">CIN Delivre Le:</label>
-      <input type="text" id="cin_delivre_le" [(ngModel)]="client.cin_delivre_le" name="cin_delivre_le"
+      <input type="text" id="cin_delivre_le" [(ngModel)]="client.cinDelivreLe" name="cin_delivre_le"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
     </div>
 
     <!-- Permis Delivre Au -->
     <div>
       <label for="permis_delivre_au" class="block text-sm font-medium">Permis Delivre Au:</label>
-      <input type="text" id="permis_delivre_au" [(ngModel)]="client.permis_delivre_au" name="permis_delivre_au"
+      <input type="text" id="permis_delivre_au" [(ngModel)]="client.permisDelivreAu" name="permis_delivre_au"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
     </div>
 
     <!-- Permis Delivre Le -->
     <div>
       <label for="permis_delivre_le" class="block text-sm font-medium">Permis Delivre Le:</label>
-      <input type="text" id="permis_delivre_le" [(ngModel)]="client.permis_delivre_le" name="permis_delivre_le"
+      <input type="text" id="permis_delivre_le" [(ngModel)]="client.permisDelivreLe" name="permis_delivre_le"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
     </div>
 
     <!-- Adresse Etranger -->
     <div>
       <label for="adresse_etranger" class="block text-sm font-medium">Adresse Etranger:</label>
-      <input type="text" id="adresse_etranger" [(ngModel)]="client.adresse_etranger" name="adresse_etranger"
+      <input type="text" id="adresse_etranger" [(ngModel)]="client.adresseEtranger" name="adresse_etranger"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
     </div>
 
     <!-- Delivre Le Passeport -->
     <div>
       <label for="delivre_le_passeport" class="block text-sm font-medium">Delivre Le Passeport:</label>
-      <input type="text" id="delivre_le_passeport" [(ngModel)]="client.delivre_le_passeport" name="delivre_le_passeport"
+      <input type="text" id="delivre_le_passeport" [(ngModel)]="client.delivreLePasseport" name="delivre_le_passeport"
         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
     </div>
 

@@ -1,46 +1,77 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../client.service';
 import { Client } from '../client.model';
 
 @Component({
   selector: 'app-client-create',
-  standalone:false,
+  standalone: false,
   templateUrl: './client-create.component.html',
   styleUrls: ['./client-create.component.css']
 })
-export class ClientCreateComponent {
+export class ClientCreateComponent implements OnInit {
   client: Client = {
-    id: 0, // Will be auto-generated
-    cin_delivre_le: '',
-    permis_delivre_au: '',
-    permis_delivre_le: '',
+    id: 0,
+    cinDelivreLe: '',
+    permisDelivreAu: '',
+    permisDelivreLe: '',
     adresse: '',
-    adresse_etranger: '',
+    adresseEtranger: '',
     cin: '',
     cname: '',
-    delivre_le_passeport: '',
+    delivreLePasseport: '',
     nationalite: '',
     passeport: '',
     permis: '',
     tel: ''
   };
 
+  isEditMode: boolean = false;
+
   constructor(
     private clientService: ClientService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
-  // Handle form submission
+  ngOnInit(): void {
+    const clientId = this.route.snapshot.paramMap.get('id');
+
+    if (clientId) {
+      this.isEditMode = true;
+      this.clientService.getClientById(+clientId).subscribe({
+        next: (data) => {
+          this.client = data;
+        },
+        error: (err) => {
+          console.error('Error fetching client:', err);
+        }
+      });
+    }
+  }
+
   onSubmit(): void {
-    this.clientService.createClient(this.client).subscribe({
-      next: (response) => {
-        console.log('Client created successfully:', response);
-        this.router.navigate(['/admin/clients']); // Navigate back to the clients list
-      },
-      error: (error) => {
-        console.error('Error creating client:', error);
-      }
-    });
+    if (this.isEditMode) {
+      this.clientService.updateClient(this.client).subscribe({
+        next: () => {
+          console.log('Client updated successfully');
+          this.router.navigate(['/admin/clients']);
+        },
+        error: (err) => {
+          console.error('Error updating client:', err);
+        }
+      });
+
+    } else {
+      this.clientService.createClient(this.client).subscribe({
+        next: () => {
+          console.log('Client created successfully');
+          this.router.navigate(['/admin/clients']);
+        },
+        error: (err) => {
+          console.error('Error creating client:', err);
+        }
+      });
+    }
   }
 }
