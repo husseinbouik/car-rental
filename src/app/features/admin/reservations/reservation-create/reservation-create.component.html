@@ -1,79 +1,101 @@
 <div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Create New Reservation</h2>
+  <h2 class="text-2xl font-bold mb-6">{{ pageTitle }}</h2>
 
-  <!-- Reservation Form -->
-  <form (ngSubmit)="onSubmit()" class="space-y-4">
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <p>{{ isEditMode ? 'Loading reservation...' : 'Creating reservation...' }}</p>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #reservationForm="ngForm" class="space-y-4" *ngIf="!isLoading">
     <!-- Acompte -->
     <div>
-      <label for="acompte" class="block text-sm font-medium">Acompte:</label>
-      <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="acompte" class="block text-sm font-medium mb-1">Deposit:</label>
+      <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte" step="0.01" min="0"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
     </div>
 
     <!-- Date Début -->
     <div>
-      <label for="date_debut" class="block text-sm font-medium">Date Début:</label>
-      <input type="datetime-local" id="date_debut" [(ngModel)]="reservation.date_debut" name="date_debut"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="dateDebut" class="block text-sm font-medium mb-1">Start Date:</label>
+      <input type="datetime-local" id="dateDebut" [(ngModel)]="reservation.dateDebut" name="dateDebut" required
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
     </div>
 
     <!-- Date Fin -->
     <div>
-      <label for="date_fin" class="block text-sm font-medium">Date Fin:</label>
-      <input type="datetime-local" id="date_fin" [(ngModel)]="reservation.date_fin" name="date_fin"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="dateFin" class="block text-sm font-medium mb-1">End Date:</label>
+      <input type="datetime-local" id="dateFin" [(ngModel)]="reservation.dateFin" name="dateFin" required
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
     </div>
 
     <!-- Montant Total -->
     <div>
-      <label for="montant_total" class="block text-sm font-medium">Montant Total:</label>
-      <input type="number" id="montant_total" [(ngModel)]="reservation.montant_total" name="montant_total"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="montantTotal" class="block text-sm font-medium mb-1">Total Amount:</label>
+      <input type="number" id="montantTotal" [(ngModel)]="reservation.montantTotal" name="montantTotal" step="0.01" min="0"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
     </div>
 
     <!-- Statut -->
     <div>
-      <label for="statut" class="block text-sm font-medium">Statut:</label>
-      <select id="statut" [(ngModel)]="reservation.statut" name="statut"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="statut" class="block text-sm font-medium mb-1">Status:</label>
+      <select id="statut" [(ngModel)]="reservation.statut" name="statut" required
+              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
         <option value="Pending">Pending</option>
         <option value="Confirmed">Confirmed</option>
+        <option value="Completed">Completed</option>
         <option value="Cancelled">Cancelled</option>
       </select>
     </div>
 
-    <!-- Client ID -->
+    <!-- Client Selection -->
     <div>
-      <label for="client_id" class="block text-sm font-medium">Client ID:</label>
-      <input type="number" id="client_id" [(ngModel)]="reservation.client_id" name="client_id"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="client_id" class="block text-sm font-medium mb-1">Client:</label>
+      <select id="client_id" [(ngModel)]="reservation.client_id" name="client_id" required
+              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
+        <option [ngValue]="0" disabled>Select a client</option>
+        <option *ngFor="let client of clients" [ngValue]="client.id">
+          {{ client.cname || client.nom }} {{ client.prenom }}
+        </option>
+      </select>
     </div>
 
-    <!-- Conducteur Secondaire ID -->
+    <!-- Car Selection -->
     <div>
-      <label for="conducteur_secondaire_id" class="block text-sm font-medium">Conducteur Secondaire ID:</label>
-      <input type="number" id="conducteur_secondaire_id" [(ngModel)]="reservation.conducteur_secondaire_id" name="conducteur_secondaire_id"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+      <label for="voiture_id" class="block text-sm font-medium mb-1">Car:</label>
+      <select id="voiture_id" [(ngModel)]="reservation.voiture_id" name="voiture_id" required
+              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
+        <option [ngValue]="0" disabled>Select a car</option>
+        <option *ngFor="let car of cars" [ngValue]="car.id">
+          {{ car.marque }} {{ car.modele }} ({{ car.matricule }})
+        </option>
+      </select>
     </div>
 
-    <!-- Voiture ID -->
+    <!-- Secondary Driver -->
     <div>
-      <label for="voiture_id" class="block text-sm font-medium">Voiture ID:</label>
-      <input type="number" id="voiture_id" [(ngModel)]="reservation.voiture_id" name="voiture_id"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+      <label for="conducteur_secondaire_id" class="block text-sm font-medium mb-1">Secondary Driver (Optional):</label>
+      <input type="number" id="conducteur_secondaire_id" [(ngModel)]="reservation.conducteur_secondaire_id"
+             name="conducteur_secondaire_id" min="0"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
     </div>
 
-    <!-- Submit Button -->
-    <div class="flex justify-end">
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-        Create Reservation
+    <!-- Action Buttons -->
+    <div class="flex justify-end space-x-3 pt-4">
+      <button type="button" (click)="cancel()"
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+        Cancel
+      </button>
+      <button type="submit"
+              [disabled]="reservationForm.invalid || isLoading"
+              [class.opacity-50]="reservationForm.invalid || isLoading"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:cursor-not-allowed">
+        {{ submitButtonText }}
+        <span *ngIf="isLoading">...</span>
       </button>
     </div>
   </form>
