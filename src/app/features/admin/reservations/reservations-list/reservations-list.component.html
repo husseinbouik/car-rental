@@ -1,91 +1,116 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Reservations</h2>
+<!-- src/app/features/reservations/reservations-list/reservations-list.component.html -->
+<div class="p-4 sm:p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-xl sm:text-2xl font-bold mb-4">Reservations Management</h2>
 
   <!-- Header Controls: Search, Export & Create -->
-  <div class="flex justify-between items-center mb-4">
-    <input type="text" [(ngModel)]="searchTerm" (input)="onSearchInput()"
-           placeholder="Search reservations..."
-           class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600"> <!-- Themed input -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-4">
+    <input type="search" #searchInput [(ngModel)]="searchTerm" (input)="onSearchInput()"
+           placeholder="Search by ID, name, car, status..."
+           class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
 
-    <div class="flex space-x-4">
-      <button (click)="exportToExcel()"
-              class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
-        <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
+    <div class="flex space-x-2 sm:space-x-3">
+      <button (click)="exportToExcel()" title="Export current view to Excel"
+              class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow">
+        <i class="fa-solid fa-file-excel text-base sm:text-lg mr-1 sm:mr-2"></i> Export
       </button>
-      <button (click)="createReservation()"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
-         <i class="fa-solid fa-plus text-lg mr-2"></i> Create Reservation
+      <button (click)="createReservation()" title="Create New Reservation"
+              class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow">
+         <i class="fa-solid fa-plus text-base sm:text-lg mr-1 sm:mr-2"></i> Create
       </button>
     </div>
   </div>
 
   <!-- Reservations Table -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-700 rounded-lg shadow-md"> <!-- Adjusted border color -->
-      <thead>
-        <tr class="bg-[var(--seconday-background-color)] text-[var(--text-color)] text-left">
-          <!-- Make headers clickable for sorting -->
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('id')">
-            ID <i class="fa-solid ml-2" [ngClass]="getSortIcon('id')"></i>
+  <div class="overflow-x-auto shadow-md rounded-lg border border-gray-700">
+    <table class="min-w-full w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] text-sm">
+      <thead class="bg-gray-700 text-gray-300">
+        <tr class="text-left text-xs uppercase tracking-wider">
+          <!-- Sort primarily by IDs or simple fields -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('id')">
+            ID <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('acompte')">
-            Acompte <i class="fa-solid ml-2" [ngClass]="getSortIcon('acompte')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('dateDebut')">
+            Dates <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('dateDebut')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('dateDebut')">
-            Date Début <i class="fa-solid ml-2" [ngClass]="getSortIcon('dateDebut')"></i>
+          <!-- Display Client Name/ID -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('client_id')">
+            Client <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('client_id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('dateFin')">
-            Date Fin <i class="fa-solid ml-2" [ngClass]="getSortIcon('dateFin')"></i>
+          <!-- Display Car Info/ID -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('voiture_id')">
+            Car <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('voiture_id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('montantTotal')">
-            Montant Total <i class="fa-solid ml-2" [ngClass]="getSortIcon('montantTotal')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('montantTotal')">
+            Total <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('montantTotal')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('statut')">
-            Statut <i class="fa-solid ml-2" [ngClass]="getSortIcon('statut')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('acompte')">
+            Deposit <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('acompte')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('client_id')">
-            Client ID <i class="fa-solid ml-2" [ngClass]="getSortIcon('client_id')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('statut')">
+            Status <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('statut')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('conducteur_secondaire_id')">
-            Cond. Sec. ID <i class="fa-solid ml-2" [ngClass]="getSortIcon('conducteur_secondaire_id')"></i>
+           <!-- Secondary Driver (Optional Display) -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('conducteur_secondaire_id')">
+            Sec. Driver <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('conducteur_secondaire_id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('voiture_id')">
-            Voiture ID <i class="fa-solid ml-2" [ngClass]="getSortIcon('voiture_id')"></i>
-          </th>
-          <th class="py-3 px-4 border-b border-gray-700 text-center">Actions</th> <!-- Not sortable -->
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th> <!-- Not sortable -->
         </tr>
       </thead>
-      <tbody>
-        <!-- Display message if no reservations match -->
-         <tr *ngIf="paginatedReservations.length === 0">
-             <td colspan="10" class="text-center py-4 px-4 border-b border-gray-700">No reservations found matching your criteria.</td> <!-- Adjust colspan -->
+      <tbody class="divide-y divide-gray-700">
+        <!-- Loading Indicator Row -->
+        <tr *ngIf="isLoading">
+            <td colspan="9" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading reservations...</td>
+        </tr>
+        <!-- No Results Row -->
+         <tr *ngIf="!isLoading && paginatedReservations.length === 0">
+             <td colspan="9" class="text-center py-4 px-4 text-gray-400">
+                {{ searchTerm ? 'No reservations found matching "' + searchTerm + '".' : 'No reservations available.' }}
+             </td>
          </tr>
-        <!-- Iterate over paginatedReservations -->
-        <tr *ngFor="let reservation of paginatedReservations" class="border-b border-gray-700 transition hover:bg-[var(--hover-background-color)]"> <!-- Added hover effect, adjusted border -->
-          <td class="py-3 px-4">{{ reservation.id }}</td>
-          <!-- Use pipes for formatting numbers/currency -->
-          <td class="py-3 px-4">{{ reservation.acompte | number:'1.2-2' }}</td>
-          <!-- Use pipes for formatting dates -->
-          <td class="py-3 px-4">{{ reservation.dateDebut | date:'shortDate' }}</td> <!-- Example DatePipe -->
-          <td class="py-3 px-4">{{ reservation.dateFin | date:'shortDate' }}</td>   <!-- Example DatePipe -->
-          <td class="py-3 px-4">{{ reservation.montantTotal | number:'1.2-2' }}</td>
-          <td class="py-3 px-4">{{ reservation.statut }}</td>
-          <td class="py-3 px-4">{{ reservation.client_id }}</td>
-          <td class="py-3 px-4">{{ reservation.conducteur_secondaire_id ?? 'N/A' }}</td> <!-- Handle potential null/undefined -->
-          <td class="py-3 px-4">{{ reservation.voiture_id }}</td>
-          <td class="py-3 px-4 text-center">
-            <div class="flex justify-center space-x-2">
-              <!-- View Details Button -->
-              <button (click)="viewDetails(reservation)" title="View Details" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600 flex items-center justify-center w-8 h-8">
-                <i class="fa-solid fa-eye"></i>
+        <!-- Reservation Data Rows -->
+        <tr *ngFor="let reservation of paginatedReservations" class="transition hover:bg-[var(--hover-background-color)]">
+          <td class="py-2 px-4 font-medium">{{ reservation.id }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">
+              <div>{{ reservation.dateDebut | date:'dd/MM/yy HH:mm' }}</div>
+              <div class="text-xs text-gray-400">to {{ reservation.dateFin | date:'dd/MM/yy HH:mm' }}</div>
+          </td>
+          <!-- Display Client Info -->
+          <td class="py-2 px-4">
+              {{ reservation.client?.cname ??  ('ID: ' + reservation.client_id) }}
+          </td>
+          <!-- Display Car Info -->
+          <td class="py-2 px-4">
+              {{ reservation.voiture?.marque ?? '' }} {{ reservation.voiture?.modele ?? reservation.voiture?.vname ?? '' }}
+              <span class="text-xs text-gray-400 block">({{ reservation.voiture?.matricule ?? 'ID: ' + reservation.voiture_id }})</span>
+          </td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.montantTotal | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.acompte | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4">
+              <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="{
+                        'bg-yellow-200 text-yellow-900': reservation.statut === 'Pending',
+                        'bg-blue-200 text-blue-900': reservation.statut === 'Confirmed',
+                        'bg-green-200 text-green-900': reservation.statut === 'Completed',
+                        'bg-red-200 text-red-900': reservation.statut === 'Cancelled',
+                        'bg-gray-200 text-gray-800': !['Pending', 'Confirmed', 'Completed', 'Cancelled'].includes(reservation.statut)
+                    }">
+                {{ reservation.statut }}
+              </span>
+          </td>
+           <!-- Display Secondary Driver Info -->
+          <td class="py-2 px-4">
+              {{ reservation.conducteurSecondaire?.cname ??  (reservation.conducteur_secondaire_id ? ('ID: ' + reservation.conducteur_secondaire_id) : 'N/A') }}
+          </td>
+          <td class="py-2 px-4 text-center whitespace-nowrap">
+            <div class="flex justify-center items-center space-x-1 sm:space-x-2">
+              <button (click)="viewDetails(reservation)" title="View Details" class="text-green-400 hover:text-green-600 p-1 text-base">
+                <i class="fa-solid fa-eye fa-fw"></i>
               </button>
-              <!-- Edit Button -->
-              <button (click)="editReservation(reservation)" title="Edit Reservation" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center w-8 h-8">
-                <i class="fa-solid fa-edit"></i>
+              <button (click)="editReservation(reservation)" title="Edit Reservation" class="text-blue-400 hover:text-blue-600 p-1 text-base">
+                <i class="fa-solid fa-edit fa-fw"></i>
               </button>
-              <!-- Delete Button -->
-              <button (click)="deleteReservation(reservation)" title="Delete Reservation" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center w-8 h-8">
-                <i class="fa-solid fa-trash"></i>
+              <button (click)="deleteReservation(reservation)" title="Delete Reservation" class="text-red-400 hover:text-red-600 p-1 text-base">
+                <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </div>
           </td>
@@ -95,36 +120,41 @@
   </div>
 
   <!-- Pagination -->
-  <div class="flex justify-between items-center mt-6 text-[var(--text-color)]"> <!-- Increased margin-top, added text color -->
-      <div>
+  <div class="flex flex-col sm:flex-row justify-between items-center mt-4 text-xs sm:text-sm text-[var(--text-color)] gap-3">
+      <div class="text-gray-400">
+          Page {{ currentPage }} of {{ totalPages }}.
           Showing {{ paginatedReservations.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
-          to {{ Math.min(currentPage * itemsPerPage, reservations.length) }}
-          of {{ reservations.length }} entries
-          <span *ngIf="allReservations.length !== reservations.length">(filtered from {{ allReservations.length }} total)</span>
+          - {{ Math.min(currentPage * itemsPerPage, reservations.length) }}
+          of {{ reservations.length }} reservations
+          <span *ngIf="allReservations.length !== reservations.length" class="ml-1">(filtered from {{ allReservations.length }} total)</span>
       </div>
-      <div class="flex items-center">
+      <!-- Pagination Controls -->
+      <div class="flex items-center" *ngIf="totalPages > 1">
         <button (click)="prevPage()" [disabled]="currentPage === 1"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1}"
-                class="px-3 py-1 border rounded-lg hover:bg-[var(--hover-background-color)] border-gray-600 mx-1"> <!-- Adjusted padding/margin, added border color -->
-          <i class="fa-solid fa-chevron-left"></i> Previous
+                title="Previous Page"
+                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
+                class="px-3 py-1 border rounded-l-lg border-gray-600">
+          <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <div class="mx-1 flex space-x-1">
-          <!-- Page numbers -->
+        <!-- Page number buttons -->
+        <div class="flex border-t border-b border-gray-600">
           <button *ngFor="let page of getPages()" (click)="goToPage(page)"
+                  [attr.aria-current]="page === currentPage ? 'page' : null"
                   [ngClass]="{
-                      'bg-blue-500 text-white': page === currentPage,
+                      'bg-blue-600 text-white border-blue-600 font-bold': page === currentPage,
                       'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
                   }"
-                  class="px-3 py-1 border rounded-lg text-sm"> <!-- Adjusted padding/size -->
+                  class="px-3 py-1 border-l border-r border-gray-600 text-xs">
             {{ page }}
           </button>
         </div>
 
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0}"
-                class="px-3 py-1 border rounded-lg hover:bg-[var(--hover-background-color)] border-gray-600 mx-1">
-          Next <i class="fa-solid fa-chevron-right"></i>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                title="Next Page"
+                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages}"
+                class="px-3 py-1 border rounded-r-lg border-gray-600">
+           <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
   </div>

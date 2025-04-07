@@ -1,101 +1,164 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-6">{{ pageTitle }}</h2>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-    {{ errorMessage }}
+<!-- src/app/features/reservations/reservation-create/reservation-create.component.html -->
+<div class="bg-[var(--seconday-background-color)] text-[var(--text-color)] rounded-lg shadow-xl max-w-4xl mx-auto my-8">
+  <div class="p-6 sm:p-8 border-b border-gray-700">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">{{ pageTitle }}</h2>
+    <p class="mt-1 text-sm text-gray-400">
+      {{ isEditMode ? 'Update the reservation details below.' : 'Fill in the details to create a new reservation.' }}
+    </p>
   </div>
 
-  <!-- Loading Indicator -->
-  <div *ngIf="isLoading" class="text-center my-4">
-    <p>{{ isEditMode ? 'Loading reservation...' : 'Creating reservation...' }}</p>
-  </div>
+  <form (ngSubmit)="onSubmit()" #reservationForm="ngForm" class="p-6 sm:p-8" *ngIf="!isLoading || reservation.id || !isEditMode">
 
-  <form (ngSubmit)="onSubmit()" #reservationForm="ngForm" class="space-y-4" *ngIf="!isLoading">
-    <!-- Acompte -->
-    <div>
-      <label for="acompte" class="block text-sm font-medium mb-1">Deposit:</label>
-      <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte" step="0.01" min="0"
-             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
+    <!-- Error Message Area -->
+    <div *ngIf="errorMessage" aria-live="assertive" class="mb-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+      <div class="flex items-center">
+        <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
     </div>
 
-    <!-- Date Début -->
-    <div>
-      <label for="dateDebut" class="block text-sm font-medium mb-1">Start Date:</label>
-      <input type="datetime-local" id="dateDebut" [(ngModel)]="reservation.dateDebut" name="dateDebut" required
-             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading && isEditMode && !reservation.id" class="text-center my-10 text-gray-400">
+      <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-sm">Loading reservation data...</p>
     </div>
 
-    <!-- Date Fin -->
-    <div>
-      <label for="dateFin" class="block text-sm font-medium mb-1">End Date:</label>
-      <input type="datetime-local" id="dateFin" [(ngModel)]="reservation.dateFin" name="dateFin" required
-             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-    </div>
+    <!-- Form Fields Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
 
-    <!-- Montant Total -->
-    <div>
-      <label for="montantTotal" class="block text-sm font-medium mb-1">Total Amount:</label>
-      <input type="number" id="montantTotal" [(ngModel)]="reservation.montantTotal" name="montantTotal" step="0.01" min="0"
-             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-    </div>
+      <!-- Client Selection (Required) -->
+      <div class="md:col-span-1">
+        <label for="client_id" class="block text-sm font-medium text-gray-300 mb-1">Client <span class="text-red-500">*</span></label>
+        <select id="client_id" [(ngModel)]="reservation.client_id" name="client_id" required
+                class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+                [disabled]="isLoading">
+          <option [ngValue]="undefined" disabled>-- Select a Client --</option>
+          <option *ngFor="let client of clients" [ngValue]="client.id">
+            {{ client.display_name }}
+          </option>
+        </select>
+         <div *ngIf="reservationForm.controls['client_id']?.invalid && (reservationForm.controls['client_id']?.dirty || reservationForm.controls['client_id']?.touched)" class="text-red-400 text-xs pt-1">
+             Client selection is required.
+         </div>
+      </div>
 
-    <!-- Statut -->
-    <div>
-      <label for="statut" class="block text-sm font-medium mb-1">Status:</label>
-      <select id="statut" [(ngModel)]="reservation.statut" name="statut" required
-              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-        <option value="Pending">Pending</option>
-        <option value="Confirmed">Confirmed</option>
-        <option value="Completed">Completed</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-    </div>
+      <!-- Car Selection (Required) -->
+      <div class="md:col-span-1">
+        <label for="voiture_id" class="block text-sm font-medium text-gray-300 mb-1">Car <span class="text-red-500">*</span></label>
+        <select id="voiture_id" [(ngModel)]="reservation.voiture_id" name="voiture_id" required
+                class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+                [disabled]="isLoading">
+          <option [ngValue]="undefined" disabled>-- Select a Car --</option>
+          <option *ngFor="let car of cars" [ngValue]="car.id">
+            {{ car.display_name }}
+          </option>
+        </select>
+         <div *ngIf="reservationForm.controls['voiture_id']?.invalid && (reservationForm.controls['voiture_id']?.dirty || reservationForm.controls['voiture_id']?.touched)" class="text-red-400 text-xs pt-1">
+             Car selection is required.
+         </div>
+      </div>
 
-    <!-- Client Selection -->
-    <div>
-      <label for="client_id" class="block text-sm font-medium mb-1">Client:</label>
-      <select id="client_id" [(ngModel)]="reservation.client_id" name="client_id" required
-              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-        <option [ngValue]="0" disabled>Select a client</option>
-        <option *ngFor="let client of clients" [ngValue]="client.id">
-          {{ client.cname || client.nom }} {{ client.prenom }}
-        </option>
-      </select>
-    </div>
+      <!-- Start Date & Time (Required) -->
+      <div class="md:col-span-1">
+        <label for="dateDebut" class="block text-sm font-medium text-gray-300 mb-1">Start Date & Time <span class="text-red-500">*</span></label>
+        <input type="datetime-local" id="dateDebut" [(ngModel)]="reservation.dateDebut" name="dateDebut" required
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+               [disabled]="isLoading">
+          <div *ngIf="reservationForm.controls['dateDebut']?.invalid && (reservationForm.controls['dateDebut']?.dirty || reservationForm.controls['dateDebut']?.touched)" class="text-red-400 text-xs pt-1">
+             Start date and time are required.
+         </div>
+      </div>
 
-    <!-- Car Selection -->
-    <div>
-      <label for="voiture_id" class="block text-sm font-medium mb-1">Car:</label>
-      <select id="voiture_id" [(ngModel)]="reservation.voiture_id" name="voiture_id" required
-              class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-        <option [ngValue]="0" disabled>Select a car</option>
-        <option *ngFor="let car of cars" [ngValue]="car.id">
-          {{ car.marque }} {{ car.modele }} ({{ car.matricule }})
-        </option>
-      </select>
-    </div>
+      <!-- End Date & Time (Required) -->
+      <div class="md:col-span-1">
+        <label for="dateFin" class="block text-sm font-medium text-gray-300 mb-1">End Date & Time <span class="text-red-500">*</span></label>
+        <input type="datetime-local" id="dateFin" [(ngModel)]="reservation.dateFin" name="dateFin" required
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+               [disabled]="isLoading">
+         <div *ngIf="reservationForm.controls['dateFin']?.invalid && (reservationForm.controls['dateFin']?.dirty || reservationForm.controls['dateFin']?.touched)" class="text-red-400 text-xs pt-1">
+             End date and time are required.
+         </div>
+      </div>
 
-    <!-- Secondary Driver -->
-    <div>
-      <label for="conducteur_secondaire_id" class="block text-sm font-medium mb-1">Secondary Driver (Optional):</label>
-      <input type="number" id="conducteur_secondaire_id" [(ngModel)]="reservation.conducteur_secondaire_id"
-             name="conducteur_secondaire_id" min="0"
-             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
-    </div>
+      <!-- Total Amount -->
+      <div class="md:col-span-1">
+        <label for="montantTotal" class="block text-sm font-medium text-gray-300 mb-1">Total Amount (€)</label>
+        <input type="number" id="montantTotal" [(ngModel)]="reservation.montantTotal" name="montantTotal" step="0.01" min="0" placeholder="e.g., 250.00"
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+               [disabled]="isLoading">
+      </div>
+
+      <!-- Deposit Paid -->
+      <div class="md:col-span-1">
+        <label for="acompte" class="block text-sm font-medium text-gray-300 mb-1">Deposit Paid (€)</label>
+        <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte" step="0.01" min="0" placeholder="e.g., 50.00"
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+                [disabled]="isLoading">
+      </div>
+
+      <!-- Status (Required) -->
+      <div class="md:col-span-1">
+        <label for="statut" class="block text-sm font-medium text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
+        <select id="statut" [(ngModel)]="reservation.statut" name="statut" required
+                class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+                [disabled]="isLoading">
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+          <!-- Add other statuses if applicable -->
+        </select>
+         <div *ngIf="reservationForm.controls['statut']?.invalid && (reservationForm.controls['statut']?.dirty || reservationForm.controls['statut']?.touched)" class="text-red-400 text-xs pt-1">
+             Status is required.
+         </div>
+      </div>
+
+       <!-- Secondary Driver (Optional) -->
+      <div class="md:col-span-1">
+          <label for="conducteur_secondaire_id" class="block text-sm font-medium text-gray-300 mb-1">Secondary Driver</label>
+          <select id="conducteur_secondaire_id"
+                  [(ngModel)]="reservation.conducteur_secondaire_id"
+                  name="conducteur_secondaire_id"
+                  class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"
+                  [disabled]="isLoading">
+              <!-- Options loaded in component, including 'None' -->
+              <option *ngFor="let driver of secondaryDriverOptions" [ngValue]="driver.id">
+                  {{ driver.display_name }}
+              </option>
+          </select>
+          <!-- Add validation hint if needed -->
+          <!-- <div *ngIf="reservation.conducteur_secondaire_id === reservation.client_id && reservation.client_id !== null" class="text-yellow-400 text-xs pt-1">
+               Cannot be the same as the primary client.
+           </div> -->
+      </div>
+
+    </div> <!-- End Grid -->
 
     <!-- Action Buttons -->
-    <div class="flex justify-end space-x-3 pt-4">
+    <div class="flex justify-end items-center space-x-3 pt-8 mt-6 border-t border-gray-700">
       <button type="button" (click)="cancel()"
-              class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-        Cancel
+              [disabled]="isLoading"
+              class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50 shadow-sm">
+        <i class="fa-solid fa-times mr-1"></i> Cancel
       </button>
       <button type="submit"
               [disabled]="reservationForm.invalid || isLoading"
-              [class.opacity-50]="reservationForm.invalid || isLoading"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:cursor-not-allowed">
-        {{ submitButtonText }}
-        <span *ngIf="isLoading">...</span>
+              [class.opacity-60]="reservationForm.invalid || isLoading"
+              [class.cursor-not-allowed]="reservationForm.invalid || isLoading"
+              class="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50">
+         <span *ngIf="!isLoading">
+            <i class="fa-solid {{ isEditMode ? 'fa-save' : 'fa-plus' }} mr-2"></i> {{ submitButtonText }}
+         </span>
+         <span *ngIf="isLoading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Saving...
+          </span>
       </button>
     </div>
   </form>
