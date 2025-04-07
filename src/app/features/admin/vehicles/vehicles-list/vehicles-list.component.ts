@@ -14,6 +14,7 @@ type SortableColumn = keyof Voiture | ''; // Allow empty string for no sort
   styleUrls: ['./vehicles-list.component.css']
 })
 export class VehiclesListComponent implements OnInit {
+  isLoading = false;
 
   allVoitures: Voiture[] = []; // Holds the original unfiltered list
   voitures: Voiture[] = [];     // Holds the currently displayed list (filtered and sorted)

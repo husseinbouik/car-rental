@@ -1,78 +1,95 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <!-- Header Controls: Search & Export -->
-  <div class="flex justify-between items-center mb-4">
-    <input type="text" [(ngModel)]="searchTerm" (input)="onSearchInput()"
-      placeholder="Search vehicles..."
-      class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600"> <!-- Added background/text/border for better theme matching -->
+<!-- src/app/features/vehicles/vehicle-list/vehicle-list.component.html -->
+<div class="p-4 sm:p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-xl sm:text-2xl font-bold mb-4">Vehicle Management</h2>
 
-    <div class="flex space-x-4">
-      <button (click)="exportToExcel()"
-        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
-        <i class="fa-solid fa-file-excel text-lg mr-2"></i> Export
+  <!-- Header Controls: Search, Export & Create -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-4">
+    <input type="search" #searchInput [(ngModel)]="searchTerm" (input)="onSearchInput()"
+           placeholder="Search by make, model, plate..."
+           class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
+
+    <div class="flex space-x-2 sm:space-x-3">
+      <button (click)="exportToExcel()" title="Export current view to Excel"
+              class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow">
+        <i class="fa-solid fa-file-excel text-base sm:text-lg mr-1 sm:mr-2"></i> Export
       </button>
-      <button (click)="createVoiture()"
-        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
-        <i class="fa-solid fa-plus text-lg mr-2"></i> Create Vehicle
+      <button (click)="createVoiture()" title="Create New Vehicle"
+              class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow">
+         <i class="fa-solid fa-plus text-base sm:text-lg mr-1 sm:mr-2"></i> Create
       </button>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] border border-gray-700 rounded-lg shadow-md"> <!-- Adjusted border color -->
-      <thead>
-        <tr class="bg-[var(--seconday-background-color)] text-[var(--text-color)] text-left">
-          <!-- Make headers clickable for sorting -->
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('id')"> <!-- Added hover effect, adjusted border -->
-            ID <i class="fa-solid ml-2" [ngClass]="getSortIcon('id')"></i>
+  <!-- Vehicles Table -->
+  <div class="overflow-x-auto shadow-md rounded-lg border border-gray-700">
+    <table class="min-w-full w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] text-sm">
+      <thead class="bg-gray-700 text-gray-300">
+        <tr class="text-left text-xs uppercase tracking-wider">
+          <!-- Headers -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('id')">
+            ID <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('marque')">
-            Marque <i class="fa-solid ml-2" [ngClass]="getSortIcon('marque')"></i>
+           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('vname')"> <!-- Consider sorting by vname if available -->
+            Name <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('vname')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('modele')">
-            Modele <i class="fa-solid ml-2" [ngClass]="getSortIcon('modele')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('marque')">
+            Make <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('marque')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('matricule')">
-            Matricule <i class="fa-solid ml-2" [ngClass]="getSortIcon('matricule')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('modele')">
+            Model <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('modele')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('type')">
-            Type <i class="fa-solid ml-2" [ngClass]="getSortIcon('type')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('matricule')">
+            License Plate <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('matricule')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-[var(--hover-background-color)]" (click)="sortTable('prixDeBase')">
-            Prix de Base <i class="fa-solid ml-2" [ngClass]="getSortIcon('prixDeBase')"></i>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('type')">
+            Type <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('type')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-700 text-center">Actions</th> <!-- Actions column is not sortable -->
+           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('carburant')">
+            Fuel <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('carburant')"></i>
+          </th>
+           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('estAutomate')">
+            Trans. <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('estAutomate')"></i>
+          </th>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('prixDeBase')">
+            Base Price <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('prixDeBase')"></i>
+          </th>
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Display message if no vehicles match -->
-         <tr *ngIf="paginatedVoitures.length === 0">
-             <td colspan="7" class="text-center py-4 px-4 border-b border-gray-700">No vehicles found matching your criteria.</td>
+      <tbody class="divide-y divide-gray-700">
+        <!-- Loading Indicator Row -->
+        <tr *ngIf="isLoading"> <!-- Assume isLoading property exists -->
+            <td colspan="10" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading vehicles...</td> <!-- Adjust colspan -->
+        </tr>
+        <!-- No Results Row -->
+         <tr *ngIf="!isLoading && paginatedVoitures.length === 0">
+             <td colspan="10" class="text-center py-4 px-4 text-gray-400"> <!-- Adjust colspan -->
+                {{ searchTerm ? 'No vehicles found matching "' + searchTerm + '".' : 'No vehicles available.' }}
+             </td>
          </tr>
-        <!-- Iterate over paginatedVoitures -->
-        <tr *ngFor="let voiture of paginatedVoitures" class="border-b border-gray-700 transition hover:bg-[var(--hover-background-color)]"> <!-- Added hover effect, adjusted border -->
-          <td class="py-3 px-4">{{ voiture.id }}</td>
-          <td class="py-3 px-4">{{ voiture.marque }}</td>
-          <td class="py-3 px-4">{{ voiture.modele }}</td>
-          <td class="py-3 px-4">{{ voiture.matricule }}</td>
-          <td class="py-3 px-4">{{ voiture.type }}</td>
-          <!-- Consider using a pipe for currency formatting if needed -->
-          <td class="py-3 px-4">{{ voiture.prixDeBase | number:'1.2-2' }}</td> <!-- Example using DecimalPipe -->
-          <td class="py-3 px-4 text-center">
-            <div class="flex justify-center space-x-2">
-              <!-- View Details Button -->
-              <button (click)="viewDetails(voiture)" title="View Details" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600 flex items-center justify-center w-8 h-8"> <!-- Fixed size for consistency -->
-                <i class="fa-solid fa-eye"></i>
+        <!-- Vehicle Data Rows -->
+        <tr *ngFor="let voiture of paginatedVoitures" class="transition hover:bg-[var(--hover-background-color)]">
+          <!-- Data Cells -->
+          <td class="py-2 px-4 font-medium">{{ voiture.id }}</td>
+           <td class="py-2 px-4">{{ voiture.vname ?? 'N/A' }}</td> <!-- Display vname -->
+          <td class="py-2 px-4">{{ voiture.marque ?? 'N/A' }}</td>
+          <td class="py-2 px-4">{{ voiture.modele ?? 'N/A' }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ voiture.matricule ?? 'N/A' }}</td>
+          <td class="py-2 px-4">{{ voiture.type ?? 'N/A' }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ voiture.carburant ?? 'N/A' }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ voiture.estAutomate ? 'Auto' : 'Manual' }}</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ voiture.prixDeBase | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 text-center whitespace-nowrap">
+            <div class="flex justify-center items-center space-x-1 sm:space-x-2">
+              <!-- Action Buttons -->
+              <button (click)="viewDetails(voiture)" title="View Details" class="text-green-400 hover:text-green-600 p-1 text-base">
+                <i class="fa-solid fa-eye fa-fw"></i>
               </button>
-
-              <!-- Edit Button -->
-              <button (click)="editVoiture(voiture)" title="Edit Vehicle" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center w-8 h-8">
-                <i class="fa-solid fa-edit"></i>
+              <button (click)="editVoiture(voiture)" title="Edit Vehicle" class="text-blue-400 hover:text-blue-600 p-1 text-base">
+                <i class="fa-solid fa-edit fa-fw"></i>
               </button>
-
-              <!-- Delete Button -->
-              <button (click)="deleteVoiture(voiture)" title="Delete Vehicle" class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex items-center justify-center w-8 h-8">
-                <i class="fa-solid fa-trash"></i>
+              <button (click)="deleteVoiture(voiture)" title="Delete Vehicle" class="text-red-400 hover:text-red-600 p-1 text-base">
+                <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </div>
           </td>
@@ -81,39 +98,47 @@
     </table>
   </div>
 
-  <!-- Pagination -->
-  <div class="flex justify-between items-center mt-6 text-[var(--text-color)]"> <!-- Increased margin-top, added text color -->
+  <!-- Pagination (Using the style you provided) -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mt-6 text-xs sm:text-sm text-[var(--text-color)] gap-3">
+      <!-- Info Text -->
       <div>
           Showing {{ paginatedVoitures.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
           to {{ Math.min(currentPage * itemsPerPage, voitures.length) }}
           of {{ voitures.length }} entries
-          <span *ngIf="allVoitures.length !== voitures.length">(filtered from {{ allVoitures.length }} total)</span>
+          <span *ngIf="allVoitures.length !== voitures.length" class="text-gray-400 ml-1">(filtered from {{ allVoitures.length }} total)</span>
       </div>
+      <!-- Pagination Controls -->
       <div class="flex items-center">
+        <!-- Previous Button -->
         <button (click)="prevPage()" [disabled]="currentPage === 1"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1}"
-                class="px-3 py-1 border rounded-lg hover:bg-[var(--hover-background-color)] border-gray-600 mx-1"> <!-- Adjusted padding/margin, added border color -->
-          <i class="fa-solid fa-chevron-left"></i> Previous
+                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
+                class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+                aria-label="Go to previous page" title="Previous Page">
+          <i class="fa-solid fa-chevron-left mr-1 text-xs"></i> Previous
         </button>
 
+        <!-- Page number buttons -->
         <div class="mx-1 flex space-x-1">
-          <!-- Page numbers -->
           <button *ngFor="let page of getPages()" (click)="goToPage(page)"
+                  [attr.aria-label]="'Go to page ' + page"
+                  [attr.aria-current]="page === currentPage ? 'page' : null"
                   [ngClass]="{
-                      'bg-blue-500 text-white': page === currentPage,
+                      'bg-blue-500 text-white font-bold border-blue-500': page === currentPage,
                       'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
                   }"
-                  class="px-3 py-1 border rounded-lg text-sm"> <!-- Adjusted padding/size -->
+                  class="px-3 py-1 border rounded-lg text-sm transition-colors duration-150 ease-in-out">
             {{ page }}
           </button>
         </div>
 
+        <!-- Next Button -->
         <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0}"
-                class="px-3 py-1 border rounded-lg hover:bg-[var(--hover-background-color)] border-gray-600 mx-1">
-          Next <i class="fa-solid fa-chevron-right"></i>
+                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages && totalPages !== 0}"
+                class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+                 aria-label="Go to next page" title="Next Page">
+          Next <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
         </button>
       </div>
-  </div>
+  </div> <!-- End Pagination -->
 
 </div>

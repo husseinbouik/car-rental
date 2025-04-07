@@ -25,18 +25,16 @@
     <table class="min-w-full w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] text-sm">
       <thead class="bg-gray-700 text-gray-300">
         <tr class="text-left text-xs uppercase tracking-wider">
-          <!-- Sort primarily by IDs or simple fields -->
+          <!-- Headers -->
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('id')">
             ID <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('dateDebut')">
             Dates <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('dateDebut')"></i>
           </th>
-          <!-- Display Client Name/ID -->
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('client_id')">
             Client <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('client_id')"></i>
           </th>
-          <!-- Display Car Info/ID -->
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('voiture_id')">
             Car <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('voiture_id')"></i>
           </th>
@@ -49,11 +47,10 @@
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('statut')">
             Status <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('statut')"></i>
           </th>
-           <!-- Secondary Driver (Optional Display) -->
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('conducteur_secondaire_id')">
             Sec. Driver <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('conducteur_secondaire_id')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th> <!-- Not sortable -->
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-700">
@@ -69,16 +66,15 @@
          </tr>
         <!-- Reservation Data Rows -->
         <tr *ngFor="let reservation of paginatedReservations" class="transition hover:bg-[var(--hover-background-color)]">
+          <!-- Data Cells -->
           <td class="py-2 px-4 font-medium">{{ reservation.id }}</td>
           <td class="py-2 px-4 whitespace-nowrap">
               <div>{{ reservation.dateDebut | date:'dd/MM/yy HH:mm' }}</div>
               <div class="text-xs text-gray-400">to {{ reservation.dateFin | date:'dd/MM/yy HH:mm' }}</div>
           </td>
-          <!-- Display Client Info -->
           <td class="py-2 px-4">
-              {{ reservation.client?.cname ??  ('ID: ' + reservation.client_id) }}
+              {{ reservation.client?.cname ?? ('ID: ' + reservation.client_id) }}
           </td>
-          <!-- Display Car Info -->
           <td class="py-2 px-4">
               {{ reservation.voiture?.marque ?? '' }} {{ reservation.voiture?.modele ?? reservation.voiture?.vname ?? '' }}
               <span class="text-xs text-gray-400 block">({{ reservation.voiture?.matricule ?? 'ID: ' + reservation.voiture_id }})</span>
@@ -97,12 +93,12 @@
                 {{ reservation.statut }}
               </span>
           </td>
-           <!-- Display Secondary Driver Info -->
           <td class="py-2 px-4">
-              {{ reservation.conducteurSecondaire?.cname ??  (reservation.conducteur_secondaire_id ? ('ID: ' + reservation.conducteur_secondaire_id) : 'N/A') }}
+              {{ reservation.conducteurSecondaire?.cname ?? (reservation.conducteur_secondaire_id ? ('ID: ' + reservation.conducteur_secondaire_id) : 'N/A') }}
           </td>
           <td class="py-2 px-4 text-center whitespace-nowrap">
             <div class="flex justify-center items-center space-x-1 sm:space-x-2">
+              <!-- Action Buttons -->
               <button (click)="viewDetails(reservation)" title="View Details" class="text-green-400 hover:text-green-600 p-1 text-base">
                 <i class="fa-solid fa-eye fa-fw"></i>
               </button>
@@ -120,43 +116,45 @@
   </div>
 
   <!-- Pagination -->
-  <div class="flex flex-col sm:flex-row justify-between items-center mt-4 text-xs sm:text-sm text-[var(--text-color)] gap-3">
-      <div class="text-gray-400">
-          Page {{ currentPage }} of {{ totalPages }}.
-          Showing {{ paginatedReservations.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
-          - {{ Math.min(currentPage * itemsPerPage, reservations.length) }}
-          of {{ reservations.length }} reservations
-          <span *ngIf="allReservations.length !== reservations.length" class="ml-1">(filtered from {{ allReservations.length }} total)</span>
-      </div>
-      <!-- Pagination Controls -->
-      <div class="flex items-center" *ngIf="totalPages > 1">
-        <button (click)="prevPage()" [disabled]="currentPage === 1"
-                title="Previous Page"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
-                class="px-3 py-1 border rounded-l-lg border-gray-600">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
+  <div class="flex flex-col sm:flex-row justify-between items-center mt-6 text-xs sm:text-sm text-[var(--text-color)] gap-3">
+    <!-- Info Text -->
+    <div>
+        Showing {{ paginatedReservations.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
+        to {{ Math.min(currentPage * itemsPerPage, reservations.length) }}
+        of {{ reservations.length }} entries
+        <span *ngIf="allReservations.length !== reservations.length" class="text-gray-400 ml-1">(filtered from {{ allReservations.length }} total)</span>
+    </div>
+    <!-- Pagination Controls -->
+    <div class="flex items-center">
+      <!-- Previous Button -->
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+              [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
+              class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+              aria-label="Go to previous page" title="Previous Page">
+        <i class="fa-solid fa-chevron-left mr-1 text-xs"></i> Previous
+      </button>
 
-        <!-- Page number buttons -->
-        <div class="flex border-t border-b border-gray-600">
-          <button *ngFor="let page of getPages()" (click)="goToPage(page)"
-                  [attr.aria-current]="page === currentPage ? 'page' : null"
-                  [ngClass]="{
-                      'bg-blue-600 text-white border-blue-600 font-bold': page === currentPage,
-                      'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
-                  }"
-                  class="px-3 py-1 border-l border-r border-gray-600 text-xs">
-            {{ page }}
-          </button>
-        </div>
-
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-                title="Next Page"
-                [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages}"
-                class="px-3 py-1 border rounded-r-lg border-gray-600">
-           <i class="fa-solid fa-chevron-right"></i>
+      <!-- Page number buttons -->
+      <div class="mx-1 flex space-x-1">
+        <button *ngFor="let page of getPages()" (click)="goToPage(page)"
+                [attr.aria-label]="'Go to page ' + page"
+                [attr.aria-current]="page === currentPage ? 'page' : null"
+                [ngClass]="{
+                    'bg-blue-500 text-white font-bold border-blue-500': page === currentPage,
+                    'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
+                }"
+                class="px-3 py-1 border rounded-lg text-sm transition-colors duration-150 ease-in-out">
+          {{ page }}
         </button>
       </div>
-  </div>
 
+      <!-- Next Button -->
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0"
+              [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages && totalPages !== 0}"
+              class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+               aria-label="Go to next page" title="Next Page">
+        Next <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+      </button>
+    </div>
+</div> <!-- End Pagination -->
 </div>

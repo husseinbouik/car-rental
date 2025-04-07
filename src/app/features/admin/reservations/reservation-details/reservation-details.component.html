@@ -1,72 +1,151 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Reservation Details</h2>
+<div class="p-6 sm:p-8 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-xl rounded-lg max-w-4xl mx-auto my-8">
+  <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">Reservation Details</h2>
 
-  <!-- Display Reservation Details -->
-  <div *ngIf="reservation" class="space-y-4">
-    <!-- ID -->
-    <div>
-      <label class="block text-sm font-medium">ID:</label>
-      <p class="mt-1">{{ reservation?.id }}</p>
-    </div>
+    <button *ngIf="reservation && reservation.id" (click)="goToEdit()"
+            title="Edit Reservation"
+            class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
+       <i class="fa-solid fa-edit mr-2"></i> Edit
+    </button>
+  </div>
 
-    <!-- Acompte -->
-    <div>
-      <label class="block text-sm font-medium">Acompte:</label>
-      <p class="mt-1">{{ reservation?.acompte }}</p>
-    </div>
 
-    <!-- Date Début -->
-    <div>
-      <label class="block text-sm font-medium">Date Début:</label>
-      <p class="mt-1">{{ reservation?.dateDebut | date: 'medium' }}</p>
-    </div>
+  <div *ngIf="isLoading" class="text-center my-10 text-gray-400">
+    <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-sm">Loading reservation details...</p>
+  </div>
 
-    <!-- Date Fin -->
-    <div>
-      <label class="block text-sm font-medium">Date Fin:</label>
-      <p class="mt-1">{{ reservation?.dateFin | date: 'medium' }}</p>
-    </div>
 
-    <!-- Montant Total -->
-    <div>
-      <label class="block text-sm font-medium">Montant Total:</label>
-      <p class="mt-1">{{ reservation?.montantTotal }}</p>
-    </div>
-
-    <!-- Statut -->
-    <div>
-      <label class="block text-sm font-medium">Statut:</label>
-      <p class="mt-1">{{ reservation?.statut }}</p>
-    </div>
-
-    <!-- Client ID -->
-    <div>
-      <label class="block text-sm font-medium">Client ID:</label>
-      <p class="mt-1">{{ reservation.client_id }}</p>
-    </div>
-
-    <!-- Conducteur Secondaire ID -->
-    <div>
-      <label class="block text-sm font-medium">Conducteur Secondaire ID:</label>
-      <p class="mt-1">{{ reservation.conducteur_secondaire_id }}</p>
-    </div>
-
-    <!-- Voiture ID -->
-    <div>
-      <label class="block text-sm font-medium">Voiture ID:</label>
-      <p class="mt-1">{{ reservation.voiture_id }}</p>
+  <div *ngIf="!isLoading && errorMessage" aria-live="assertive" class="my-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+    <div class="flex items-center">
+      <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
+      <span>{{ errorMessage }}</span>
     </div>
   </div>
 
-  <!-- Display if Reservation is not found -->
-  <div *ngIf="!reservation" class="text-red-500">
-    <p>Reservation not found.</p>
+
+  <div *ngIf="!isLoading && reservation" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-sm">
+
+
+    <div class="space-y-4">
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-200">Reservation Info</h3>
+      <div>
+        <dt class="font-medium text-gray-400">Reservation ID:</dt>
+        <dd class="mt-1">{{ reservation.id }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Status:</dt>
+        <dd class="mt-1">
+          <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full"
+                [ngClass]="{
+                    'bg-yellow-200 text-yellow-900': reservation.statut === 'Pending',
+                    'bg-blue-200 text-blue-900': reservation.statut === 'Confirmed',
+                    'bg-green-200 text-green-900': reservation.statut === 'Completed',
+                    'bg-red-200 text-red-900': reservation.statut === 'Cancelled',
+                    'bg-gray-300 text-gray-800': !['Pending', 'Confirmed', 'Completed', 'Cancelled'].includes(reservation.statut ?? '')
+                }">
+            {{ reservation.statut }}
+          </span>
+        </dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Start Date & Time:</dt>
+        <dd class="mt-1">{{ reservation.dateDebut | date: 'EEEE, MMMM d, y, h:mm a' }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">End Date & Time:</dt>
+        <dd class="mt-1">{{ reservation.dateFin | date: 'EEEE, MMMM d, y, h:mm a' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Total Amount:</dt>
+        <dd class="mt-1">{{ reservation.montantTotal | number:'1.2-2' }} €</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Deposit Paid (Acompte):</dt>
+        <dd class="mt-1">{{ reservation.acompte | number:'1.2-2' }} €</dd>
+      </div>
+    </div>
+
+
+    <div class="space-y-4">
+
+
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-200">Client</h3>
+      <div *ngIf="reservation.client; else noClientData">
+        <div>
+          <dt class="font-medium text-gray-400">Name:</dt>
+          <dd class="mt-1">{{ reservation.client.cname ?? 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-400">Contact:</dt>
+          <dd class="mt-1">{{ reservation.client.tel ?? 'N/A' }}</dd>
+        </div>
+         <div>
+          <dt class="font-medium text-gray-400">CIN:</dt>
+          <dd class="mt-1">{{ reservation.client.cin ?? 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-400">Permis:</dt>
+          <dd class="mt-1">{{ reservation.client.permis ?? 'N/A' }}</dd>
+        </div>
+
+         <a [routerLink]="['/admin/clients/details', reservation.client.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Client Details →</a>
+      </div>
+      <ng-template #noClientData>
+        <dd class="mt-1 text-gray-500">Client details not available (ID: {{ reservation.client_id }})</dd>
+      </ng-template>
+
+
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-200">Vehicle</h3>
+      <div *ngIf="reservation.voiture; else noCarData">
+        <div>
+          <dt class="font-medium text-gray-400">Vehicle:</dt>
+          <dd class="mt-1">{{ reservation.voiture.marque ?? '' }} {{ reservation.voiture.modele ?? reservation.voiture.vname ?? 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-400">Matricule:</dt>
+          <dd class="mt-1">{{ reservation.voiture.matricule ?? 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-400">Type:</dt>
+          <dd class="mt-1">{{ reservation.voiture.type ?? 'N/A' }}</dd>
+        </div>
+
+        <a [routerLink]="['/admin/vehicles/details', reservation.voiture.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Vehicle Details →</a>
+      </div>
+       <ng-template #noCarData>
+          <dd class="mt-1 text-gray-500">Vehicle details not available (ID: {{ reservation.voiture_id }})</dd>
+       </ng-template>
+
+
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-200">Secondary Driver</h3>
+      <div *ngIf="reservation.conducteurSecondaire; else noSecondaryDriver">
+        <div>
+          <dt class="font-medium text-gray-400">Name:</dt>
+          <dd class="mt-1">{{ reservation.conducteurSecondaire.cname ?? 'N/A' }}</dd>
+        </div>
+         <div>
+          <dt class="font-medium text-gray-400">Contact:</dt>
+          <dd class="mt-1">{{ reservation.conducteurSecondaire.tel ?? 'N/A' }}</dd>
+        </div>
+
+        <a [routerLink]="['/admin/clients/details', reservation.conducteurSecondaire.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Client Details →</a>
+      </div>
+      <ng-template #noSecondaryDriver>
+        <dd class="mt-1 text-gray-400">None</dd>
+      </ng-template>
+
+    </div>
   </div>
 
-  <!-- Go Back Button -->
-  <div class="mt-6">
-    <button (click)="goBack()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-      Go Back
+
+  <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
+    <button (click)="goBack()"
+            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)]">
+      <i class="fa-solid fa-arrow-left mr-2"></i> Back to List
     </button>
   </div>
 </div>

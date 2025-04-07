@@ -1,103 +1,178 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">
-    {{ isEditMode ? 'Edit Client' : 'Create New Client' }}
-  </h2>
+<!-- Example path: src/app/features/clients/client-form/client-form.component.html -->
+<div class="bg-[var(--seconday-background-color)] text-[var(--text-color)] rounded-lg shadow-xl max-w-4xl mx-auto my-8">
+  <div class="p-6 sm:p-8 border-b border-gray-700">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">
+      {{ pageTitle ?? (isEditMode ? 'Edit Client' : 'Create New Client') }} <!-- Use pageTitle property if available -->
+    </h2>
+    <p class="mt-1 text-sm text-gray-400">
+      {{ isEditMode ? 'Update the client information below.' : 'Enter the details for the new client.' }}
+    </p>
+  </div>
 
-  <!-- Client Form -->
-  <form (ngSubmit)="onSubmit()" class="space-y-4">
-    <!-- CIN -->
-    <div>
-      <label for="cin" class="block text-sm font-medium">CIN:</label>
-      <input type="text" id="cin" [(ngModel)]="client.cin" name="cin"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+  <!-- Form starts after header -->
+  <form (ngSubmit)="onSubmit()" #clientForm="ngForm" class="p-6 sm:p-8" *ngIf="!isLoading || (isEditMode && client)">
+    <!-- Error Message Area -->
+    <div *ngIf="errorMessage" aria-live="assertive" class="mb-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+      <div class="flex items-center">
+        <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
     </div>
 
-    <!-- Name -->
-    <div>
-      <label for="cname" class="block text-sm font-medium">Name:</label>
-      <input type="text" id="cname" [(ngModel)]="client.cname" name="cname"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
+     <!-- Loading Indicator (for edit mode) -->
+    <div *ngIf="isLoading && isEditMode" class="text-center my-10 text-gray-400">
+      <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-sm">Loading client data...</p>
     </div>
 
-    <!-- Address -->
-    <div>
-      <label for="adresse" class="block text-sm font-medium">Address:</label>
-      <input type="text" id="adresse" [(ngModel)]="client.adresse" name="adresse"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
-    </div>
+    <!-- Form Fields Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
 
-    <!-- Phone -->
-    <div>
-      <label for="tel" class="block text-sm font-medium">Phone:</label>
-      <input type="text" id="tel" [(ngModel)]="client.tel" name="tel"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
-    </div>
+      <!-- Basic Information -->
+      <fieldset class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 border-t border-gray-700 pt-5">
+          <legend class="text-base font-medium text-gray-200 mb-3 md:col-span-2">Basic Information</legend>
+          <!-- Name (Required) -->
+          <div class="md:col-span-1">
+            <label for="cname" class="block text-sm font-medium text-gray-300 mb-1">Full Name <span class="text-red-500">*</span></label>
+            <input type="text" id="cname" [(ngModel)]="client.cname" name="cname" required #cname="ngModel"
+                   [class.border-red-500]="cname.invalid && (cname.dirty || cname.touched)"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+            <div *ngIf="cname.invalid && (cname.dirty || cname.touched)" class="text-red-400 text-xs pt-1">
+                <span *ngIf="cname.errors?.['required']">Client name is required.</span>
+            </div>
+          </div>
 
-    <!-- Nationality -->
-    <div>
-      <label for="nationalite" class="block text-sm font-medium">Nationality:</label>
-      <input type="text" id="nationalite" [(ngModel)]="client.nationalite" name="nationalite"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        required>
-    </div>
+          <!-- Phone (Required) -->
+          <div class="md:col-span-1">
+            <label for="tel" class="block text-sm font-medium text-gray-300 mb-1">Phone Number <span class="text-red-500">*</span></label>
+            <input type="tel" id="tel" [(ngModel)]="client.tel" name="tel" required #tel="ngModel" placeholder="+1 (XXX) XXX-XXXX"
+                   [class.border-red-500]="tel.invalid && (tel.dirty || tel.touched)"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+             <div *ngIf="tel.invalid && (tel.dirty || tel.touched)" class="text-red-400 text-xs pt-1">
+                <span *ngIf="tel.errors?.['required']">Phone number is required.</span>
+            </div>
+          </div>
 
-    <!-- CIN Delivre Le -->
-    <div>
-      <label for="cin_delivre_le" class="block text-sm font-medium">CIN Delivre Le:</label>
-      <input type="text" id="cin_delivre_le" [(ngModel)]="client.cinDelivreLe" name="cin_delivre_le"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+          <!-- Address (Required) -->
+          <div class="md:col-span-1">
+            <label for="adresse" class="block text-sm font-medium text-gray-300 mb-1">Address <span class="text-red-500">*</span></label>
+            <input type="text" id="adresse" [(ngModel)]="client.adresse" name="adresse" required #adresse="ngModel"
+                   [class.border-red-500]="adresse.invalid && (adresse.dirty || adresse.touched)"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+             <div *ngIf="adresse.invalid && (adresse.dirty || adresse.touched)" class="text-red-400 text-xs pt-1">
+                <span *ngIf="adresse.errors?.['required']">Address is required.</span>
+            </div>
+          </div>
 
-    <!-- Permis Delivre Au -->
-    <div>
-      <label for="permis_delivre_au" class="block text-sm font-medium">Permis Delivre Au:</label>
-      <input type="text" id="permis_delivre_au" [(ngModel)]="client.permisDelivreAu" name="permis_delivre_au"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+           <!-- Nationality (Required) -->
+          <div class="md:col-span-1">
+            <label for="nationalite" class="block text-sm font-medium text-gray-300 mb-1">Nationality <span class="text-red-500">*</span></label>
+            <input type="text" id="nationalite" [(ngModel)]="client.nationalite" name="nationalite" required #nationalite="ngModel"
+                   [class.border-red-500]="nationalite.invalid && (nationalite.dirty || nationalite.touched)"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+             <div *ngIf="nationalite.invalid && (nationalite.dirty || nationalite.touched)" class="text-red-400 text-xs pt-1">
+                <span *ngIf="nationalite.errors?.['required']">Nationality is required.</span>
+            </div>
+          </div>
 
-    <!-- Permis Delivre Le -->
-    <div>
-      <label for="permis_delivre_le" class="block text-sm font-medium">Permis Delivre Le:</label>
-      <input type="text" id="permis_delivre_le" [(ngModel)]="client.permisDelivreLe" name="permis_delivre_le"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+          <!-- Foreign Address (Optional) -->
+          <div class="md:col-span-2">
+            <label for="adresse_etranger" class="block text-sm font-medium text-gray-300 mb-1">Foreign Address (If applicable)</label>
+            <input type="text" id="adresse_etranger" [(ngModel)]="client.adresseEtranger" name="adresse_etranger"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          </div>
+      </fieldset>
 
-    <!-- Adresse Etranger -->
-    <div>
-      <label for="adresse_etranger" class="block text-sm font-medium">Adresse Etranger:</label>
-      <input type="text" id="adresse_etranger" [(ngModel)]="client.adresseEtranger" name="adresse_etranger"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+      <!-- Identification -->
+      <fieldset class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 border-t border-gray-700 pt-5">
+           <legend class="text-base font-medium text-gray-200 mb-3 md:col-span-2">Identification Documents</legend>
+           <!-- CIN (Required) -->
+           <div class="md:col-span-1">
+            <label for="cin" class="block text-sm font-medium text-gray-300 mb-1">CIN / ID Card Number <span class="text-red-500">*</span></label>
+            <input type="text" id="cin" [(ngModel)]="client.cin" name="cin" required #cin="ngModel"
+                   [class.border-red-500]="cin.invalid && (cin.dirty || cin.touched)"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+              <div *ngIf="cin.invalid && (cin.dirty || cin.touched)" class="text-red-400 text-xs pt-1">
+                <span *ngIf="cin.errors?.['required']">CIN/ID Card number is required.</span>
+              </div>
+           </div>
 
-    <!-- Delivre Le Passeport -->
-    <div>
-      <label for="delivre_le_passeport" class="block text-sm font-medium">Delivre Le Passeport:</label>
-      <input type="text" id="delivre_le_passeport" [(ngModel)]="client.delivreLePasseport" name="delivre_le_passeport"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+           <!-- CIN Issue Date (Optional) -->
+           <div class="md:col-span-1">
+            <label for="cin_delivre_le" class="block text-sm font-medium text-gray-300 mb-1">CIN / ID Card Issue Date</label>
+            <input type="date" id="cin_delivre_le" [(ngModel)]="client.cinDelivreLe" name="cin_delivre_le" placeholder="YYYY-MM-DD"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
 
-    <!-- Passeport -->
-    <div>
-      <label for="passeport" class="block text-sm font-medium">Passeport:</label>
-      <input type="text" id="passeport" [(ngModel)]="client.passeport" name="passeport"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+           <!-- Passport (Optional) -->
+           <div class="md:col-span-1">
+            <label for="passeport" class="block text-sm font-medium text-gray-300 mb-1">Passport Number</label>
+            <input type="text" id="passeport" [(ngModel)]="client.passeport" name="passeport"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
 
-    <!-- Permis -->
-    <div>
-      <label for="permis" class="block text-sm font-medium">Permis:</label>
-      <input type="text" id="permis" [(ngModel)]="client.permis" name="permis"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
-    </div>
+            <!-- Passport Issuer (Optional) -->
+           <div class="md:col-span-1">
+            <label for="delivre_le_passeport" class="block text-sm font-medium text-gray-300 mb-1">Passport Issuer</label> <!-- Assuming this is the issuer name/authority -->
+            <input type="text" id="delivre_le_passeport" [(ngModel)]="client.delivreLePasseport" name="delivre_le_passeport"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
+      </fieldset>
 
-    <!-- Submit Button -->
-    <div class="flex justify-end">
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-        Create Client
+
+      <!-- Driving License -->
+       <fieldset class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-5 border-t border-gray-700 pt-5">
+           <legend class="text-base font-medium text-gray-200 mb-3 md:col-span-3">Driving License Information</legend>
+           <!-- License Number (Optional, maybe required based on context?) -->
+           <div class="md:col-span-1">
+            <label for="permis" class="block text-sm font-medium text-gray-300 mb-1">License Number</label>
+            <input type="text" id="permis" [(ngModel)]="client.permis" name="permis" #permis="ngModel"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
+
+           <!-- License Issue Date (Optional) -->
+           <div class="md:col-span-1">
+            <label for="permis_delivre_le" class="block text-sm font-medium text-gray-300 mb-1">License Issue Date</label>
+            <input type="date" id="permis_delivre_le" [(ngModel)]="client.permisDelivreLe" name="permis_delivre_le" placeholder="YYYY-MM-DD"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
+
+           <!-- License Issue Location (Optional) -->
+           <div class="md:col-span-1">
+            <label for="permis_delivre_au" class="block text-sm font-medium text-gray-300 mb-1">License Issue Location</label>
+            <input type="text" id="permis_delivre_au" [(ngModel)]="client.permisDelivreAu" name="permis_delivre_au"
+                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+           </div>
+       </fieldset>
+
+    </div> <!-- End Main Grid -->
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end items-center space-x-3 pt-8 mt-6 border-t border-gray-700">
+      <button type="button" (click)="cancel()"
+              [disabled]="isLoading"
+              class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50 shadow-sm">
+        <i class="fa-solid fa-times mr-1"></i> Cancel
+      </button>
+      <button type="submit"
+              [disabled]="clientForm.invalid || isLoading"
+              [class.opacity-60]="clientForm.invalid || isLoading"
+              [class.cursor-not-allowed]="clientForm.invalid || isLoading"
+              class="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50">
+         <span *ngIf="!isLoading">
+            <i class="fa-solid {{ isEditMode ? 'fa-save' : 'fa-plus' }} mr-2"></i>
+            {{ submitButtonText ?? (isEditMode ? 'Save Changes' : 'Create Client') }} <!-- Use submitButtonText property -->
+         </span>
+         <span *ngIf="isLoading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Saving...
+          </span>
       </button>
     </div>
   </form>

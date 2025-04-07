@@ -1,84 +1,102 @@
-<div class="p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Voiture Details</h2>
+<div class="p-6 sm:p-8 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-xl rounded-lg max-w-4xl mx-auto my-8">
+  <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">Vehicle Details</h2>
+    <!-- Edit Button -->
+    <button *ngIf="voiture && voiture.id" (click)="goToEdit()"
+            title="Edit Vehicle"
+            class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
+       <i class="fa-solid fa-edit mr-2"></i> Edit
+    </button>
+  </div>
 
-  <!-- Display Voiture Details -->
-  <div *ngIf="voiture" class="space-y-4">
-    <!-- ID -->
-    <div>
-      <label class="block text-sm font-medium">ID:</label>
-      <p class="mt-1">{{ voiture.id }}</p>
-    </div>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center my-10 text-gray-400">
+    <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-sm">Loading vehicle details...</p>
+  </div>
 
-    <!-- Marque -->
-    <div>
-      <label class="block text-sm font-medium">Marque:</label>
-      <p class="mt-1">{{ voiture.marque }}</p>
-    </div>
-
-    <!-- Modele -->
-    <div>
-      <label class="block text-sm font-medium">Modele:</label>
-      <p class="mt-1">{{ voiture.modele }}</p>
-    </div>
-
-    <!-- Matricule -->
-    <div>
-      <label class="block text-sm font-medium">Matricule:</label>
-      <p class="mt-1">{{ voiture.matricule }}</p>
-    </div>
-
-    <!-- Type -->
-    <div>
-      <label class="block text-sm font-medium">Type:</label>
-      <p class="mt-1">{{ voiture.type }}</p>
-    </div>
-
-    <!-- Prix de Base -->
-    <div>
-      <label class="block text-sm font-medium">Prix de Base:</label>
-      <p class="mt-1">{{ voiture.prixDeBase }}</p>
-    </div>
-
-    <!-- Capacite -->
-    <div>
-      <label class="block text-sm font-medium">Capacite:</label>
-      <p class="mt-1">{{ voiture.capacite }}</p>
-    </div>
-
-    <!-- Carburant -->
-    <div>
-      <label class="block text-sm font-medium">Carburant:</label>
-      <p class="mt-1">{{ voiture.carburant }}</p>
-    </div>
-
-    <!-- Couleur -->
-    <div>
-      <label class="block text-sm font-medium">Couleur:</label>
-      <p class="mt-1">{{ voiture.couleur }}</p>
-    </div>
-
-    <!-- Est Automate -->
-    <div>
-      <label class="block text-sm font-medium">Est Automate:</label>
-      <p class="mt-1">{{ voiture.estAutomate ? 'Yes' : 'No' }}</p>
-    </div>
-
-    <!-- Vname -->
-    <div>
-      <label class="block text-sm font-medium">Vname:</label>
-      <p class="mt-1">{{ voiture.vname }}</p>
+  <!-- Error State -->
+  <div *ngIf="!isLoading && errorMessage" aria-live="assertive" class="my-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+    <div class="flex items-center">
+      <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
+      <span>{{ errorMessage }}</span>
     </div>
   </div>
 
-  <!-- Display if Voiture is not found -->
-  <div *ngIf="!voiture" class="text-red-500">
-    <p>Voiture not found.</p>
+  <!-- Display Vehicle Details -->
+  <div *ngIf="!isLoading && voiture" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5 text-sm">
+
+    <!-- Column 1 -->
+    <div class="space-y-4">
+      <div>
+        <dt class="font-medium text-gray-400">Vehicle ID:</dt>
+        <dd class="mt-1 font-semibold">{{ voiture.id }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Display Name (Vname):</dt>
+        <dd class="mt-1">{{ voiture.vname ?? 'N/A' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Make (Marque):</dt>
+        <dd class="mt-1">{{ voiture.marque ?? 'N/A' }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Model:</dt>
+        <dd class="mt-1">{{ voiture.modele ?? 'N/A' }}</dd>
+      </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="space-y-4">
+       <div>
+        <dt class="font-medium text-gray-400">License Plate (Matricule):</dt>
+        <dd class="mt-1">{{ voiture.matricule ?? 'N/A' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Type:</dt>
+        <dd class="mt-1">{{ voiture.type ?? 'N/A' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Color:</dt>
+        <dd class="mt-1">{{ voiture.couleur ?? 'N/A' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Capacity:</dt>
+        <dd class="mt-1">{{ voiture.capacite ? voiture.capacite + ' seats' : 'N/A' }}</dd>
+      </div>
+    </div>
+
+     <!-- Column 3 -->
+    <div class="space-y-4">
+      <div>
+        <dt class="font-medium text-gray-400">Fuel Type:</dt>
+        <dd class="mt-1">{{ voiture.carburant ?? 'N/A' }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Transmission:</dt>
+        <dd class="mt-1">{{ voiture.estAutomate === undefined ? 'N/A' : (voiture.estAutomate ? 'Automatic' : 'Manual') }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Base Price:</dt>
+        <dd class="mt-1">{{ voiture.prixDeBase | number:'1.2-2' }} €</dd> <!-- Assuming Euro -->
+      </div>
+      <!-- Add photo display if photoPath exists in model -->
+      <!-- <div *ngIf="voiture.photoPath">
+           <dt class="font-medium text-gray-400">Photo:</dt>
+           <dd class="mt-1"><img [src]="voiture.photoPath" alt="Vehicle photo" class="max-w-xs rounded"></dd>
+      </div> -->
+    </div>
+
   </div>
 
   <!-- Go Back Button -->
-  <div class="mt-6">
-    <button (click)="goBack()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-      Go Back
+  <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
+    <button (click)="goBack()"
+            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)]">
+      <i class="fa-solid fa-arrow-left mr-2"></i> Back to List
     </button>
   </div>
 </div>
