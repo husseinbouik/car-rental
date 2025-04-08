@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+// src/app/services/login.service.ts
+import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,17 @@ export class LoginService {
   private apiUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
+// Add these methods to your existing LoginService
+hasRole(roleName: string): boolean {
+  const token = this.getDecodedToken();
+  if (!token || !token.authorities) return false;
+  return token.authorities.includes(roleName);
+}
 
+private getDecodedToken(): any {
+  const token = this.getToken();
+  return token ? new JwtHelperService().decodeToken(token) : null;
+}
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 export interface PaymentExpense {
   id: number;
-  type: string; // e.g., "Payment", "Expense"
+  type: string; 
   amount: number;
   date: Date;
   description: string;

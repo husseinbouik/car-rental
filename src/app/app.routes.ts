@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
 import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
+import { AccessDeniedComponent } from './features/access-denied/access-denied.component';
 
 export const routes: Routes = [
   // Admin Routes
@@ -26,7 +27,10 @@ export const routes: Routes = [
       },
     ],
   },
-
+  {
+    path: 'access-denied',
+    component: AccessDeniedComponent
+  },
   // Handle 404
   { path: '**', redirectTo: '' },
 ];

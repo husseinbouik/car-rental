@@ -6,7 +6,7 @@ import { MOCK_USERS } from './mock-users';
 @Injectable({
   providedIn: 'root'
 })
-export class UserSeUserManagementServicervice {
+export class UserManagementService {
   constructor() {}
 
   getUsers(): Observable<User[]> {

@@ -18,12 +18,18 @@ import { AdminRoutingModule } from '../admin/admin-routing.module';
 import { RouterModule } from '@angular/router';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { ResetPasswordRequestComponent } from './reset-password-request/reset-password-request.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ResetPasswordRequestComponent,
+    ResetPasswordComponent,
+    VerifyEmailComponent
   ],
   imports: [
     CommonModule,

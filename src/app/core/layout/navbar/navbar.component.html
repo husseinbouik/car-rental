@@ -13,6 +13,6 @@
       <fa-icon [icon]="faSun" *ngIf="!isDarkMode"></fa-icon> <fa-icon [icon]="faMoon" *ngIf="isDarkMode"></fa-icon> {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
     </button>
     <span>👤 Admin</span>
-    <button class="bg-[var(--primary-color)] text-white px-3 py-1 rounded-md">Logout</button>
+    <button (click)="simpleLogout()" class="bg-[var(--primary-color)] text-white px-3 py-1 rounded-md">Logout</button>
   </div>
 </nav>

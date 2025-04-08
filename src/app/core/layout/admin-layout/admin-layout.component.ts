@@ -20,6 +20,6 @@ export class AdminLayoutComponent {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
   isLoginPage(): boolean {
-    return this.router.url.includes('/login'); // Modify if your login route is different
+    return this.router.url.includes('/login') || this.router.url.includes('/reset-password-request')|| this.router.url.includes('/signup')|| this.router.url.includes('/reset-password')|| this.router.url.includes('/verify-email');
   }
 }

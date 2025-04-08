@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, Inject, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,8 +19,7 @@ export class NavbarComponent {
   faMoon = faMoon;
   @Output() toggleSidebarEvent = new EventEmitter<void>();
   isDarkMode = false; // Initial state: light mode
-
-  constructor(private translate: TranslateService, @Inject(PLATFORM_ID) private platformId: object) {
+  constructor(private translate: TranslateService, @Inject(PLATFORM_ID) private platformId: object, private router: Router) {
     this.translate.setDefaultLang('en');  // Default language
     this.translate.use('en');  // Use English initially
   }
@@ -33,7 +33,11 @@ export class NavbarComponent {
       }
     }
   }
-
+  simpleLogout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/login']);
+  }
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
     document.body.classList.toggle('dark-mode', this.isDarkMode);

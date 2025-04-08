@@ -45,17 +45,11 @@ export class SignupComponent {
       const { username, password, email } = this.signupForm.value;
 
       this.signupService.register({ username, password, email }).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-
-          // Use the message from the backend response
-          this.successMessage = response.message || "Inscription réussie! Redirection vers la page de connexion...";
-
-          // Navigate after 3 seconds
-          setTimeout(() => {
-            this.router.navigate(['/login'], { state: { registrationSuccess: true } });
-          }, 3000);
-        },
+// In the signup component's onSubmit method
+next: (response) => {
+  this.isLoading = false;
+  this.successMessage = "Inscription réussie! Un email de vérification a été envoyé à votre adresse email.";
+},
         error: (error) => {
           this.isLoading = false;
 
