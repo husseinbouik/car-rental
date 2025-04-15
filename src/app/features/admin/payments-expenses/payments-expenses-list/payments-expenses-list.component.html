@@ -1,1 +1,107 @@
-<p>payments-expenses-list works!</p>
+<!-- src/app/features/payments-expenses/payment-expense-list/payment-expense-list.component.html -->
+<div class="p-4 sm:p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-xl sm:text-2xl font-bold mb-4">Payment & Expense Management</h2> <!-- Renamed title -->
+
+  <!-- Header Controls -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-4">
+    <input type="search" #searchInput [(ngModel)]="searchTerm" (input)="onSearchInput()"
+           placeholder="Search category, description, amount..."
+           class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
+    <div class="flex space-x-2 sm:space-x-3">
+      <button (click)="exportToExcel()" title="Export current view to Excel"
+              class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow">
+        <i class="fa-solid fa-file-excel text-base sm:text-lg mr-1 sm:mr-2"></i> Export
+      </button>
+      <button (click)="createPaymentExpense()" title="Record New Payment/Expense"
+              class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow">
+         <i class="fa-solid fa-plus text-base sm:text-lg mr-1 sm:mr-2"></i> Add Record <!-- Renamed button text -->
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto shadow-md rounded-lg border border-gray-700">
+    <table class="min-w-full w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] text-sm">
+      <thead class="bg-gray-700 text-gray-300">
+        <tr class="text-left text-xs uppercase tracking-wider">
+          <!-- Headers -->
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('id')">ID <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i></th>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('date')">Date <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('date')"></i></th>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('categorie')">Category <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('categorie')"></i></th>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap text-right" (click)="sortTable('montant')">Amount <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('montant')"></i></th>
+          <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('description')">Description <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('description')"></i></th>
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-700">
+        <!-- Loading Row -->
+        <tr *ngIf="isLoading"><td colspan="6" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading records...</td></tr> <!-- Updated text -->
+        <!-- No Results Row -->
+        <tr *ngIf="!isLoading && paginatedPaymentExpenses.length === 0"> <!-- Renamed variable -->
+          <td colspan="6" class="text-center py-4 px-4 text-gray-400">
+            {{ searchTerm ? 'No records found matching "' + searchTerm + '".' : 'No payment/expense records available.' }} <!-- Updated text -->
+          </td>
+        </tr>
+        <!-- Data Rows -->
+        <tr *ngFor="let expense of paginatedPaymentExpenses" class="transition hover:bg-[var(--hover-background-color)]"> <!-- Renamed variable -->
+          <td class="py-2 px-4 font-medium">{{ expense.id }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ expense.date | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="py-2 px-4">{{ expense.categorie ?? 'N/A' }}</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ expense.montant | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 truncate max-w-sm" [title]="expense.description">{{ expense.description ?? 'N/A' }}</td>
+          <td class="py-2 px-4 text-center whitespace-nowrap">
+            <div class="flex justify-center items-center space-x-1 sm:space-x-2">
+              <!-- Actions -->
+              <button (click)="viewDetails(expense)" title="View Details" class="text-green-400 hover:text-green-600 p-1 text-base"><i class="fa-solid fa-eye fa-fw"></i></button>
+              <button (click)="editPaymentExpense(expense)" title="Edit Record" class="text-blue-400 hover:text-blue-600 p-1 text-base"><i class="fa-solid fa-edit fa-fw"></i></button> <!-- Renamed method call -->
+              <button (click)="deletePaymentExpense(expense)" title="Delete Record" class="text-red-400 hover:text-red-600 p-1 text-base"><i class="fa-solid fa-trash fa-fw"></i></button> <!-- Renamed method call -->
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mt-6 text-xs sm:text-sm text-[var(--text-color)] gap-3">
+    <!-- Info Text -->
+    <div> <!-- Updated variable names -->
+      Showing {{ paginatedPaymentExpenses.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
+      to {{ Math.min(currentPage * itemsPerPage, paymentExpenses.length) }}
+      of {{ paymentExpenses.length }} records <!-- Renamed text -->
+      <span *ngIf="allPaymentExpenses.length !== paymentExpenses.length" class="text-gray-400 ml-1">(filtered from {{ allPaymentExpenses.length }} total)</span>
+    </div>
+    <!-- Controls (Logic remains the same) -->
+    <div class="flex items-center">
+      <!-- Previous Button -->
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+              [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
+              class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+              aria-label="Go to previous page" title="Previous Page">
+        <i class="fa-solid fa-chevron-left mr-1 text-xs"></i> Previous
+      </button>
+
+      <!-- Page number buttons -->
+      <div class="mx-1 flex space-x-1">
+        <button *ngFor="let page of getPages()" (click)="goToPage(page)"
+                [attr.aria-label]="'Go to page ' + page"
+                [attr.aria-current]="page === currentPage ? 'page' : null"
+                [ngClass]="{
+                    'bg-blue-500 text-white font-bold border-blue-500': page === currentPage,
+                    'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
+                }"
+                class="px-3 py-1 border rounded-lg text-sm transition-colors duration-150 ease-in-out">
+          {{ page }}
+        </button>
+      </div>
+
+      <!-- Next Button -->
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0"
+              [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages && totalPages !== 0}"
+              class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
+               aria-label="Go to next page" title="Next Page">
+        Next <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+      </button>
+    </div>
+  </div>
+</div>

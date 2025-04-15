@@ -2,16 +2,22 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PaymentsExpensesRoutingModule } from './payments-expenses-routing.module';
-import { PaymentsExpensesListComponent } from './payments-expenses-list/payments-expenses-list.component';
+import { PaymentExpensesListComponent } from './payments-expenses-list/payments-expenses-list.component';
+import { PaymentExpensesCreateComponent } from './payment-expenses-create/payment-expenses-create.component';
+import { PaymentExpensesDetailsComponent } from './payment-expenses-details/payment-expenses-details.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
-    PaymentsExpensesListComponent
+    PaymentExpensesListComponent,
+    PaymentExpensesCreateComponent,
+    PaymentExpensesDetailsComponent
   ],
   imports: [
     CommonModule,
-    PaymentsExpensesRoutingModule
+    PaymentsExpensesRoutingModule,
+    FormsModule
   ]
 })
 export class PaymentsExpensesModule { }

@@ -1,7 +1,7 @@
 export interface PaymentExpense {
-  id: number;
-  type: string; 
-  amount: number;
-  date: Date;
+  id: number | null;
+  montant: number;
+  categorie: string;
+  date: string;
   description: string;
 }

@@ -1,1 +1,114 @@
-<p>payment-expenses-create works!</p>
+<!-- src/app/features/payments-expenses/payment-expenses-create/payment-expenses-create.component.html -->
+<div class="bg-[var(--seconday-background-color)] text-[var(--text-color)] rounded-lg shadow-xl max-w-lg mx-auto my-8">
+  <!-- Header -->
+  <div class="p-6 sm:p-8 border-b border-gray-700">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">
+      {{ pageTitle }} <!-- Dynamic Title -->
+    </h2>
+    <p class="mt-1 text-sm text-gray-400">
+      {{ isEditMode ? 'Update the record details below.' : 'Enter the details for the new payment/expense.' }}
+    </p>
+  </div>
+
+  <!-- Form Section -->
+  <form (ngSubmit)="onSubmit()" #expenseForm="ngForm" class="p-6 sm:p-8" *ngIf="!isLoading || (isEditMode && paymentExpense)">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" aria-live="assertive" class="mb-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+        <div class="flex items-center"><i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i><span>{{ errorMessage }}</span></div>
+    </div>
+
+    <!-- Loading Indicator (shown only during initial load in edit mode) -->
+    <div *ngIf="isLoading && isEditMode && !paymentExpense.id" class="text-center my-10 text-gray-400">
+        <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <p class="text-sm">Loading record data...</p>
+    </div>
+
+    <!-- Form Fields -->
+    <div class="space-y-5">
+
+      <!-- Date (Required) -->
+      <div>
+        <label for="date" class="block text-sm font-medium text-gray-300 mb-1">Date & Time <span class="text-red-500">*</span></label>
+        <input type="datetime-local" id="date" [(ngModel)]="paymentExpense.date" name="date" required #date="ngModel"
+               [class.border-red-500]="date.invalid && (date.dirty || date.touched)"
+               [disabled]="isLoading"
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+        <div *ngIf="date.invalid && (date.dirty || date.touched)" class="text-red-400 text-xs pt-1">
+          <span *ngIf="date.errors?.['required']">Date and time are required.</span>
+        </div>
+      </div>
+
+      <!-- Category (Required) -->
+      <div>
+        <label for="categorie" class="block text-sm font-medium text-gray-300 mb-1">Category <span class="text-red-500">*</span></label>
+         <select id="categorie" [(ngModel)]="paymentExpense.categorie" name="categorie" required #categorie="ngModel"
+                 [class.border-red-500]="categorie.invalid && (categorie.dirty || categorie.touched)"
+                 [disabled]="isLoading"
+                 class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+            <option value="" disabled>-- Select a Category --</option>
+            <option *ngFor="let cat of expenseCategories" [value]="cat">{{ cat }}</option>
+         </select>
+         <div *ngIf="categorie.invalid && (categorie.dirty || categorie.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="categorie.errors?.['required']">Category is required.</span>
+         </div>
+      </div>
+
+       <!-- Amount (Required) -->
+       <div>
+        <label for="montant" class="block text-sm font-medium text-gray-300 mb-1">Amount (€) <span class="text-red-500">*</span></label>
+        <input type="number" id="montant" [(ngModel)]="paymentExpense.montant" name="montant" required min="0.01" step="0.01" #montant="ngModel" placeholder="e.g., 45.50"
+               [class.border-red-500]="montant.invalid && (montant.dirty || montant.touched)"
+               [disabled]="isLoading"
+               class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+         <div *ngIf="montant.invalid && (montant.dirty || montant.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="montant.errors?.['required']">Amount is required.</span>
+            <span *ngIf="montant.errors?.['min']">Amount must be positive.</span>
+         </div>
+      </div>
+
+      <!-- Description (Optional) -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+        <textarea id="description" [(ngModel)]="paymentExpense.description" name="description" rows="3" placeholder="Add any relevant details..."
+               [disabled]="isLoading"
+               class="form-textarea block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500"></textarea>
+      </div>
+
+    </div> <!-- End Form Fields -->
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end items-center space-x-3 pt-8 mt-6 border-t border-gray-700">
+      <button type="button" (click)="cancel()"
+              [disabled]="isLoading"
+              class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50 shadow-sm">
+        <i class="fa-solid fa-times mr-1"></i> Cancel
+      </button>
+      <button type="submit"
+              [disabled]="expenseForm.invalid || isLoading"
+              [class.opacity-60]="expenseForm.invalid || isLoading"
+              [class.cursor-not-allowed]="expenseForm.invalid || isLoading"
+              class="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50">
+         <span *ngIf="!isLoading">
+            <i class="fa-solid {{ isEditMode ? 'fa-save' : 'fa-plus' }} mr-2"></i>
+            {{ submitButtonText }} <!-- Dynamic button text -->
+         </span>
+         <span *ngIf="isLoading" class="flex items-center"> <!-- Show spinner only during submission -->
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            Saving...
+          </span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Show initial loading indicator covering the whole form area -->
+   <div *ngIf="isLoading && isEditMode && !paymentExpense.id" class="absolute inset-0 flex items-center justify-center bg-[var(--seconday-background-color)]/70 z-10">
+     <div class="text-center text-gray-400">
+       <svg class="animate-spin h-8 w-8 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+       </svg>
+       <p class="text-sm">Loading...</p>
+     </div>
+   </div>
+
+</div>
