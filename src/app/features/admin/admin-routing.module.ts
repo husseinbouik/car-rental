@@ -4,11 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role-guard.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { AccessDeniedComponent } from '../access-denied/access-denied.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'access-denied',
     pathMatch: 'full'
   },
   {
@@ -58,7 +59,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard'
+    component:AccessDeniedComponent
   }
 ];
 

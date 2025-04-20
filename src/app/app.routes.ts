@@ -32,7 +32,7 @@ export const routes: Routes = [
     component: AccessDeniedComponent
   },
   // Handle 404
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'access-denied' },
 ];
 
 @NgModule({
