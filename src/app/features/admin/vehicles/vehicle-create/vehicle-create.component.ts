@@ -2,43 +2,38 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { VehicleService } from './../vehicle.service'; // Corrected path
-import { Voiture } from '../vehicle.model';         // Ensure path is correct
+import { VehicleService } from './../vehicle.service';
+import { Voiture } from '../vehicle.model';
 
 @Component({
   selector: 'app-vehicle-create',
-  standalone: false, // Or true if using standalone
+  standalone: false,
   templateUrl: './vehicle-create.component.html',
   styleUrls: ['./vehicle-create.component.css']
 })
 export class VehicleCreateComponent implements OnInit {
-
-  // Initialize voiture with default/empty values
   voiture: Voiture = {
-    id: 0, // Or null depending on backend expectation for create
+    id: 0,
     marque: '',
     modele: '',
     matricule: '',
     type: '',
-    prixDeBase: 0, // Use null or undefined if 0 is a valid price to avoid confusion
-    capacite: 0,   // Use null or undefined?
+    prixDeBase: 0,
+    capacite: 0,
     carburant: '',
     couleur: '',
     estAutomate: false,
     vname: ''
-    // photoPath: '' // Add if you have photo uploads
   };
 
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
   isEditMode = false;
   isLoading = false;
   errorMessage: string | null = null;
-  pageTitle = 'Create New Vehicle'; // Dynamic title
-  submitButtonText = 'Create Vehicle'; // Dynamic button text
-  vehicleId: number | null = null; // Store ID for editing
-
-  // Options for dropdowns if needed (e.g., for 'type' or 'carburant')
-  // fuelTypes: string[] = ['Essence', 'Diesel', 'Electric', 'Hybrid'];
-  // vehicleTypes: string[] = ['Berline', 'SUV', 'Hatchback', 'Convertible', 'Truck'];
+  pageTitle = 'Create New Vehicle';
+  submitButtonText = 'Create Vehicle';
+  vehicleId: number | null = null;
 
   constructor(
     private vehicleService: VehicleService,
@@ -47,38 +42,45 @@ export class VehicleCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true; // Start loading indicator
+    this.isLoading = true;
     this.errorMessage = null;
     const idParam = this.route.snapshot.paramMap.get('id');
 
     if (idParam) {
       this.vehicleId = +idParam;
       if (!isNaN(this.vehicleId)) {
-        // --- Edit Mode ---
         this.isEditMode = true;
         this.pageTitle = 'Edit Vehicle';
         this.submitButtonText = 'Save Changes';
-        this.loadVehicleData(this.vehicleId); // Fetch existing data
+        this.loadVehicleData(this.vehicleId);
       } else {
-        // Invalid ID parameter
         this.errorMessage = `Invalid Vehicle ID provided in URL: ${idParam}`;
-        this.isLoading = false; // Stop loading
+        this.isLoading = false;
       }
     } else {
-      // --- Create Mode ---
       this.isEditMode = false;
       this.pageTitle = 'Create New Vehicle';
       this.submitButtonText = 'Create Vehicle';
-      // Initialize numeric fields that might cause issues with required validation if 0
-      this.voiture.prixDeBase = null as any; // Or undefined
-      this.voiture.capacite = null as any;   // Or undefined
-      this.isLoading = false; // No data to load
+      this.voiture.prixDeBase = null as any;
+      this.voiture.capacite = null as any;
+      this.isLoading = false;
     }
   }
 
-  /**
-   * Fetches vehicle data for editing.
-   */
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+
+      // Create image preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   loadVehicleData(id: number): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -90,7 +92,10 @@ export class VehicleCreateComponent implements OnInit {
         next: (data) => {
           if (data) {
             this.voiture = data;
-            console.log("Loaded vehicle data:", this.voiture);
+            if (data.photo) {
+              // If the photo exists, create a preview (assuming backend returns photo data)
+              this.imagePreview = 'data:image/jpeg;base64,' + data.photo;
+            }
           } else {
             this.errorMessage = `Vehicle with ID ${id} not found.`;
           }
@@ -102,23 +107,33 @@ export class VehicleCreateComponent implements OnInit {
       });
   }
 
-  /**
-   * Handles form submission for creating or updating a vehicle.
-   */
   onSubmit(): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    // Ensure numeric values are numbers if they were potentially null/undefined
-    const vehicleDataToSend: Voiture = {
-        ...this.voiture,
-        prixDeBase: Number(this.voiture.prixDeBase ?? 0),
-        capacite: Number(this.voiture.capacite ?? 0),
-    };
+    // Create FormData to handle file upload
+    const formData = new FormData();
+
+    // Append all vehicle data
+    formData.append('vname', this.voiture.vname || '');
+    formData.append('couleur', this.voiture.couleur || '');
+    formData.append('marque', this.voiture.marque || '');
+    formData.append('matricule', this.voiture.matricule || '');
+    formData.append('modele', this.voiture.modele || '');
+    formData.append('carburant', this.voiture.carburant || '');
+    formData.append('capacite', this.voiture.capacite?.toString() || '0');
+    formData.append('type', this.voiture.type || '');
+    formData.append('prixDeBase', this.voiture.prixDeBase?.toString() || '0');
+    formData.append('estAutomate', this.voiture.estAutomate?.toString() || 'false');
+
+    // Append photo if selected
+    if (this.selectedFile) {
+      formData.append('photo', this.selectedFile);
+    }
 
     const operation = this.isEditMode
-      ? this.vehicleService.updateVehicle(vehicleDataToSend) // Ensure service method takes Voiture object
-      : this.vehicleService.createVehicle(vehicleDataToSend);
+      ? this.vehicleService.updateVehicle(this.voiture.id!, formData)
+      : this.vehicleService.createVehicle(formData);
 
     operation
       .pipe(
@@ -127,31 +142,24 @@ export class VehicleCreateComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log(`Vehicle ${this.isEditMode ? 'updated' : 'created'} successfully`, response);
-          this.router.navigate(['/admin/vehicles'], { // Adjust route
+          this.router.navigate(['/admin/vehicles'], {
             state: { successMessage: `Vehicle ${this.isEditMode ? 'updated' : 'created'} successfully!` }
           });
         },
         error: (err: HttpErrorResponse) => {
           console.error(`Error ${this.isEditMode ? 'updating' : 'creating'} vehicle:`, err);
           if (err.error && typeof err.error === 'string' && err.status !== 500) {
-               this.errorMessage = err.error;
-           } else if (err.error && err.error.message) {
-               this.errorMessage = err.error.message;
-           } else {
-               this.errorMessage = `Failed to ${this.isEditMode ? 'update' : 'create'} vehicle. Status: ${err.status} - ${err.statusText || 'Unknown error'}.`;
-           }
-           // Add specific error checks if needed (e.g., matricule already exists)
-           // if (this.errorMessage?.includes('constraint violation')) {
-           //     this.errorMessage = "Failed to save: A vehicle with this license plate (matricule) might already exist.";
-           // }
+            this.errorMessage = err.error;
+          } else if (err.error && err.error.message) {
+            this.errorMessage = err.error.message;
+          } else {
+            this.errorMessage = `Failed to ${this.isEditMode ? 'update' : 'create'} vehicle. Status: ${err.status} - ${err.statusText || 'Unknown error'}.`;
+          }
         }
       });
   }
 
-  /**
-   * Navigates back to the vehicle list.
-   */
   cancel(): void {
-    this.router.navigate(['/admin/vehicles']); // Adjust route
+    this.router.navigate(['/admin/vehicles']);
   }
 }

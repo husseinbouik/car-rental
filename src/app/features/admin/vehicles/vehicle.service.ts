@@ -12,11 +12,7 @@ export class VehicleService {
 
   constructor(private http: HttpClient) {}
 
-  // Function to get authentication headers
   private getAuthHeaders() {
-    console.log(localStorage.getItem('access_token'));
-
-
     return {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -24,32 +20,32 @@ export class VehicleService {
     };
   }
 
-  // Fetch all vehicles
   getVehicles(): Observable<Voiture[]> {
     return this.http.get<Voiture[]>(`${this.apiUrl}/api/voitures`, this.getAuthHeaders());
   }
 
-  // Fetch available vehicles
   getAvailableVehicles(): Observable<Voiture[]> {
     return this.http.get<Voiture[]>(`${this.apiUrl}/api/voitures/disponibles`, this.getAuthHeaders());
   }
 
-  // Fetch a single vehicle by ID
   getVehicleById(id: number): Observable<Voiture> {
     return this.http.get<Voiture>(`${this.apiUrl}/api/voitures/${id}`, this.getAuthHeaders());
   }
 
-  // Create a new vehicle
-  createVehicle(voiture: Voiture): Observable<Voiture> {
-    return this.http.post<Voiture>(`${this.apiUrl}/api/voitures`, voiture, this.getAuthHeaders());
+  createVehicle(formData: FormData): Observable<Voiture> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+    });
+    return this.http.post<Voiture>(`${this.apiUrl}/api/voitures`, formData, { headers });
   }
 
-  // Update an existing vehicle
-  updateVehicle(voiture: Voiture): Observable<Voiture> {
-    return this.http.put<Voiture>(`${this.apiUrl}/api/voitures/${voiture.id}`, voiture, this.getAuthHeaders());
+  updateVehicle(id: number, formData: FormData): Observable<Voiture> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+    });
+    return this.http.put<Voiture>(`${this.apiUrl}/api/voitures/${id}`, formData, { headers });
   }
 
-  // Delete a vehicle by ID
   deleteVehicle(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/api/voitures/${id}`, this.getAuthHeaders());
   }

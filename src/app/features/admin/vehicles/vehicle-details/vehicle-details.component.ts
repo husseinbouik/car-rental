@@ -21,7 +21,7 @@ export class VehicleDetailsComponent implements OnInit {
     private router: Router,
     private vehicleService: VehicleService
   ) {}
-
+  // Other properties and methods...
   ngOnInit(): void {
     this.isLoading = true; // Start loading
     this.errorMessage = null;

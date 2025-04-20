@@ -10,4 +10,5 @@ export interface Voiture {
   prixDeBase: number;
   type?: string;
   vname?: string;
+  photo?: any; // This can be more specific if you know the type
 }

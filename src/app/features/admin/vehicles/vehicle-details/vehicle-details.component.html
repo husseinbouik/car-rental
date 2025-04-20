@@ -1,16 +1,17 @@
-<div class="p-6 sm:p-8 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-xl rounded-lg max-w-4xl mx-auto my-8">
+<div class="p-6 sm:p-8 bg-[var(--primary-background-color)] text-[var(--text-color)] shadow-xl rounded-lg max-w-4xl mx-auto my-8">
+  <!-- Header with Title and Edit Button -->
   <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
     <h2 class="text-xl sm:text-2xl font-semibold leading-tight">Vehicle Details</h2>
     <!-- Edit Button -->
     <button *ngIf="voiture && voiture.id" (click)="goToEdit()"
             title="Edit Vehicle"
             class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
-       <i class="fa-solid fa-edit mr-2"></i> Edit
+      <i class="fa-solid fa-edit mr-2"></i> Edit
     </button>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="text-center my-10 text-gray-400">
+  <!-- Loading and Error States -->
+  <div *ngIf="isLoading" class="text-center text-gray-400">
     <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -18,7 +19,6 @@
     <p class="text-sm">Loading vehicle details...</p>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="!isLoading && errorMessage" aria-live="assertive" class="my-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
     <div class="flex items-center">
       <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
@@ -26,20 +26,20 @@
     </div>
   </div>
 
-  <!-- Display Vehicle Details -->
+  <!-- Vehicle Details Display -->
   <div *ngIf="!isLoading && voiture" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5 text-sm">
 
-    <!-- Column 1 -->
+    <!-- Column 1: General Info -->
     <div class="space-y-4">
       <div>
         <dt class="font-medium text-gray-400">Vehicle ID:</dt>
         <dd class="mt-1 font-semibold">{{ voiture.id }}</dd>
       </div>
       <div>
-        <dt class="font-medium text-gray-400">Display Name (Vname):</dt>
+        <dt class="font-medium text-gray-400">Name:</dt>
         <dd class="mt-1">{{ voiture.vname ?? 'N/A' }}</dd>
       </div>
-       <div>
+      <div>
         <dt class="font-medium text-gray-400">Make (Marque):</dt>
         <dd class="mt-1">{{ voiture.marque ?? 'N/A' }}</dd>
       </div>
@@ -49,31 +49,31 @@
       </div>
     </div>
 
-    <!-- Column 2 -->
+    <!-- Column 2: Details -->
     <div class="space-y-4">
-       <div>
-        <dt class="font-medium text-gray-400">License Plate (Matricule):</dt>
+      <div>
+        <dt class="font-medium text-gray-400">License Plate:</dt>
         <dd class="mt-1">{{ voiture.matricule ?? 'N/A' }}</dd>
       </div>
-       <div>
+      <div>
         <dt class="font-medium text-gray-400">Type:</dt>
         <dd class="mt-1">{{ voiture.type ?? 'N/A' }}</dd>
       </div>
-       <div>
+      <div>
         <dt class="font-medium text-gray-400">Color:</dt>
         <dd class="mt-1">{{ voiture.couleur ?? 'N/A' }}</dd>
       </div>
        <div>
-        <dt class="font-medium text-gray-400">Capacity:</dt>
-        <dd class="mt-1">{{ voiture.capacite ? voiture.capacite + ' seats' : 'N/A' }}</dd>
+        <dt class="font-medium text-gray-400">Fuel Type:</dt>
+        <dd class="mt-1">{{ voiture.carburant ?? 'N/A' }}</dd>
       </div>
     </div>
 
-     <!-- Column 3 -->
+    <!-- Column 3: Specs & Photo -->
     <div class="space-y-4">
       <div>
-        <dt class="font-medium text-gray-400">Fuel Type:</dt>
-        <dd class="mt-1">{{ voiture.carburant ?? 'N/A' }}</dd>
+        <dt class="font-medium text-gray-400">Capacity:</dt>
+        <dd class="mt-1">{{ voiture.capacite ? voiture.capacite + ' seats' : 'N/A' }}</dd>
       </div>
       <div>
         <dt class="font-medium text-gray-400">Transmission:</dt>
@@ -81,13 +81,16 @@
       </div>
       <div>
         <dt class="font-medium text-gray-400">Base Price:</dt>
-        <dd class="mt-1">{{ voiture.prixDeBase | number:'1.2-2' }} €</dd> <!-- Assuming Euro -->
+        <dd class="mt-1">{{ voiture.prixDeBase | number:'1.2-2' }} €</dd>
       </div>
-      <!-- Add photo display if photoPath exists in model -->
-      <!-- <div *ngIf="voiture.photoPath">
-           <dt class="font-medium text-gray-400">Photo:</dt>
-           <dd class="mt-1"><img [src]="voiture.photoPath" alt="Vehicle photo" class="max-w-xs rounded"></dd>
-      </div> -->
+       <!-- Photo Display -->
+      <div>
+          <dt class="font-medium text-gray-400">Photo:</dt>
+          <dd class="mt-1">
+              <img *ngIf="voiture.photo" src="data:image/jpeg;base64, {{ voiture.photo}}" alt="Vehicle Photo" class="rounded-md max-w-full h-auto">
+              <span *ngIf="!voiture.photo">No photo available.</span>
+          </dd>
+      </div>
     </div>
 
   </div>
@@ -95,7 +98,7 @@
   <!-- Go Back Button -->
   <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
     <button (click)="goBack()"
-            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)]">
+            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] transition-colors duration-150 ease-in-out">
       <i class="fa-solid fa-arrow-left mr-2"></i> Back to List
     </button>
   </div>
