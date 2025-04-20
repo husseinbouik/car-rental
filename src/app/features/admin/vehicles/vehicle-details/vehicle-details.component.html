@@ -87,7 +87,7 @@
       <div>
           <dt class="font-medium text-gray-400">Photo:</dt>
           <dd class="mt-1">
-              <img *ngIf="voiture.photo" src="data:image/jpeg;base64, {{ voiture.photo}}" alt="Vehicle Photo" class="rounded-md max-w-full h-auto">
+              <img *ngIf="voiture.photo" src="data:image/jpeg;base64, {{ voiture.photo}}" alt="Vehicle Photo" class="h-40 w-auto mx-auto">
               <span *ngIf="!voiture.photo">No photo available.</span>
           </dd>
       </div>

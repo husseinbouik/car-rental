@@ -1,28 +1,27 @@
-<!-- src/app/features/vehicles/vehicle-list/vehicle-list.component.html -->
-<div class="p-4 sm:p-6 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-xl sm:text-2xl font-bold mb-4">Vehicle Management</h2>
+<div class="p-4 sm:p-6 bg-[var(--primary-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Vehicle Management</h2>
 
   <!-- Header Controls: Search, Export & Create -->
   <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-4">
     <input type="search" #searchInput [(ngModel)]="searchTerm" (input)="onSearchInput()"
            placeholder="Search by make, model, plate..."
-           class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
+           class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--secondary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
 
     <div class="flex space-x-2 sm:space-x-3">
       <button (click)="exportToExcel()" title="Export current view to Excel"
-              class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow">
-        <i class="fa-solid fa-file-excel text-base sm:text-lg mr-1 sm:mr-2"></i> Export
+              class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
+        <i class="fa-solid fa-file-excel text-base sm:text-sm mr-1 sm:mr-2"></i> Export
       </button>
       <button (click)="createVoiture()" title="Create New Vehicle"
-              class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow">
-         <i class="fa-solid fa-plus text-base sm:text-lg mr-1 sm:mr-2"></i> Create
+              class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
+        <i class="fa-solid fa-plus text-base sm:text-sm mr-1 sm:mr-2"></i> Create
       </button>
     </div>
   </div>
 
   <!-- Vehicles Table -->
   <div class="overflow-x-auto shadow-md rounded-lg border border-gray-700">
-    <table class="min-w-full w-full bg-[var(--seconday-background-color)] text-[var(--text-color)] text-sm">
+    <table class="min-w-full w-full bg-[var(--secondary-background-color)] text-[var(--text-color)] text-sm">
       <thead class="bg-gray-700 text-gray-300">
         <tr class="text-left text-xs uppercase tracking-wider">
           <!-- Headers -->
@@ -53,17 +52,18 @@
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('prixDeBase')">
             Base Price <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('prixDeBase')"></i>
           </th>
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Photo</th>
           <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-700">
         <!-- Loading Indicator Row -->
         <tr *ngIf="isLoading"> <!-- Assume isLoading property exists -->
-            <td colspan="10" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading vehicles...</td> <!-- Adjust colspan -->
+            <td colspan="11" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading vehicles...</td> <!-- Increased colspan -->
         </tr>
         <!-- No Results Row -->
          <tr *ngIf="!isLoading && paginatedVoitures.length === 0">
-             <td colspan="10" class="text-center py-4 px-4 text-gray-400"> <!-- Adjust colspan -->
+             <td colspan="11" class="text-center py-4 px-4 text-gray-400"> <!-- Increased colspan -->
                 {{ searchTerm ? 'No vehicles found matching "' + searchTerm + '".' : 'No vehicles available.' }}
              </td>
          </tr>
@@ -79,6 +79,11 @@
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.carburant ?? 'N/A' }}</td>
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.estAutomate ? 'Auto' : 'Manual' }}</td>
           <td class="py-2 px-4 text-right whitespace-nowrap">{{ voiture.prixDeBase | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 text-center">
+            <img *ngIf="voiture.photo" src="data:image/jpeg;base64, {{ voiture.photo}}" alt="Vehicle Photo" class="h-10 w-auto mx-auto">
+            <span *ngIf="!voiture.photo">No Photo</span>
+           </td>
+
           <td class="py-2 px-4 text-center whitespace-nowrap">
             <div class="flex justify-center items-center space-x-1 sm:space-x-2">
               <!-- Action Buttons -->
