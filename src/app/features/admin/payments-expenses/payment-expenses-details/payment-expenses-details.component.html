@@ -1,1 +1,65 @@
-<p>payment-expenses-details works!</p>
+<!-- src/app/features/payments-expenses/payment-expenses-details/payment-expenses-details.component.html -->
+<div class="p-6 sm:p-8 bg-[var(--seconday-background-color)] text-[var(--text-color)] shadow-xl rounded-lg max-w-xl mx-auto my-8"> <!-- Adjusted max-width for fewer fields -->
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+    <h2 class="text-xl sm:text-2xl font-semibold leading-tight">Payment/Expense Details</h2>
+    <!-- Edit Button -->
+    <button *ngIf="paymentExpense && paymentExpense.id" (click)="goToEdit()"
+            title="Edit Record"
+            class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
+       <i class="fa-solid fa-edit mr-2"></i> Edit
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center my-10 text-gray-400">
+    <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+    <p class="text-sm">Loading record details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && errorMessage" aria-live="assertive" class="my-6 p-4 border rounded-md bg-red-900/30 border-red-600 text-red-200 text-sm shadow-md">
+    <div class="flex items-center"><i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i><span>{{ errorMessage }}</span></div>
+  </div>
+
+  <!-- Display Details -->
+  <div *ngIf="!isLoading && paymentExpense" class="space-y-4 text-sm"> <!-- Renamed variable -->
+      <div>
+        <dt class="font-medium text-gray-400">Record ID:</dt>
+        <dd class="mt-1 font-semibold">{{ paymentExpense.id }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Date:</dt>
+        <!-- Using a detailed date format, adjust as needed -->
+        <dd class="mt-1">{{ paymentExpense.date | date: 'EEEE, MMMM d, y, h:mm a' }}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Category:</dt>
+        <dd class="mt-1">{{ paymentExpense.categorie ?? 'N/A' }}</dd>
+      </div>
+       <div>
+        <dt class="font-medium text-gray-400">Amount:</dt>
+        <!-- Make amount stand out -->
+        <dd class="mt-1 text-lg font-semibold">{{ paymentExpense.montant | number:'1.2-2' }} €</dd> <!-- Adjust currency if needed -->
+      </div>
+      <div>
+        <dt class="font-medium text-gray-400">Description:</dt>
+        <!-- Preserve whitespace in description -->
+        <dd class="mt-1 whitespace-pre-wrap">{{ paymentExpense.description || 'No description provided.' }}</dd>
+      </div>
+  </div>
+
+   <!-- Display Message if Record Not Found (alternative to error message) -->
+   <div *ngIf="!isLoading && !errorMessage && !paymentExpense" class="text-center my-10 text-gray-500">
+      <p>Payment/Expense record not found.</p>
+   </div>
+
+
+  <!-- Go Back Button -->
+  <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
+    <button (click)="goBack()"
+            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)]">
+      <i class="fa-solid fa-arrow-left mr-2"></i> Back to List
+    </button>
+  </div>
+</div>

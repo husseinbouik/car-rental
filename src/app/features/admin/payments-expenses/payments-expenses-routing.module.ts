@@ -26,8 +26,14 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] }
   },
   {
-    path: ':id/edit',
+    path: 'edit/:id',
     component: PaymentExpensesCreateComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'details/:id',
+    component: PaymentExpensesDetailsComponent,
     canActivate: [RoleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   }
