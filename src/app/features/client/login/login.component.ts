@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { LoginService } from './login.service'; // Import the login service
-import { Router } from '@angular/router'; // To navigate after successful login
+import { LoginService } from './login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  username: string = ''; // Use 'username' instead of 'email'
+  username: string = '';
   password: string = '';
-  errorMessage: string = ''; // For displaying error messages
-  isLoading: boolean = false; // To show loading indicator
+  errorMessage: string = '';
+  isLoading: boolean = false;
   successMessage: string = '';
 
   constructor(private loginService: LoginService, private router: Router) {}
@@ -26,22 +26,33 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
 
-        // Store the JWT token
         localStorage.setItem('authToken', response.token);
 
-        // Show success message
         this.successMessage = 'Connexion réussie ! Redirection en cours...';
 
-        // Delay navigation for 2 seconds
-        setTimeout(() => {
-          this.router.navigate(['/admin/dashboard']); // Replace with your actual route
-        }, 2000);
+        // Determine where to redirect based on role
+        if (this.loginService.hasRole('ROLE_CLIENT')) { // Corrected role check
+          setTimeout(() => {
+            this.router.navigate(['/client/dashboard']); // Client interface route
+          }, 2000);
+        } else if (this.loginService.hasRole('ROLE_ADMIN')) {
+            setTimeout(() => {
+                this.router.navigate(['/admin/dashboard']);
+            }, 2000);
+        }
+        else {
+          // Default redirection or error handling if no recognized role
+          setTimeout(() => {
+            this.router.navigate(['/default']); // Or show an error message
+          }, 2000);
+        }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Échec de la connexion, veuillez réessayer.';
-      }
+        this.errorMessage =
+          error.error?.message ||
+          'Échec de la connexion, veuillez réessayer.';
+      },
     });
   }
-
 }

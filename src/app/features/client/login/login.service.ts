@@ -2,30 +2,38 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
-// src/app/services/login.service.ts
-import { JwtHelperService } from '@auth0/angular-jwt';
-
+import { environment } from '../../../../environments/environment'; // Corrected path
+import { JwtHelperService } from '@auth0/angular-jwt'; // Import the JWT helper
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
-
   private apiUrl = environment.apiBaseUrl;
+  private jwtHelper: JwtHelperService = new JwtHelperService(); // Instantiate JwtHelperService
 
   constructor(private http: HttpClient) {}
-// Add these methods to your existing LoginService
-hasRole(roleName: string): boolean {
-  const token = this.getDecodedToken();
-  if (!token || !token.authorities) return false;
-  return token.authorities.includes(roleName);
-}
 
-private getDecodedToken(): any {
-  const token = this.getToken();
-  return token ? new JwtHelperService().decodeToken(token) : null;
-}
+  // Added method to determine the user's role
+  hasRole(roleName: string): boolean {
+    const token = this.getToken();
+    if (!token) {
+      return false; // Or handle the case where no token exists differently
+    }
+
+    try {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      // Adjust the property name based on how roles are stored in your JWT
+      if (decodedToken && decodedToken.authorities) {
+        return decodedToken.authorities.includes(roleName); // Assuming roles is an array of strings
+      }
+      return false;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false; // Handle token decoding errors gracefully
+    }
+  }
+
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -36,19 +44,20 @@ private getDecodedToken(): any {
       password: password,
     };
 
-    return this.http.post(`${this.apiUrl}/auth/login`, loginPayload, { headers }).pipe(
-      tap((response: any) => {
-        // Adjust the property name based on your backend's response
-        const token = response.token || response.access_token || response.jwt;
+    return this.http
+      .post(`${this.apiUrl}/auth/login`, loginPayload, { headers })
+      .pipe(
+        tap((response: any) => {
+          const token = response.token || response.access_token || response.jwt;
 
-        if (token) {
-          localStorage.setItem('access_token', token);
-          console.log('JWT saved to localStorage');
-        } else {
-          console.warn('No token found in the login response');
-        }
-      })
-    );
+          if (token) {
+            localStorage.setItem('access_token', token);
+            console.log('JWT saved to localStorage');
+          } else {
+            console.warn('No token found in the login response');
+          }
+        })
+      );
   }
 
   logout(): void {
