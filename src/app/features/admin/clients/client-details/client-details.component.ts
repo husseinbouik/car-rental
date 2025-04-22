@@ -16,6 +16,10 @@ export class ClientDetailsComponent implements OnInit {
   errorMessage: string | null = null;
   clientId: number | null = null;
 
+  // Image URLs for display
+  photoCINUrl: string | null = null;
+  photoPermisUrl: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -41,7 +45,6 @@ export class ClientDetailsComponent implements OnInit {
     }
   }
 
-
   loadClientDetails(id: number): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -51,10 +54,18 @@ export class ClientDetailsComponent implements OnInit {
       )
       .subscribe({
         next: (clientData) => {
-          console.log("Fetched client details:", clientData);
           this.client = clientData;
-           if (!this.client) {
-             this.errorMessage = `Client with ID ${id} not found.`;
+
+          // Set image URLs if they exist
+          if (this.client?.photoCIN) {
+            this.photoCINUrl = 'data:image/jpeg;base64,' + this.client.photoCIN;
+          }
+          if (this.client?.photoPermis) {
+            this.photoPermisUrl = 'data:image/jpeg;base64,' + this.client.photoPermis;
+          }
+
+          if (!this.client) {
+            this.errorMessage = `Client with ID ${id} not found.`;
           }
         },
         error: (error) => {
@@ -65,11 +76,9 @@ export class ClientDetailsComponent implements OnInit {
       });
   }
 
-
   goBack(): void {
     this.router.navigate(['/admin/clients']);
   }
-
 
   goToEdit(): void {
     if (this.client?.id) {
