@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoginComponent } from './features/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 

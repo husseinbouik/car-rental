@@ -8,11 +8,15 @@ import { ResetPasswordRequestComponent } from './reset-password-request/reset-pa
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { AccessDeniedComponent } from '../access-denied/access-denied.component';
+import { LandingComponent } from './landing/landing.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path:'signup', component: SignupComponent},
-
+  {
+    path: '',
+    component: LandingComponent
+  },
   { path: 'reset-password-request', component: ResetPasswordRequestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },

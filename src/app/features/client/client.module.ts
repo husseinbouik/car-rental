@@ -21,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ResetPasswordRequestComponent } from './reset-password-request/reset-password-request.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { LandingComponent } from './landing/landing.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     SignupComponent,
     ResetPasswordRequestComponent,
     ResetPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    LandingComponent
   ],
   imports: [
     CommonModule,

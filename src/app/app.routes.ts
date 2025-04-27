@@ -4,8 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
 import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
 import { AccessDeniedComponent } from './features/access-denied/access-denied.component';
-import { LandingComponent } from './features/landing/landing.component';
-import { LoginComponent } from './features/login/login.component';
+import { LandingComponent } from './features/client/landing/landing.component';
 
 export const routes: Routes = [
   // Admin Routes
@@ -21,7 +20,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'client', // * added or the `*path:'', component` value
+    path: '',
     component: ClientLayoutComponent,
     children: [
       {
@@ -34,14 +33,8 @@ export const routes: Routes = [
     path: 'access-denied',
     component: AccessDeniedComponent
   },
-  {
-    path: '',
-    component: LandingComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+
+
   { path: '**', redirectTo: 'access-denied' },
 ];
 

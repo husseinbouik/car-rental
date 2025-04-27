@@ -33,11 +33,11 @@ export class LoginComponent {
         // Determine where to redirect based on role
         if (this.loginService.hasRole('ROLE_CLIENT')) { // Corrected role check
           setTimeout(() => {
-            this.router.navigate(['/client/dashboard']); // Client interface route
+            this.router.navigate(['/dashboard']); // Client interface route
           }, 2000);
         } else if (this.loginService.hasRole('ROLE_ADMIN')) {
             setTimeout(() => {
-                this.router.navigate(['/admin/dashboard']);
+                this.router.navigate(['/dashboard']);
             }, 2000);
         }
         else {

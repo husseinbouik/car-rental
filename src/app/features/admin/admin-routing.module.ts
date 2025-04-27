@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role-guard.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
 import { AccessDeniedComponent } from '../access-denied/access-denied.component';
 
 const routes: Routes = [
@@ -53,10 +52,10 @@ const routes: Routes = [
     canActivateChild: [RoleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+  // {
+  //   path: 'login',
+  //   component: LoginComponent
+  // },
   {
     path: '**',
     component:AccessDeniedComponent

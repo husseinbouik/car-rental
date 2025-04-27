@@ -10,13 +10,11 @@ import { SidebarComponent } from '../../core/layout/sidebar/sidebar.component';
 import { NavbarComponent } from '../../core/layout/navbar/navbar.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
-    LoginComponent,
     DashboardComponent,
   ],
   imports: [
