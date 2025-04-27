@@ -1,8 +1,11 @@
+// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
 import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
 import { AccessDeniedComponent } from './features/access-denied/access-denied.component';
+import { LandingComponent } from './features/landing/landing.component';
+import { LoginComponent } from './features/login/login.component';
 
 export const routes: Routes = [
   // Admin Routes
@@ -18,11 +21,11 @@ export const routes: Routes = [
   },
 
   {
-    path: '',
+    path: 'client', // * added or the `*path:'', component` value
     component: ClientLayoutComponent,
     children: [
       {
-        path: '',
+        path: '',  // Make sure this is present
         loadChildren: () => import('./features/client/client.module').then(m => m.ClientModule),
       },
     ],
@@ -31,7 +34,14 @@ export const routes: Routes = [
     path: 'access-denied',
     component: AccessDeniedComponent
   },
-  // Handle 404
+  {
+    path: '',
+    component: LandingComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
   { path: '**', redirectTo: 'access-denied' },
 ];
 
