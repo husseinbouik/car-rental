@@ -14,7 +14,6 @@ interface Feature {
   color: string;
 }
 
-// Define a type for the rental modal data structure
 interface RentalData {
   pickupDate: string;
   returnDate: string;
@@ -34,24 +33,21 @@ export class LandingComponent implements OnInit {
   isDarkMode = false;
   mobileMenuOpen = false;
   currentLang = 'en';
-  activeSection = 'home'; // Default active section
+  activeSection = 'home';
 
   showRentalModal = false;
-  selectedVehicle: Voiture | null = null; // Use Voiture type
-  rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' }; // Use RentalData type
+  selectedVehicle: Voiture | null = null;
+  rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
 
   newsletterEmail = '';
   currentYear = new Date().getFullYear();
 
-  // Assuming these are static or populated elsewhere
   navItems = [
     { link: '#home', title: 'nav.home' },
-    { link: '#vehicles', title: 'nav.vehicles' }, // Link to vehicles section
-    { link: '#services', title: 'nav.services' }, // Renamed from 'about' to match id 'services'
+    { link: '#vehicles', title: 'nav.vehicles' },
+    { link: '#services', title: 'nav.services' },
     { link: '#testimonials', title: 'nav.testimonials' },
     { link: '#faq', title: 'nav.faq' },
-    // Add a contact link if you have a contact section or modal
-    // { link: '#contact', title: 'nav.contact' }
   ];
   stats: { value: string | number; label: string }[] = [
       { value: '50+', label: 'stats.locations' },
@@ -59,8 +55,6 @@ export class LandingComponent implements OnInit {
       { value: '10k+', label: 'stats.happy_customers' },
       { value: '24/7', label: 'stats.support' }
   ];
-  // vehicles: Voiture[] = []; // This will be populated from the service
-
   features: Feature[] = [
      { title: 'features.wide_selection', description: 'features.wide_selection_desc', icon: 'fa-car-side', color: 'blue' },
      { title: 'features.easy_booking', description: 'features.easy_booking_desc', icon: 'fa-calendar-check', color: 'green' },
@@ -84,7 +78,9 @@ export class LandingComponent implements OnInit {
     { id: 2, question: 'faq.q2', answer: 'faq.a2', open: false },
     { id: 3, question: 'faq.q3', answer: 'faq.a3', open: false }
   ];
-  locations = ['location.city1', 'location.city2', 'location.city3']; // Example locations - consider fetching these
+  // Removed locations as it's no longer used for search input, but could be used elsewhere
+  // locations = ['location.city1', 'location.city2', 'location.city3'];
+
   socialLinks: { link: string; icon: string }[] = [
     { link: 'https://facebook.com', icon: 'fa-facebook' },
     { link: 'https://twitter.com', icon: 'fa-twitter' },
@@ -95,19 +91,22 @@ export class LandingComponent implements OnInit {
     { title: 'footer.link2', link: '#vehicles' },
     { title: 'footer.link3', link: '#services' },
     { title: 'footer.link4', link: '#faq' }
-    // Add more footer links as needed
   ];
   legalLinks: { title: string; link: string }[] = [
-     { title: 'footer.privacy_policy', link: '/privacy-policy' }, // Assuming a privacy policy page/route
-     { title: 'footer.terms_of_service', link: '/terms-of-service' } // Assuming terms page/route
+     { title: 'footer.privacy_policy', link: '/privacy-policy' },
+     { title: 'footer.terms_of_service', link: '/terms-of-service' }
   ];
   newsletterMessage: string | null = null;
   newsletterError = false;
 
-   // --- NEW PROPERTIES FOR VEHICLE DATA ---
-   vehicles: Voiture[] = []; // Property to hold vehicles fetched from the service
-   loadingVehicles = true; // Loading state
-   vehicleError: string | null = null; // Error message state
+   // --- NEW PROPERTIES FOR VEHICLE DATA & SEARCH ---
+   vehicles: Voiture[] = []; // Holds the full list fetched from the service
+   filteredVehicles: Voiture[] = []; // Holds the list currently displayed (filtered)
+   loadingVehicles = true;
+   vehicleError: string | null = null;
+
+   searchVehicleName: string = ''; // Property to hold the vehicle name search term
+
 
   private sectionOffsets: Map<string, { top: number, bottom: number }> = new Map();
   private offsetsCalculated = false;
@@ -118,17 +117,14 @@ export class LandingComponent implements OnInit {
     private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private cdr: ChangeDetectorRef,
-    private vehicleService: VehicleService // Inject the VehicleService
-  ) {
-     // Default language already set in your code
-  }
+    private vehicleService: VehicleService
+  ) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initializeDarkMode();
       this.initializeLanguage();
       this.fetchVehicles(); // Fetch vehicles on init
-      // Calculate offsets after view init or on first scroll
     }
     this.initRentalDates();
   }
@@ -140,54 +136,110 @@ export class LandingComponent implements OnInit {
       this.vehicleService.getVehicles().pipe(
          catchError(error => {
            console.error('Error fetching vehicles:', error);
-           this.vehicleError = this.translate.instant('vehicles.error_fetching'); // Use a translation key for error message
+           this.vehicleError = this.translate.instant('vehicles.error_fetching');
            this.loadingVehicles = false;
-           return of([]); // Return an empty array to prevent the app from breaking
+           return of([]);
          })
       ).subscribe((data: Voiture[]) => {
          this.vehicles = data;
-         console.log('Vehicles fetched:', this.vehicles); // Log fetched data
+         this.filteredVehicles = [...this.vehicles]; // Initialize filtered list with all vehicles
+         console.log('Vehicles fetched:', this.vehicles);
          this.loadingVehicles = false;
-          // Recalculate offsets if vehicles section content changes significantly
-          // Or trigger a scroll event to recalculate offsets after vehicles are loaded
+
           if (isPlatformBrowser(this.platformId)) {
-              setTimeout(() => { // Allow DOM to update before calculating
+              setTimeout(() => {
                   this.calculateSectionOffsets();
-                  // Trigger a dummy scroll event to update active section if needed
-                   window.dispatchEvent(new Event('scroll'));
+                  window.dispatchEvent(new Event('scroll'));
                }, 100);
           }
       });
    }
 
+   // Method to perform the search filtering
+   performSearch(event?: Event): void {
+       if (event) {
+           event.preventDefault(); // Prevent default form submission page reload
+       }
 
-  // Separate initialization for clarity
+       const searchTerm = this.searchVehicleName.trim().toLowerCase();
+
+       if (!searchTerm) {
+           // If search term is empty, show all vehicles
+           this.filteredVehicles = [...this.vehicles];
+       } else {
+           // Filter vehicles where vname includes the search term (case-insensitive)
+           this.filteredVehicles = this.vehicles.filter(vehicle =>
+               vehicle.vname?.toLowerCase().includes(searchTerm)
+           );
+       }
+        // Optional: Scroll to the vehicles section after searching
+       // if (this.filteredVehicles.length > 0 || searchTerm) {
+       //      this.scrollToSection('#vehicles');
+       // }
+   }
+
+
+  // Initialize dark mode based on localStorage, apply to body
   initializeDarkMode(): void {
       if (isPlatformBrowser(this.platformId)) {
           const darkMode = localStorage.getItem('darkMode');
           if (darkMode === 'enabled') {
             this.isDarkMode = true;
-            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark-mode');
+            document.documentElement.classList.add('dark'); // Keep for Tailwind dark variants
           } else {
             this.isDarkMode = false;
-            document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark'); // Keep for Tailwind dark variants
           }
       }
   }
 
+  // Toggle dark mode, apply to body
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.isDarkMode) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+        document.documentElement.classList.add('dark'); // Keep for Tailwind dark variants
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+        document.documentElement.classList.remove('dark'); // Keep for Tailwind dark variants
+      }
+    }
+  }
+
+
   initializeLanguage(): void {
       if (isPlatformBrowser(this.platformId)) {
            const savedLang = localStorage.getItem('language');
-          if (savedLang && this.translate.getLangs().includes(savedLang)) { // Validate against available langs
+          const availableLangs = this.translate.getLangs();
+          if (savedLang && availableLangs.includes(savedLang)) {
             this.currentLang = savedLang;
           } else {
-            // Fallback to browser language or default 'en'
             const browserLang = this.translate.getBrowserLang();
-            this.currentLang = browserLang && this.translate.getLangs().includes(browserLang) ? browserLang : 'en';
+            this.currentLang = browserLang && availableLangs.includes(browserLang) ? browserLang : 'en';
           }
           this.translate.use(this.currentLang);
       }
   }
+
+   switchLanguage(event: Event): void {
+       const target = event.target as HTMLSelectElement;
+       const lang = target.value;
+       if (isPlatformBrowser(this.platformId) && lang && this.translate.getLangs().includes(lang)) {
+           this.currentLang = lang;
+           this.translate.use(this.currentLang);
+           localStorage.setItem('language', this.currentLang);
+       } else {
+           console.warn(`Attempted to switch to an invalid or unsupported language: ${lang}`);
+           this.currentLang = this.translate.currentLang || 'en';
+           target.value = this.currentLang;
+       }
+   }
+
 
   initRentalDates(): void {
     const today = new Date();
@@ -202,139 +254,115 @@ export class LandingComponent implements OnInit {
   }
 
   // --- UI INTERACTIONS ---
-  toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark-mode', this.isDarkMode);
-
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('darkMode', this.isDarkMode ? 'enabled' : 'disabled'); // Store user preference
-    }
-  }
-
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
-  switchLanguage(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const lang = target.value;
-    this.translate.use(lang);
-  }
-
   // --- SCROLL HANDLING & NAVIGATION ---
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    if (isPlatformBrowser(this.platformId)) {
-      // Calculate offsets lazily on the first scroll after potential data load
-      if (!this.offsetsCalculated && this.vehicles.length > 0) { // Wait for vehicles to potentially load
-         this.calculateSectionOffsets();
-      }
-
-      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      const offsetMargin = window.innerHeight * 0.3; // Adjust margin for active section detection
-
-      let currentSectionId = 'home'; // Default to home
-
-      // Determine which section is currently visible
-      this.sectionOffsets.forEach((offsets, sectionId) => {
-         // Check if the section is significantly visible
-         if (scrollPosition + offsetMargin >= offsets.top && scrollPosition < offsets.bottom - offsetMargin) {
-            currentSectionId = sectionId;
-         }
-      });
-
-      // Special case for reaching the very bottom
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = document.documentElement.clientHeight;
-      // Check if near bottom (within 100px)
-      if (scrollPosition + clientHeight >= scrollHeight - 100) {
-           // Find the id of the last section that has an entry in sectionOffsets
-           const lastNavItemId = this.navItems[this.navItems.length - 1]?.link.substring(1);
-           if (lastNavItemId && this.sectionOffsets.has(lastNavItemId)) {
-                currentSectionId = lastNavItemId;
-           } else {
-             // Fallback if the last nav item link doesn't match an existing element ID
-             // Find the section with the highest 'top' value that's fully above the current scroll position
-              let lastReachedSection = 'home';
-              let maxTop = -1;
-              this.sectionOffsets.forEach((offsets, sectionId) => {
-                 if (scrollPosition >= offsets.top && offsets.top > maxTop) {
-                    maxTop = offsets.top;
-                    lastReachedSection = sectionId;
-                 }
-              });
-               currentSectionId = lastReachedSection;
-           }
-      }
-
-
-      if (this.activeSection !== currentSectionId) {
-        this.activeSection = currentSectionId;
-         // Manually trigger change detection if needed (usually not required with default settings)
-         // this.cdr.detectChanges();
-      }
-    }
-  }
-
-  // Calculate section offsets (call this after view is initialized or on first scroll)
-  calculateSectionOffsets(): void {
+   @HostListener('window:scroll', ['$event'])
+   onWindowScroll() {
      if (isPlatformBrowser(this.platformId)) {
-        this.sectionOffsets.clear();
-        this.navItems.forEach(item => {
-          const sectionId = item.link.substring(1);
-          const element = document.getElementById(sectionId);
-          if (element) {
-            // Adjust offset for the fixed header height
-            const top = element.offsetTop - 80; // Assuming header is ~80px tall
-            const bottom = top + element.offsetHeight;
-            this.sectionOffsets.set(sectionId, { top, bottom });
-          }
-        });
-        this.offsetsCalculated = true;
-       // console.log("Section offsets calculated:", this.sectionOffsets);
-     }
-  }
+       // Recalculate offsets if filteredVehicles list changes significantly the first time it's populated
+        if (!this.offsetsCalculated && this.filteredVehicles.length > 0 && this.navItems.length > 0) {
+           this.calculateSectionOffsets();
+        }
 
-  // Helper for smooth scrolling when clicking nav links (optional, if using JS scrolling instead of default browser anchor behavior)
-  // If using default browser anchor links (#section), remove this method and the (click) handler from nav links.
-  // Keep the (click) handler for mobile menu closing.
-  scrollToSection(sectionId: string, event?: Event): void {
-     // Only prevent default if it's a same-page link click, not an external route
-      if (event && sectionId.startsWith('#')) {
-         event.preventDefault(); // Prevent default anchor jump
-         const element = document.getElementById(sectionId.substring(1)); // Get element by ID without '#'
-         if(element) {
-              if (isPlatformBrowser(this.platformId)) {
-                // Use smooth scroll behavior
-                 window.scrollTo({
-                   top: element.offsetTop - 70, // Adjust for fixed header height
-                    behavior: 'smooth'
-                });
-             }
-             // Close mobile menu after clicking a link
-             if(this.mobileMenuOpen) {
-               this.mobileMenuOpen = false;
+       const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+       const offsetMargin = window.innerHeight * 0.3;
+
+       let currentSectionId = 'home';
+
+       this.sectionOffsets.forEach((offsets, sectionId) => {
+          if (scrollPosition + offsetMargin >= offsets.top && scrollPosition < offsets.bottom - offsetMargin) {
+             currentSectionId = sectionId;
+          }
+       });
+
+       const scrollHeight = document.documentElement.scrollHeight;
+       const clientHeight = document.documentElement.clientHeight;
+       if (scrollPosition + clientHeight >= scrollHeight - 100) {
+            const lastNavItemId = this.navItems[this.navItems.length - 1]?.link.substring(1);
+            if (lastNavItemId && this.sectionOffsets.has(lastNavItemId)) {
+                 currentSectionId = lastNavItemId;
+            } else {
+               let lastReachedSection = 'home';
+               let maxTop = -1;
+               this.sectionOffsets.forEach((offsets, sectionId) => {
+                  if (scrollPosition >= offsets.top) {
+                     if (offsets.top > maxTop) {
+                        maxTop = offsets.top;
+                        lastReachedSection = sectionId;
+                     }
+                  }
+               });
+                currentSectionId = lastReachedSection;
             }
-             // Manually set active section immediately for better UX
-             this.activeSection = sectionId.substring(1);
-             // Optionally update URL hash without jumping
-             // if (isPlatformBrowser(this.platformId)) {
-             //    history.pushState(null, '', sectionId);
-             // }
-         }
+       }
+
+       if (this.activeSection !== currentSectionId) {
+         this.activeSection = currentSectionId;
+       }
+     }
+   }
+
+   calculateSectionOffsets(): void {
+      if (isPlatformBrowser(this.platformId)) {
+         this.sectionOffsets.clear();
+         this.navItems.forEach(item => {
+           const sectionId = item.link.substring(1);
+           const element = document.getElementById(sectionId);
+           if (element) {
+             const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+             const top = element.offsetTop - headerHeight - 1;
+             const bottom = top + element.offsetHeight;
+             this.sectionOffsets.set(sectionId, { top, bottom });
+           }
+         });
+         this.offsetsCalculated = true;
+        console.log("Section offsets calculated:", this.sectionOffsets);
+      }
+   }
+
+   scrollToSection(link: string, event?: Event): void {
+      const sectionId = link.substring(1);
+       if (event && link.startsWith('#')) {
+          event.preventDefault();
+          const element = document.getElementById(sectionId);
+          if(element) {
+               if (isPlatformBrowser(this.platformId)) {
+                 const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+                 const targetTop = element.offsetTop - headerHeight;
+
+                 window.scrollTo({
+                    top: targetTop,
+                     behavior: 'smooth'
+                 });
+              }
+              if(this.mobileMenuOpen) {
+                this.mobileMenuOpen = false;
+             }
+              this.activeSection = sectionId;
+               if (isPlatformBrowser(this.platformId)) {
+                 setTimeout(() => {
+                     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                     const elementTop = element.offsetTop - (document.querySelector('header')?.offsetHeight || 80);
+                     if (Math.abs(currentScroll - elementTop) < 20) {
+                          history.replaceState(null, '', link);
+                     }
+                 }, 600);
+              }
+          }
      } else if (this.mobileMenuOpen) {
-        // If it's not a section link but mobile menu is open, just close it
          this.mobileMenuOpen = false;
      }
-  }
+   }
 
 
   // --- MODAL HANDLING ---
-  openRentalModal(vehicle: Voiture): void { // Use Voiture type
+  openRentalModal(vehicle: Voiture): void {
     this.selectedVehicle = vehicle;
-    this.initRentalDates(); // Reset dates each time modal opens
+    this.initRentalDates();
     this.showRentalModal = true;
-    // Prevent body scroll when modal is open
     if (isPlatformBrowser(this.platformId)) {
       document.body.style.overflow = 'hidden';
     }
@@ -343,62 +371,40 @@ export class LandingComponent implements OnInit {
   closeRentalModal(): void {
     this.showRentalModal = false;
     this.selectedVehicle = null;
-     // Restore body scroll
     if (isPlatformBrowser(this.platformId)) {
       document.body.style.overflow = '';
     }
   }
 
   submitRentalRequest(): void {
-     // Basic validation
     if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
-       // Use a translated alert or display an error message in the modal
       alert(this.translate.instant('modal.validation.date_required'));
       return;
     }
     if (new Date(this.rentalData.returnDate) <= new Date(this.rentalData.pickupDate)) {
-       // Use a translated alert
-        alert(this.translate.instant('modal.validation.return_date_after'));
-       return;
+      alert(this.translate.instant('modal.validation.return_date_after'));
+      return;
     }
 
-     // --- Rental Request Logic ---
-     // In a real app, you would gather all necessary info (user ID, vehicle ID, dates, insurance)
-     // and send it to your backend service using HttpClient.
      const rentalDetailsToSend = {
          vehicleId: this.selectedVehicle?.id,
          pickupDate: this.rentalData.pickupDate,
          returnDate: this.rentalData.returnDate,
          insuranceOption: this.rentalData.insurance,
-         // Add userId if applicable
      };
 
      console.log('Rental Request Data:', rentalDetailsToSend);
-
-     // Example service call (replace with your actual rental service method)
-     // this.rentalService.createRental(rentalDetailsToSend).subscribe({
-     //   next: (response) => {
-     //      console.log('Rental successful', response);
-     //      alert(this.translate.instant('modal.rental_success')); // Translated success message
-     //      this.closeRentalModal();
-     //   },
-     //   error: (err) => {
-     //      console.error('Rental failed', err);
-     //      alert(this.translate.instant('modal.rental_error')); // Translated error message
-     //   }
-     // });
-
-     // Placeholder success feedback
-    alert(this.translate.instant('modal.rental_submitted')); // Translated placeholder
-    this.closeRentalModal();
+     alert(this.translate.instant('modal.rental_submitted'));
+     this.closeRentalModal();
   }
 
-  // Helper to display transmission type based on boolean
   getTransmissionText(isAutomate: boolean | undefined): string {
-      if (isAutomate === undefined) {
-          return this.translate.instant('modal.transmission_unknown'); // Or handle missing data
+      if (isAutomate === true) {
+          return this.translate.instant('modal.transmission_auto');
+      } else if (isAutomate === false) {
+          return this.translate.instant('modal.transmission_manual');
       }
-      return isAutomate ? this.translate.instant('modal.transmission_auto') : this.translate.instant('modal.transmission_manual');
+      return this.translate.instant('modal.transmission_unknown');
   }
 
   // --- FAQ ---
@@ -407,41 +413,28 @@ export class LandingComponent implements OnInit {
       if (faq.id === id) {
         return { ...faq, open: !faq.open };
       }
-       // Optional: close other FAQs when one is opened
-       // return { ...faq, open: false };
-      return faq; // Keep others as they are
+      return faq;
     });
   }
 
   // --- NEWSLETTER ---
   subscribeNewsletter(event: Event): void {
-    event.preventDefault(); // Prevent page reload
-    this.newsletterMessage = null; // Clear previous messages
+    event.preventDefault();
+    this.newsletterMessage = null;
     this.newsletterError = false;
 
     if (!this.newsletterEmail || !/\S+@\S+\.\S+/.test(this.newsletterEmail)) {
        this.newsletterError = true;
-       this.newsletterMessage = this.translate.instant('footer.newsletter_invalid_email'); // Translated message
+       this.newsletterMessage = this.translate.instant('footer.newsletter_invalid_email');
        return;
     }
 
     console.log('Subscribing newsletter for:', this.newsletterEmail);
-    // Simulate API call
-    // In a real app, call a service: this.newsletterService.subscribe(this.newsletterEmail).subscribe(...)
-    // Assuming success
     setTimeout(() => {
-        this.newsletterMessage = this.translate.instant('footer.newsletter_success', { email: this.newsletterEmail }); // Translated success message with interpolation
+        this.newsletterMessage = this.translate.instant('footer.newsletter_success', { email: this.newsletterEmail });
         this.newsletterError = false;
-        this.newsletterEmail = ''; // Clear the input field on success
-        // Auto-hide message after a few seconds
+        this.newsletterEmail = '';
          setTimeout(() => this.newsletterMessage = null, 5000);
     }, 1000);
-
-    // Example error handling (uncomment and adapt if needed)
-    // setTimeout(() => {
-    //     this.newsletterError = true;
-    //     this.newsletterMessage = this.translate.instant('footer.newsletter_error'); // Translated error message
-    //     setTimeout(() => this.newsletterMessage = null, 5000);
-    // }, 1000);
   }
 }
