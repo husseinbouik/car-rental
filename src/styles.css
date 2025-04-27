@@ -1,36 +1,185 @@
+/* Import Tailwind */
 @import "tailwindcss";
 
-
+/*
+  Define CSS Variables
+  These variables define the color scheme for both light and dark modes.
+*/
 :root {
+  /* Primary Brand Color - #00AFF0 from your CSS */
   --primary-color: #00AFF0;
-  --background-color: #eeeeee;
-  --text-color: #344054;
-  --hover-color: #e2e8f0;
-  --seconday-background-color: #f7fafc;
+  --primary-hover-color: #008ac9; /* Slightly darker for hover */
 
+  /* Background Colors */
+  --page-background: #eeeeee; /* Main page background */
+  --card-background: #ffffff; /* Card, Header, Search, Modal background */
+  --alternate-section-background: #f7fafc; /* Background for alternating sections (Features, Testimonials, FAQ) */
+
+
+  /* Text Colors */
+  --text-color: #344054; /* Main headings, titles, standard text */
+  --text-color-muted: #6b7280; /* Subtitles, descriptions, muted text, price "/day" */
+  --primary-text-color: #00AFF0; /* Text using primary color (e.g., logo, active nav link, price) */
+
+
+  /* Borders */
+  --border-color: #d1d5db; /* Standard border color */
+
+
+  /* Hover States (Backgrounds) */
+  --hover-background: #e5e7eb; /* For generic hover effects on elements like toggles, FAQ buttons */
+
+  /* Other Specific Colors */
+   --star-color: #facc15; /* yellow-400 for ratings */
+   /* Add other specific colors like feature icon background/text if needed */
 }
 
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-
-
-.sidebar a.active {
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
-
-
+/* Dark Mode Overrides - Apply when body has class 'dark-mode' */
 body.dark-mode {
-  --background-color: #1a202c;
-  --seconday-background-color: #282a2f;
-  --text-color: #ffffff;
-  --hover-color: #374151; /* Dark gray for dark mode */
+  /* Backgrounds */
+  --page-background: #1a202c;
+  --card-background: #282a2f;
+  --alternate-section-background: #282a2f; /* Often same as card background in dark mode */
 
+
+  /* Text Colors */
+  --text-color: #ffffff;
+  --text-color-muted: #d1d5db;
+  --primary-text-color: #00AFF0; /* Keeping primary color the same in dark mode */
+
+  /* Borders */
+  --border-color: #4b5563;
+
+  /* Hover States (Backgrounds) */
+  --hover-background: #374151;
+
+   /* Star color might remain the same or change - adjust if needed */
 }
-.sidebar a:hover {
-  background-color: var(--hover-color);
+
+
+/* --- Global/Base Styles using Variables --- */
+
+/* Apply the main page background and default text color to the body */
+/* Tailwind's min-h-screen on the main div will ensure this covers the viewport */
+body {
+  background-color: var(--page-background);
+  color: var(--text-color); /* This sets the default text color */
+  /* Add transition for smoother color changes if not handled by Tailwind on the main div */
+   transition: background-color 300ms ease, color 300ms ease;
 }
+
+
+/* --- Custom Utility Classes using Variables --- */
+/* Use these classes in your HTML template */
+
+/* Backgrounds */
+.theme-card-bg {
+  background-color: var(--card-background);
+  transition: background-color 300ms ease;
+}
+
+.theme-alternate-section-bg {
+   background-color: var(--alternate-section-background);
+   transition: background-color 300ms ease;
+}
+
+
+/* Text Colors - Use alongside Tailwind font sizes, weights etc. */
+/* Default text color is set on body, use these for specific overrides */
+.theme-text-main {
+   color: var(--text-color);
+   transition: color 300ms ease;
+}
+
+.theme-text-muted {
+  color: var(--text-color-muted);
+  transition: color 300ms ease;
+}
+
+.theme-primary-text {
+  color: var(--primary-text-color);
+  transition: color 300ms ease;
+}
+
+
+/* Borders */
+.theme-border {
+  border-color: var(--border-color);
+  transition: border-color 300ms ease;
+}
+
+/* Inputs, Selects, Textareas - Combine background, border, and text color */
+.theme-input {
+    background-color: var(--card-background); /* Use card background for form elements */
+    border-color: var(--border-color);
+    color: var(--text-color); /* Input value text color */
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
+}
+/* Style the placeholder color */
+.theme-input::placeholder {
+  color: var(--text-color-muted);
+  opacity: 1; /* Make sure placeholder is not transparent */
+}
+
+
+/* Primary Button Styles (e.g., Rent Now, Search Button, CTA buttons) */
+/* These classes replace Tailwind's bg-blue-600 and hover:bg-blue-700 */
+.theme-primary-button {
+  background-color: var(--primary-color);
+  color: white; /* Button text is white */
+  transition: background-color 0.3s ease; /* Smooth hover */
+}
+.theme-primary-button:hover {
+  background-color: var(--primary-hover-color);
+}
+
+
+/* Generic Hover Background - for toggles, menu items, FAQ buttons */
+/* Add this class IN ADDITION TO existing padding/rounded/transition classes */
+.theme-hover-bg:hover {
+  background-color: var(--hover-background);
+}
+
+
+/* Star Rating Color */
+.theme-star-color {
+    color: var(--star-color);
+}
+
+/* --- Specific Element Overrides (if needed) --- */
+
+/* Header sticky shadow */
+header.sticky {
+    /* Adjust shadow color based on dark mode if needed, or rely on Tailwind */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+body.dark-mode header.sticky {
+    /* Tailwind's dark:shadow-md might handle this already, check config */
+    /* box-shadow: 0 2px 4px rgba(255,255,255,0.1); */
+}
+
+
+/* FAQ Content */
+.faq-content {
+  /* Background color for the revealed answer content */
+   background-color: var(--card-background); /* Or another color */
+   transition: background-color 300ms ease;
+}
+.faq-content div {
+   color: var(--text-color-muted); /* Text color for the answer */
+   transition: color 300ms ease;
+}
+
+/* Ensure base text color is applied if no specific class */
+/* This might be redundant if set on body, but good for safety */
+/*
+div, p, span, h1, h2, h3, h4, h5, h6 {
+    color: inherit; // Inherit from parent (eventually body)
+}
+*/
+
+/* Hero & CTA Gradient sections - Keeping Tailwind classes */
+/* Vehicle Card Image Hover - Keeping Tailwind scale transform */
+
+
+/* Specific adjustments might be needed based on how elements render */

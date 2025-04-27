@@ -6,5 +6,149 @@
     "CLIENTS": "Clients",
     "PAYMENTS": "Payments & Expenses",
     "USER_MANAGEMENT": "User Management"
-  }
+  },
+  "brand": "DriveEasy",
+  "lang": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch"
+  },
+  "nav": {
+    "home": "Home",
+    "vehicles": "Vehicles",
+    "services": "Services",
+    "testimonials": "Testimonials",
+    "faq": "FAQ",
+     "contact": "Contact"
+  },
+  "hero": {
+    "title": "Find Your Perfect Rental Car",
+    "subtitle": "Browse our wide selection of vehicles for any occasion, from city trips to family vacations.",
+    "cta1": "Browse Vehicles",
+    "cta2": "Learn More About Us"
+  },
+  "stats": {
+    "locations": "Locations",
+    "vehicles": "Vehicles",
+    "happy_customers": "Happy Customers",
+    "support": "Support"
+  },
+  "search": {
+    "title": "Quick Vehicle Search",
+    "pickup": "Pickup Location",
+    "pickup_date": "Pickup Date",
+    "return_date": "Return Date",
+    "button": "Search"
+  },
+  "location": {
+    "city1": "New York",
+    "city2": "Los Angeles",
+    "city3": "Chicago"
+  },
+  "vehicles": {
+    "title": "Our Fleet",
+    "subtitle": "Choose from a wide range of vehicles for any occasion.",
+    "loading": "Loading vehicles...",
+    "error_fetching": "Failed to load vehicles. Please try again later.",
+    "no_vehicles_found": "No vehicles found at the moment.",
+    "view_all": "View All Vehicles"
+  },
+  "vehicle": {
+    "day": "day",
+    "rent": "Rent Now",
+    "seats": "seats"
+  },
+  "features": {
+    "title": "Why Choose Us?",
+    "subtitle": "Experience hassle-free car rental with our premium services.",
+    "wide_selection": "Wide Selection",
+    "wide_selection_desc": "Explore a diverse range of vehicles, from compact cars to spacious SUVs.",
+    "easy_booking": "Easy Booking",
+    "easy_booking_desc": "Our intuitive platform makes renting a car quick and hassle-free.",
+    "affordable_prices": "Affordable Prices",
+    "affordable_prices_desc": "Get the best value for your money with our competitive rates.",
+    "24_7_support": "24/7 Support",
+    "24_7_support_desc": "Our dedicated support team is always available to assist you.",
+    "multiple_locations": "Multiple Locations",
+    "multiple_locations_desc": "Pick up or drop off your car at convenient locations across the city.",
+    "flexible_options": "Flexible Options",
+    "flexible_options_desc": "Choose from various rental durations and customizable options."
+  },
+  "how": {
+    "title": "How It Works",
+    "subtitle": "Renting a car with us is easy. Just follow these simple steps.",
+    "step1_title": "Choose Your Vehicle",
+    "step1_desc": "Browse our extensive fleet and select the perfect car for your needs.",
+    "step2_title": "Book Online",
+    "step2_desc": "Securely book your chosen vehicle online in just a few clicks.",
+    "step3_title": "Pick Up & Drive",
+    "step3_desc": "Collect your car from the designated location and start your journey."
+  },
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "subtitle": "Hear from our satisfied clients about their rental experiences.",
+    "name1": "Alice Johnson",
+    "text1": "Renting was so smooth! The car was clean and the process was quick.",
+    "name2": "Bob Williams",
+    "text2": "Great service and friendly staff. I highly recommend them!",
+    "name3": "Charlie Brown",
+    "text3": "Affordable prices and a wide selection of cars. Will rent again!"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about our car rental service.",
+    "q1": "What is the minimum age to rent a car?",
+    "a1": "The minimum age is typically 21, but may vary depending on the vehicle type and location.",
+    "q2": "What documents do I need?",
+    "a2": "You will generally need a valid driver's license, a major credit card, and depending on location, potentially an international driving permit or passport.",
+    "q3": "Can I add an additional driver?",
+    "a3": "Yes, additional drivers can usually be added to the rental agreement for an extra fee. They must meet the same rental requirements as the primary driver."
+  },
+  "cta": {
+    "title": "Ready to Hit the Road?",
+    "subtitle": "Find the perfect car for your next adventure or trip and book today!",
+    "button1": "Browse Vehicles",
+    "button2": "Create an Account"
+  },
+  "footer": {
+    "about": "Your reliable partner for car rentals. We offer a wide selection of vehicles and excellent service.",
+    "links_title": "Quick Links",
+    "link1": "Home",
+    "link2": "Vehicles",
+    "link3": "Services",
+    "link4": "FAQ",
+    "contact_title": "Contact Us",
+    "address": "123 Main St,\nCityville, ST 12345\nCountry",
+    "newsletter_title": "Newsletter",
+    "newsletter_desc": "Stay updated with our latest deals and offers.",
+    "email_placeholder": "Enter your email",
+    "copyright": "All rights reserved.",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "newsletter_invalid_email": "Please enter a valid email address.",
+    "newsletter_success": "Thank you for subscribing, {{email}}!",
+    "newsletter_error": "Failed to subscribe to the newsletter. Please try again."
+  },
+  "modal": {
+    "seats": "seats",
+    "pickup_date": "Pickup Date",
+    "return_date": "Return Date",
+    "insurance": "Insurance Option",
+    "insurance_basic": "Basic Coverage",
+    "insurance_premium": "Premium Coverage",
+    "insurance_full": "Full Coverage",
+    "confirm": "Confirm Rental",
+    "transmission_auto": "Automatic",
+    "transmission_manual": "Manual",
+    "transmission_unknown": "Unknown",
+    "validation": {
+      "date_required": "Please select both pickup and return dates.",
+      "return_date_after": "Return date must be after pickup date."
+    },
+    "rental_submitted": "Rental request submitted successfully! We'll contact you shortly."
+  },
+  "defaultCarburant": "N/A",
+  "defaultType": "Vehicle",
+  "defaultColor": "Color"
 }

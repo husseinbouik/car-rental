@@ -22,6 +22,7 @@ import { ResetPasswordRequestComponent } from './reset-password-request/reset-pa
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { LandingComponent } from './landing/landing.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { LandingComponent } from './landing/landing.component';
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
 })
 export class ClientModule { }

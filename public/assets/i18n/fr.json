@@ -6,5 +6,149 @@
     "CLIENTS": "Clients",
     "PAYMENTS": "Paiements et dépenses",
     "USER_MANAGEMENT": "Gestion des utilisateurs"
-  }
+  },
+  "brand": "DriveEasy",
+  "lang": {
+    "en": "Anglais",
+    "fr": "Français",
+    "es": "Espagnol",
+    "de": "Allemand"
+  },
+  "nav": {
+    "home": "Accueil",
+    "vehicles": "Véhicules",
+    "services": "Services",
+    "testimonials": "Témoignages",
+    "faq": "FAQ",
+     "contact": "Contact"
+  },
+  "hero": {
+    "title": "Trouvez Votre Voiture de Location Parfaite",
+    "subtitle": "Découvrez notre large sélection de véhicules pour toute occasion, des voyages en ville aux vacances en famille.",
+    "cta1": "Parcourir les véhicules",
+    "cta2": "En savoir plus sur nous"
+  },
+  "stats": {
+    "locations": "Agences",
+    "vehicles": "Véhicules",
+    "happy_customers": "Clients satisfaits",
+    "support": "Support"
+  },
+  "search": {
+    "title": "Recherche rapide de véhicule",
+    "pickup": "Lieu de prise en charge",
+    "pickup_date": "Date de prise en charge",
+    "return_date": "Date de retour",
+    "button": "Rechercher"
+  },
+  "location": {
+    "city1": "New York",
+    "city2": "Los Angeles",
+    "city3": "Chicago"
+  },
+  "vehicles": {
+    "title": "Notre flotte",
+    "subtitle": "Choisissez parmi une large gamme de véhicules pour toute occasion.",
+    "loading": "Chargement des véhicules...",
+    "error_fetching": "Échec du chargement des véhicules. Veuillez réessayer plus tard.",
+    "no_vehicles_found": "Aucun véhicule trouvé pour le moment.",
+    "view_all": "Voir tous les véhicules"
+  },
+  "vehicle": {
+    "day": "jour",
+    "rent": "Louer maintenant",
+    "seats": "places"
+  },
+  "features": {
+    "title": "Pourquoi nous choisir ?",
+    "subtitle": "Faites l'expérience de la location de voiture sans tracas grâce à nos services haut de gamme.",
+    "wide_selection": "Large sélection",
+    "wide_selection_desc": "Explorez une gamme variée de véhicules, des voitures compactes aux SUV spacieux.",
+    "easy_booking": "Réservation facile",
+    "easy_booking_desc": "Notre plateforme intuitive rend la location d'une voiture rapide et simple.",
+    "affordable_prices": "Prix abordables",
+    "affordable_prices_desc": "Obtenez le meilleur rapport qualité-prix grâce à nos tarifs compétitifs.",
+    "24_7_support": "Support 24h/24 et 7j/7",
+    "24_7_support_desc": "Notre équipe de support dédiée est toujours disponible pour vous aider.",
+    "multiple_locations": "Multiples agences",
+    "multiple_locations_desc": "Récupérez ou déposez votre voiture dans nos agences pratiques à travers la ville.",
+    "flexible_options": "Options flexibles",
+    "flexible_options_desc": "Choisissez parmi différentes durées de location et options personnalisables."
+  },
+  "how": {
+    "title": "Comment ça marche",
+    "subtitle": "Louer une voiture chez nous est facile. Suivez simplement ces étapes.",
+    "step1_title": "Choisissez Votre Véhicule",
+    "step1_desc": "Parcourez notre vaste flotte et sélectionnez la voiture parfaite pour vos besoins.",
+    "step2_title": "Réservez en ligne",
+    "step2_desc": "Réservez en toute sécurité votre véhicule choisi en ligne en quelques clics seulement.",
+    "step3_title": "Prise en charge et conduite",
+    "step3_desc": "Récupérez votre voiture à l'agence désignée et commencez votre voyage."
+  },
+  "testimonials": {
+    "title": "Ce que disent nos clients",
+    "subtitle": "Écoutez nos clients satisfaits parler de leurs expériences de location.",
+    "name1": "Alice Johnson",
+    "text1": "La location s'est déroulée sans accroc ! La voiture était propre et le processus rapide.",
+    "name2": "Bob Williams",
+    "text2": "Excellent service et personnel aimable. Je les recommande vivement !",
+    "name3": "Charlie Brown",
+    "text3": "Des prix abordables et une large sélection de voitures. Je relouerai chez eux !"
+  },
+  "faq": {
+    "title": "Foire aux questions",
+    "subtitle": "Trouvez les réponses aux questions courantes sur notre service de location de voitures.",
+    "q1": "Quel est l'âge minimum pour louer une voiture ?",
+    "a1": "L'âge minimum est généralement de 21 ans, mais peut varier en fonction du type de véhicule et de l'agence.",
+    "q2": "Quels documents sont nécessaires ?",
+    "a2": "Vous aurez généralement besoin d'un permis de conduire valide, d'une carte de crédit principale, et selon l'agence, éventuellement d'un permis de conduire international ou d'un passeport.",
+    "q3": "Puis-je ajouter un conducteur additionnel ?",
+    "a3": "Oui, des conducteurs additionnels peuvent généralement être ajoutés au contrat de location moyennant des frais supplémentaires. Ils doivent satisfaire aux mêmes exigences de location que le conducteur principal."
+  },
+  "cta": {
+    "title": "Prêt à prendre la route ?",
+    "subtitle": "Trouvez la voiture parfaite pour votre prochaine aventure ou voyage et réservez dès aujourd'hui !",
+    "button1": "Parcourir les véhicules",
+    "button2": "Créer un compte"
+  },
+  "footer": {
+    "about": "Votre partenaire fiable pour la location de voitures. Nous offrons une large sélection de véhicules et un excellent service.",
+    "links_title": "Liens rapides",
+    "link1": "Accueil",
+    "link2": "Véhicules",
+    "link3": "Services",
+    "link4": "FAQ",
+    "contact_title": "Nous contacter",
+    "address": "123 rue Principale,\nVilleneuve, ÉT 12345\nPays",
+    "newsletter_title": "Newsletter",
+    "newsletter_desc": "Restez informé de nos dernières offres et promotions.",
+    "email_placeholder": "Entrez votre email",
+    "copyright": "Tous droits réservés.",
+    "privacy_policy": "Politique de confidentialité",
+    "terms_of_service": "Conditions d'utilisation",
+    "newsletter_invalid_email": "Veuillez entrer une adresse email valide.",
+    "newsletter_success": "Merci de vous être abonné, {{email}} !",
+    "newsletter_error": "Échec de l'abonnement à la newsletter. Veuillez réessayer."
+  },
+  "modal": {
+    "seats": "places",
+    "pickup_date": "Date de prise en charge",
+    "return_date": "Date de retour",
+    "insurance": "Option d'assurance",
+    "insurance_basic": "Couverture de base",
+    "insurance_premium": "Couverture premium",
+    "insurance_full": "Couverture complète",
+    "confirm": "Confirmer la location",
+    "transmission_auto": "Automatique",
+    "transmission_manual": "Manuelle",
+    "transmission_unknown": "Inconnue",
+    "validation": {
+      "date_required": "Veuillez sélectionner les dates de prise en charge et de retour.",
+      "return_date_after": "La date de retour doit être postérieure à la date de prise en charge."
+    },
+    "rental_submitted": "Demande de location soumise avec succès ! Nous vous contacterons sous peu."
+  },
+  "defaultCarburant": "N/A",
+  "defaultType": "Véhicule",
+  "defaultColor": "Couleur"
 }

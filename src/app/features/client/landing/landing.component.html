@@ -1,169 +1,575 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rental Car App - Your Journey</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<!-- Remove bg-gray-100 dark:bg-gray-900 here. Body CSS handles the background -->
+<div class="min-h-screen transition-colors duration-300">
+  <!-- Header -->
+  <!-- Use theme-card-bg for header background -->
+  <header class="theme-card-bg shadow-md sticky top-0 z-50 transition-colors duration-300">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <!-- Logo -->
+      <!-- Use theme-primary-text for logo text -->
+      <a href="#" class="text-2xl font-bold theme-primary-text flex items-center">
+        <i class="fas fa-car mr-2"></i>
+        <span>{{ 'brand' | translate }}</span>
+      </a>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512..." crossorigin="anonymous" />
-</head>
-<body class="bg-gray-100 font-sans leading-normal text-gray-900">
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:block">
+        <ul class="flex space-x-6">
+          <li *ngFor="let item of navItems">
+            <a [href]="item.link"
+               (click)="scrollToSection(item.link, $event)"
+               class="hover:theme-primary-text transition duration-300"
+               [class.theme-primary-text]="activeSection === item.link.substring(1)">
+              {{ item.title | translate }}
+            </a>
+          </li>
+        </ul>
+      </nav>
 
+      <!-- Right Side Controls -->
+      <div class="flex items-center space-x-4">
+        <!-- Language Selector -->
+        <select [(ngModel)]="currentLang" (change)="switchLanguage($event)"
+                class="theme-card-bg theme-text-main px-3 py-1 rounded-md border theme-border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+          <option value="de">Deutsch</option>
+        </select>
 
-    <header class="bg-white py-6 shadow-md">
-        <div class="container mx-auto flex items-center justify-between px-4">
-            <a href="#" class="text-2xl font-bold text-blue-600">🚗 Your Car App</a>
-            <nav>
-                <ul class="flex space-x-8">
-                    <li><a href="#services" class="hover:text-blue-600 transition duration-300">Services</a></li>
-                    <li><a href="#vehicles" class="hover:text-blue-600 transition duration-300">Vehicles</a></li>
-                    <li><a href="#faq" class="hover:text-blue-600 transition duration-300">FAQ</a></li>
-                    <li><a href="#" class="hover:text-blue-600 transition duration-300">Contact</a></li>
+        <!-- Dark Mode Toggle -->
+        <!-- Use theme-hover-bg for hover effect -->
+        <button (click)="toggleDarkMode()"
+                class="p-2 rounded-full theme-hover-bg transition-colors">
+          <!-- Keep these Tailwind classes for icon visibility toggle -->
+          <i class="fas fa-moon dark:hidden"></i>
+          <i class="fas fa-sun hidden dark:block"></i>
+        </button>
 
-                     <li><a href="/login" class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300">Login</a></li>
-                     <li><a href="/signup" class="bg-green-500 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-300">Sign Up</a></li>
-                </ul>
-            </nav>
+        <!-- Mobile Menu Button -->
+        <!-- Use theme-hover-bg for hover effect -->
+        <button (click)="toggleMobileMenu()" class="md:hidden p-2 rounded-full theme-hover-bg">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <!-- Use theme-card-bg for mobile menu background -->
+    <div *ngIf="mobileMenuOpen" class="md:hidden theme-card-bg py-4 px-6 shadow-lg">
+      <ul class="space-y-4">
+        <li *ngFor="let item of navItems">
+          <a [href]="item.link"
+             class="block hover:theme-primary-text transition duration-300"
+             (click)="scrollToSection(item.link, $event); toggleMobileMenu()">
+            {{ item.title | translate }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <!-- KEEP Tailwind gradients as they are hard to replicate with simple variables -->
+  <section id="home" class="hero bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-700 dark:to-purple-800 py-20 md:py-32">
+    <div class="container mx-auto px-4 text-center">
+      <!-- Text color handled by the gradient background - usually white/light text here -->
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">{{ 'hero.title' | translate }}</h1>
+      <p class="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
+        {{ 'hero.subtitle' | translate }}
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <!-- Primary Button - white background in light mode -->
+        <!-- This button doesn't fit the --primary-color background pattern. Keep original Tailwind/manual styles -->
+        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <i class="fas fa-car mr-2"></i> {{ 'hero.cta1' | translate }}
+        </a>
+         <!-- Secondary Button - transparent with white border/text -->
+         <!-- This button also doesn't fit the main theme. Keep original styles -->
+        <a href="#services" (click)="scrollToSection('#services', $event)" class="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white">
+          <i class="fas fa-info-circle mr-2"></i> {{ 'hero.cta2' | translate }}
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <!-- Stats backgrounds are white/10 backdrop-blur - Keep Tailwind -->
+        <div *ngFor="let stat of stats" class="bg-white/10 backdrop-blur-sm p-4 rounded-lg text-white">
+          <div class="text-3xl font-bold">{{ stat.value }}</div>
+          <div class="text-sm">{{ stat.label | translate }}</div>
         </div>
-    </header>
-
-
-    <section class="bg-gradient-to-r from-blue-400 to-purple-500 py-32">
-        <div class="container mx-auto text-center px-4">
-            <h1 class="text-5xl font-extrabold text-white mb-6">Your Adventure Starts Here!</h1>
-            <p class="text-xl text-white/80 mb-10">
-                Explore our fleet. Flexible rentals, Drive free, and the Open Road Await.
-            </p>
-           <div class="inline-block rounded-full bg-white/20 py-2 px-6 hover:bg-white/30 transition duration-300">
-               <a href="#" class="text-white text-lg font-semibold">Get Started</a>
-           </div>
-
-
-
-         </div>
-    </section>
-
-
-
-
-    <section id="services" class="py-12">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-semibold text-gray-800 text-center mb-10">Our Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-
-
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <i class="fas fa-calendar-alt text-3xl text-blue-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold mb-2">Flexible Rentals</h3>
-                    <p class="text-gray-700">Choose from various rental durations to match your trip plans.</p>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-md p-6">
-                     <i class="fas fa-car text-3xl text-blue-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold mb-2">Wide Selection</h3>
-                    <p class="text-gray-700">From city cars to SUVs, Find  vehicles of offers.</p>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-md p-6">
-                   <i class="fas fa-headset text-3xl text-blue-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold mb-2">24/7 Support</h3>
-                    <p class="text-gray-700">Our friendly support team can answer your questions. </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section id="vehicles" class="py-12 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-semibold text-gray-800 text-center mb-8">Our Fleet</h2>
-
-
-             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-               <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
-                      <img src="https://via.placeholder.com/500x300" alt="Car Model" class="w-full h-64 object-cover">
-                       <div class="p-6">
-                           <h3 class="text-xl font-semibold mb-2">Car Model X</h3>
-                           <p class="text-gray-700 mb-4">Details. You need put data (car informations - Descriptions-)</p>
-
-                            <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mt-4">
-                                 Rent Now
-                            </a>
-                        </div>
-               </div>
-           </div>
-            <div class="mt-8 text-center">
-                <a href="#" class="text-blue-600 hover:underline font-semibold">View All Vehicles</a>
-             </div>
-        </div>
-    </section>
-
-
-    <section id="faq" class="py-12">
-      <div class="container mx-auto px-4">
-             <h2 class="text-3xl font-semibold text-gray-800 text-center mb-8">Frequently Asked Questions</h2>
-
-            <div class="space-y-4">
-                <div class="border rounded-md shadow-sm bg-white overflow-hidden">
-                      <div class="flex items-center justify-between p-4 cursor-pointer  text-lg font-medium text-gray-800">
-                         <span>  Question 1:   About Payment  ?</span>
-                        <i class="fas fa-chevron-down"></i>
-                   </div>
-
-                <div class="p-4 text-gray-700 block"> Answer text for the previous item , from a set list, or from Database . Implement as the most use . or, data from array . </div>
-               </div>
-
-
-        </div>
-     </div>
+      </div>
+    </div>
   </section>
 
+  <!-- Search Section -->
+  <section class="relative -mt-10 z-10">
+    <div class="container mx-auto px-4">
+      <!-- Use theme-card-bg for search container background -->
+      <div class="theme-card-bg rounded-xl shadow-xl p-6 max-w-6xl mx-auto">
+        <!-- Use theme-text-main for title -->
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'search.title' | translate }}</h3>
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <!-- Use theme-text-muted for labels -->
+            <label for="pickup-location" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.pickup' | translate }}</label>
+            <!-- Use theme-input and theme-border for input styles -->
+            <select id="pickup-location" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option *ngFor="let location of locations">{{ location | translate }}</option>
+            </select>
+          </div>
+          <div>
+            <!-- Use theme-text-muted for labels -->
+            <label for="pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.pickup_date' | translate }}</label>
+             <!-- Use theme-input and theme-border for input styles -->
+            <input type="date" id="pickup-date" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <!-- Use theme-text-muted for labels -->
+            <label for="return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.return_date' | translate }}</label>
+             <!-- Use theme-input and theme-border for input styles -->
+            <input type="date" id="return-date" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div class="flex items-end">
+            <!-- Use theme-primary-button for button styles -->
+            <button type="button" class="w-full theme-primary-button font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+              {{ 'search.button' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 
-    <section id="advantages" class="py-12 bg-gray-100">
-      <div class="container mx-auto px-4">
-          <h2 class="text-3xl font-semibold text-gray-800 text-center mb-10">Why Choose Us?</h2>
+  <!-- Vehicles Section -->
+  <!-- Use body background implicitly or define a section background if needed -->
+  <section id="vehicles" class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+         <!-- Use theme-text-main for title -->
+        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'vehicles.title' | translate }}</h2>
+        <!-- Use theme-text-muted for subtitle -->
+        <p class="theme-text-muted max-w-2xl mx-auto">
+          {{ 'vehicles.subtitle' | translate }}
+        </p>
+      </div>
 
+      <!-- Loading or Error Messages -->
+       <!-- Use theme-primary-text for loading spinner color -->
+      <div *ngIf="loadingVehicles" class="text-center theme-primary-text text-xl">
+          <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'vehicles.loading' | translate }}
+      </div>
+       <!-- Use text-red-600 (specific color, keep Tailwind or map to variable if needed) -->
+      <div *ngIf="vehicleError" class="text-center text-red-600 dark:text-red-400 text-xl">
+          <i class="fas fa-exclamation-circle mr-2"></i> {{ vehicleError }}
+      </div>
+       <!-- Use theme-text-muted for "no vehicles" message -->
+      <div *ngIf="!loadingVehicles && !vehicleError && vehicles.length === 0" class="text-center theme-text-muted text-xl">
+          {{ 'vehicles.no_vehicles_found' | translate }}
+      </div>
 
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fas fa-check-circle text-3xl text-green-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold mb-2">Benefit 1:  - Easy Booking </h3>
-                    <p class="text-gray-700">  A quick booking platform, is all  of you.</p>
-                 </div>
+      <!-- Vehicle Grid -->
+      <div *ngIf="!loadingVehicles && !vehicleError && vehicles.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Loop through vehicles from the service -->
+        <!-- Use theme-card-bg for card background -->
+        <div *ngFor="let vehicle of vehicles" class="theme-card-bg rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-xl hover:-translate-y-1">
+          <div class="relative overflow-hidden h-48">
+             <!-- Assuming vehicle.photo is a URL -->
+             <img *ngIf="vehicle.photo" src="data:image/jpeg;base64, {{ vehicle.photo }}" alt="Vehicle Photo" class="h-40 w-auto mx-auto">
 
-               <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                  <i class="fas fa-thumbs-up text-3xl text-blue-500 mb-4"></i>
-                 <h3 class="text-xl font-semibold mb-2">Benefit 2 : Fast-Customer  service.</h3>
-                 <p class="text-gray-700"> Fast Service and best help to your journey! </p>
-              </div>
-              <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                   <i class="fas fa-award text-3xl text-yellow-500 mb-4"></i>
-                 <h3 class="text-xl font-semibold mb-2"> Benefit 3 - Premium Quality cars</h3>
-                 <p class="text-gray-700"> Premium brand-new to have more pleasure from the drive  .</p>
-              </div>
-         </div>
-       </div>
-     </section>
-
-
-
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p>© 2024 Your Rental Car App. All rights reserved.</p>
-            <div class="mt-4">
-
-                 <a href="#" class="text-gray-300 hover:text-white mr-4">Privacy Policy</a>
-                 <a href="#" class="text-gray-300 hover:text-white">Terms of Service</a>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <!-- Use theme-text-main for vehicle name -->
+              <h3 class="text-xl font-semibold theme-text-main">{{ vehicle.vname }}</h3>
+              <!-- Removed static rating - add logic here if vehicle data includes a rating -->
+            </div>
+             <!-- Use theme-text-muted for vehicle model description -->
+            <p class="theme-text-muted mb-4">
+                {{ vehicle.modele }}
+            </p>
+             <!-- Use theme-text-muted for details text. Keep specific icon colors -->
+             <div class="grid grid-cols-2 gap-y-2 theme-text-muted text-sm mb-4">
+                 <div class="flex items-center"><i class="fas fa-users mr-2 text-blue-500"></i> {{ vehicle.capacite }} {{ 'vehicle.seats' | translate }}</div>
+                 <div class="flex items-center"><i class="fas fa-gas-pump mr-2 text-blue-500"></i> {{ (vehicle.carburant || 'defaultCarburant') | translate }}</div>
+                 <div class="flex items-center"><i class="fas fa-cogs mr-2 text-blue-500"></i> {{ getTransmissionText(vehicle.estAutomate) }}</div>
+                 <div class="flex items-center"><i class="fas fa-car mr-2 text-blue-500"></i> {{ (vehicle.type || 'defaultType') | translate }}</div>
              </div>
 
-             <div class="mt-2">
-                <p>Contact Us: <a href="mailto:contact@example.com" class="text-gray-300 hover:text-white">contactexample.com</a></p>
-                <p>Phone: +1-555-RENT-CAR</p>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                 <!-- Use theme-primary-text for price -->
+                <span class="text-2xl font-bold theme-primary-text">${{ vehicle.prixDeBase }}</span>
+                <!-- Use theme-text-muted for price /day -->
+                <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+              </div>
+               <!-- Use theme-primary-button for button styles -->
+              <button (click)="openRentalModal(vehicle)" class="theme-primary-button font-medium py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {{ 'vehicle.rent' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+         <!-- Use theme-primary-text for link color -->
+        <a href="#" class="inline-flex items-center theme-primary-text hover:text-blue-800 dark:hover:text-blue-300 font-semibold transition duration-300">
+          {{ 'vehicles.view_all' | translate }} <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <!-- Use theme-alternate-section-bg for section background -->
+  <section id="services" class="py-16 theme-alternate-section-bg">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <!-- Use theme-text-main for title -->
+        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'features.title' | translate }}</h2>
+        <!-- Use theme-text-muted for subtitle -->
+        <p class="theme-text-muted max-w-2xl mx-auto">
+          {{ 'features.subtitle' | translate }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Use theme-card-bg for feature card background -->
+        <div *ngFor="let feature of features" class="theme-card-bg p-6 rounded-lg shadow-md flex flex-col items-center text-center transition-transform hover:-translate-y-2">
+          <!-- Keep Tailwind classes for specific icon background colors -->
+          <div [class]="'bg-' + feature.color + '-100 dark:bg-' + feature.color + '-900/30 p-4 rounded-full mb-4'">
+            <!-- Keep Tailwind classes for specific icon colors -->
+            <i [class]="'fas ' + feature.icon + ' text-' + feature.color + '-600 dark:text-' + feature.color + '-400 text-2xl'"></i>
+          </div>
+           <!-- Use theme-text-main for title -->
+          <h3 class="text-xl font-semibold mb-2 theme-text-main">{{ feature.title | translate }}</h3>
+           <!-- Use theme-text-muted for description -->
+          <p class="theme-text-muted">
+            {{ feature.description | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <!-- Use body background implicitly or define a section background if needed -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+         <!-- Use theme-text-main for title -->
+        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'how.title' | translate }}</h2>
+        <!-- Use theme-text-muted for subtitle -->
+        <p class="theme-text-muted max-w-2xl mx-auto">
+          {{ 'how.subtitle' | translate }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div *ngFor="let step of steps" class="flex flex-col items-center text-center">
+          <!-- Keep Tailwind classes for specific circle background colors -->
+          <div class="bg-blue-100 dark:bg-blue-900/30 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+             <!-- Use theme-primary-text for circle number -->
+            <span class="theme-primary-text font-bold text-xl">{{ step.number }}</span>
+          </div>
+           <!-- Use theme-text-main for step title -->
+          <h3 class="text-xl font-semibold mb-2 theme-text-main">{{ step.title | translate }}</h3>
+           <!-- Use theme-text-muted for step description -->
+          <p class="theme-text-muted">
+            {{ step.description | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <!-- Use theme-alternate-section-bg for section background -->
+  <section id="testimonials" class="py-16 theme-alternate-section-bg">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+         <!-- Use theme-text-main for title -->
+        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'testimonials.title' | translate }}</h2>
+         <!-- Use theme-text-muted for subtitle -->
+        <p class="theme-text-muted max-w-2xl mx-auto">
+          {{ 'testimonials.subtitle' | translate }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Use theme-card-bg for testimonial card background -->
+        <div *ngFor="let testimonial of testimonials" class="theme-card-bg p-6 rounded-lg shadow-md transition-all hover:shadow-xl hover:-translate-y-1">
+          <div class="flex items-center mb-4">
+            <img [src]="testimonial.avatar" [alt]="testimonial.name" class="w-12 h-12 rounded-full mr-4 object-cover">
+            <div>
+               <!-- Use theme-text-main for name -->
+              <h4 class="font-semibold theme-text-main">{{ testimonial.name | translate }}</h4>
+              <!-- Keep text-yellow-400 for star color -->
+              <div class="flex text-yellow-400">
+                <i *ngFor="let star of [1,2,3,4,5]" class="fas"
+                   [class.fa-star]="star <= testimonial.rating"
+                   [class.fa-star-half-alt]="star > testimonial.rating && star - 0.5 <= testimonial.rating"
+                   [class.fa-star-o]="star > testimonial.rating && star - 0.5 > testimonial.rating"
+                   ></i>
+              </div>
+            </div>
+          </div>
+           <!-- Use theme-text-muted for italic text -->
+          <p class="theme-text-muted italic">
+            "{{ testimonial.text | translate }}"
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+   <!-- Use body background implicitly or define a section background if needed -->
+  <section id="faq" class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <!-- Use theme-text-main for title -->
+        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'faq.title' | translate }}</h2>
+        <!-- Use theme-text-muted for subtitle -->
+        <p class="theme-text-muted max-w-2xl mx-auto">
+          {{ 'faq.subtitle' | translate }}
+        </p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-4">
+         <!-- Use theme-border for border -->
+        <div *ngFor="let faq of faqs" class="border theme-border rounded-lg overflow-hidden">
+           <!-- Use theme-hover-bg for hover background -->
+           <!-- Use theme-card-bg for button background -->
+           <!-- Use theme-text-main for question text -->
+          <button (click)="toggleFaq(faq.id)" class="w-full flex justify-between items-center p-4 text-left theme-card-bg theme-hover-bg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span class="font-medium theme-text-main">{{ faq.question | translate }}</span>
+            <i class="fas fa-chevron-down transition-transform" [class.rotate-180]="faq.open"></i>
+          </button>
+          <div class="faq-content" [class.hidden]="!faq.open">
+            <!-- FAQ content text color is handled by faq-content div rule -->
+            <div class="p-4">
+              <p>{{ faq.answer | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <!-- KEEP Tailwind gradients -->
+  <section class="py-16 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-800 dark:to-purple-900">
+    <div class="container mx-auto px-4 text-center">
+      <!-- Text color handled by gradient background - usually white/light text here -->
+      <h2 class="text-3xl font-bold text-white mb-6">{{ 'cta.title' | translate }}</h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        {{ 'cta.subtitle' | translate }}
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <!-- Primary Button - white background -->
+         <!-- This button doesn't fit the --primary-color background pattern. Keep original Tailwind/manual styles -->
+        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition duration-300 focus:outline-none focus:ring-2 focus:ring-white">
+          {{ 'cta.button1' | translate }}
+        </a>
+         <!-- Secondary Button - transparent with white border/text -->
+         <!-- This button also doesn't fit the main theme. Keep original styles -->
+        <a routerLink="/signup" class="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition duration-300 focus:outline-none focus:ring-2 focus:ring-white">
+          {{ 'cta.button2' | translate }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <!-- Footer has a fixed dark background, not tied to light/dark theme variables -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Column 1 -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4 flex items-center">
+            <i class="fas fa-car mr-2"></i>
+            <!-- Use theme-primary-text if logo should follow primary color -->
+            <span>{{ 'brand' | translate }}</span>
+          </h3>
+           <!-- Use text-gray-400 (specific color, keep Tailwind or map if needed) -->
+          <p class="text-gray-400 mb-4">
+            {{ 'footer.about' | translate }}
+          </p>
+          <div class="flex space-x-4">
+             <!-- Use text-gray-400 (specific color) -->
+            <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors text-lg">
+              <i [class]="'fab ' + social.icon"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div>
+           <!-- Use theme-text-main for title -->
+          <h3 class="text-lg font-semibold mb-4 theme-text-main">
+             <!-- Keeping text-white from footer base -->
+            {{ 'footer.links_title' | translate }}</h3>
+          <ul class="space-y-2">
+            <li *ngFor="let link of footerLinks">
+              <!-- Use text-gray-400 (specific color) -->
+              <a [href]="link.link" (click)="scrollToSection(link.link, $event)" class="text-gray-400 hover:text-white transition-colors">
+                {{ link.title | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3 -->
+        <div>
+          <!-- Use theme-text-main for title -->
+          <h3 class="text-lg font-semibold mb-4 theme-text-main">
+             <!-- Keeping text-white from footer base -->
+            {{ 'footer.contact_title' | translate }}</h3>
+           <!-- Use text-gray-400 (specific color) -->
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-start">
+              <i class="fas fa-map-marker-alt mr-2 mt-1"></i>
+              <span>{{ 'footer.address' | translate }}</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-phone-alt mr-2"></i>
+              <span>+1 (555) 123-4567</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-envelope mr-2"></i>
+              <span>info&#64;driveeasy.com</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 4 -->
+        <div>
+           <!-- Use theme-text-main for title -->
+          <h3 class="text-lg font-semibold mb-4 theme-text-main">
+             <!-- Keeping text-white from footer base -->
+            {{ 'footer.newsletter_title' | translate }}</h3>
+           <!-- Use text-gray-400 (specific color) -->
+          <p class="text-gray-400 mb-4">
+            {{ 'footer.newsletter_desc' | translate }}
+          </p>
+          <form class="flex" (submit)="subscribeNewsletter($event)">
+            <!-- Use theme-input for input styles, but keep text-gray-900 for contrast in this dark footer -->
+            <input type="email" [placeholder]="'footer.email_placeholder' | translate"
+                   class="px-4 py-2 rounded-l-md w-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   [(ngModel)]="newsletterEmail" name="newsletterEmail" required>
+             <!-- Use theme-primary-button for button styles -->
+            <button type="submit" class="theme-primary-button px-4 py-2 rounded-r-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+           <!-- Newsletter Feedback Message - Keep text-green-500/text-red-500 as specific colors -->
+           <div *ngIf="newsletterMessage" class="mt-3 text-sm" [class.text-green-500]="!newsletterError" [class.text-red-500]="newsletterError">
+              {{ newsletterMessage }}
            </div>
         </div>
-    </footer>
+      </div>
 
-</body>
-</html>
+      <!-- Use border-gray-700 (specific color) -->
+      <!-- Use text-gray-400 (specific color) -->
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>© {{ currentYear }} {{ 'brand' | translate }}. {{ 'footer.copyright' | translate }}</p>
+        <div class="mt-2 flex justify-center space-x-4">
+           <!-- Use text-gray-400 (specific color) -->
+          <a *ngFor="let legal of legalLinks" [routerLink]="legal.link" class="text-gray-400 hover:text-white transition-colors">
+            {{ legal.title | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Rental Modal -->
+<!-- Use theme-card-bg for modal background -->
+<div *ngIf="showRentalModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="theme-card-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle sm:max-w-lg">
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-4">
+         <!-- Use theme-text-main for name -->
+        <h3 class="text-2xl font-bold theme-text-main">{{ selectedVehicle?.vname }}</h3>
+        <!-- Use theme-hover-bg for hover effect. Keep text-gray-500 for base color -->
+        <button (click)="closeRentalModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Use photo for image -->
+      <!-- <img [src]="selectedVehicle?.photo" [alt]="selectedVehicle?.vname" class="w-full h-48 object-cover rounded-md mb-4"> -->
+      <img *ngIf="selectedVehicle?.photo" src="data:image/jpeg;base64, {{ selectedVehicle?.photo }}" alt="Vehicle Photo" class="w-full h-48 object-cover rounded-md mb-4">
+
+      <div class="grid grid-cols-2 gap-4 mb-6 theme-text-muted">
+        <div class="flex items-center">
+          <i class="fas fa-users text-blue-500 mr-2"></i>
+          <span>{{ selectedVehicle?.capacite }} {{ 'modal.seats' | translate }}</span>
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-gas-pump text-blue-500 mr-2"></i>
+          <span>{{ (selectedVehicle?.carburant ?? 'defaultCarburant') | translate }}</span>
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-cogs text-blue-500 mr-2"></i>
+          <span>{{ getTransmissionText(selectedVehicle?.estAutomate) }}</span>
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-car text-blue-500 mr-2"></i>
+          <span>{{ selectedVehicle?.type || 'defaultType' | translate }}</span>
+        </div>
+         <div class="flex items-center" *ngIf="selectedVehicle?.modele">
+             <i class="fas fa-tag mr-2 text-blue-500"></i>
+             <span>{{ selectedVehicle?.modele }}</span>
+         </div>
+          <div class="flex items-center" *ngIf="selectedVehicle?.couleur">
+             <i class="fas fa-fill-drip mr-2 text-blue-500"></i>
+             <span>{{ (selectedVehicle?.couleur ?? 'defaultColor') | translate }}</span>
+         </div>
+      </div>
+
+      <form (submit)="submitRentalRequest()">
+        <div class="mb-4">
+           <!-- Use theme-text-muted for labels -->
+          <label for="modal-pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.pickup_date' | translate }}</label>
+           <!-- Use theme-input and theme-border for input styles -->
+          <input type="date" id="modal-pickup-date" [(ngModel)]="rentalData.pickupDate" name="pickupDate" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+
+        <div class="mb-4">
+          <!-- Use theme-text-muted for labels -->
+          <label for="modal-return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.return_date' | translate }}</label>
+           <!-- Use theme-input and theme-border for input styles -->
+          <input type="date" id="modal-return-date" [(ngModel)]="rentalData.returnDate" name="returnDate" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+
+        <div class="mb-6">
+          <!-- Use theme-text-muted for labels -->
+          <label for="modal-insurance" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.insurance' | translate }}</label>
+           <!-- Use theme-input and theme-border for input styles -->
+          <select id="modal-insurance" [(ngModel)]="rentalData.insurance" name="insurance" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="basic">{{ 'modal.insurance_basic' | translate }}</option>
+            <option value="premium">{{ 'modal.insurance_premium' | translate }}</option>
+            <option value="full">{{ 'modal.insurance_full' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <div>
+            <!-- Use theme-primary-text for price -->
+            <span class="text-2xl font-bold theme-primary-text">${{ selectedVehicle?.prixDeBase }}</span>
+            <!-- Use theme-text-muted for price /day -->
+            <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+          </div>
+           <!-- Use theme-primary-button for button styles -->
+          <button type="submit" class="theme-primary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            {{ 'modal.confirm' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
