@@ -226,19 +226,11 @@ export class LandingComponent implements OnInit {
       }
   }
 
-   switchLanguage(event: Event): void {
-       const target = event.target as HTMLSelectElement;
-       const lang = target.value;
-       if (isPlatformBrowser(this.platformId) && lang && this.translate.getLangs().includes(lang)) {
-           this.currentLang = lang;
-           this.translate.use(this.currentLang);
-           localStorage.setItem('language', this.currentLang);
-       } else {
-           console.warn(`Attempted to switch to an invalid or unsupported language: ${lang}`);
-           this.currentLang = this.translate.currentLang || 'en';
-           target.value = this.currentLang;
-       }
-   }
+  switchLanguage(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const lang = target.value;
+    this.translate.use(lang);
+  }
 
 
   initRentalDates(): void {
