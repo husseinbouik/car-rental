@@ -38,4 +38,17 @@ verifyEmail(token: string): Observable<any> {
     })
   );
 }
+
+
+  // Dummy method: Replace with your actual authentication check
+  isLoggedIn(): boolean {
+    // Example: Check if a token exists in localStorage
+    // return !!localStorage.getItem('access_token');
+    // For now, let's just return false to *simulate* being logged out for testing
+    // You MUST replace this with your actual auth check logic
+    return false; // Set to true to simulate being logged in
+  }
+
+  // You would have methods like login(credentials), signup(userData), logout() etc.
 }
+

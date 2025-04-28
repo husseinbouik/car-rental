@@ -1,4 +1,5 @@
 <!-- Remove bg-gray-100 dark:bg-gray-900 here. Body CSS handles the background -->
+<!-- MAIN PAGE CONTENT WRAPPER -->
 <div class="min-h-screen transition-colors duration-300">
   <!-- Header -->
   <header class="theme-card-bg shadow-md sticky top-0 z-50 transition-colors duration-300">
@@ -397,9 +398,51 @@
     </div>
   </footer>
 </div>
+<!-- END OF MAIN PAGE CONTENT WRAPPER -->
+
+
+<!-- Authentication Required Modal -->
+<!-- MOVED OUTSIDE THE MAIN CONTENT WRAPPER -->
+<div *ngIf="showAuthModal" class="fixed inset-0 bg-gray-500/75 bg-opacity-60 flex items-center justify-center z-[60] p-4">
+  <div class="theme-card-bg rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
+    <div class="p-6 text-center">
+      <div class="flex justify-end items-start mb-4">
+         <!-- Close Button -->
+        <button (click)="closeAuthModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div class="mb-6">
+         <i class="fas fa-user-lock text-blue-500 text-4xl mb-4"></i>
+         <h3 class="text-2xl font-bold theme-text-main mb-2">{{ 'auth_modal.title' | translate }}</h3>
+         <p class="theme-text-muted">
+           {{ 'auth_modal.message' | translate }}
+         </p>
+         <p *ngIf="pendingRentalVehicle" class="theme-text-muted italic mt-2">
+             {{ 'auth_modal.renting_vehicle' | translate }}: <strong>{{ pendingRentalVehicle.marque }} {{ pendingRentalVehicle.modele }}</strong>
+         </p>
+      </div>
+
+
+      <div class="flex flex-col space-y-4">
+        <button (click)="navigateToLogin()"
+                class="theme-primary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+          {{ 'auth_modal.signin' | translate }}
+        </button>
+        <button (click)="navigateToSignup()"
+                class="theme-secondary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full">
+           {{ 'auth_modal.signup' | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Rental Modal -->
-<div *ngIf="showRentalModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+<!-- MOVED OUTSIDE THE MAIN CONTENT WRAPPER -->
+<!-- <div *ngIf="showRentalModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
   <div class="theme-card-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle sm:max-w-lg">
     <div class="p-6">
       <div class="flex justify-between items-start mb-4">
@@ -470,4 +513,4 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->

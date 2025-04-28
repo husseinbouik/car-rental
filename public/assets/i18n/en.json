@@ -150,5 +150,12 @@
   },
   "defaultCarburant": "N/A",
   "defaultType": "Vehicle",
-  "defaultColor": "Color"
+  "defaultColor": "Color",
+  "auth_modal": {
+    "title": "Sign In or Sign Up",
+    "message": "You need to be logged in to rent a vehicle. Please sign in or create an account.",
+    "renting_vehicle": "You were trying to rent",
+    "signin": "Sign In",
+    "signup": "Sign Up"
+  }
 }

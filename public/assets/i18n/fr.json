@@ -150,5 +150,12 @@
   },
   "defaultCarburant": "N/A",
   "defaultType": "Véhicule",
-  "defaultColor": "Couleur"
+  "defaultColor": "Couleur",
+  "auth_modal": {
+    "title": "Connectez-vous ou Inscrivez-vous",
+    "message": "Vous devez être connecté pour louer un véhicule. Veuillez vous connecter ou créer un compte.",
+    "renting_vehicle": "Vous essayiez de louer",
+    "signin": "Se connecter",
+    "signup": "S'inscrire"
+  }
 }

@@ -3,9 +3,11 @@ import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router'; // <--- Import Router
 import { Voiture } from '../../admin/vehicles/vehicle.model'; // Adjust path as needed
 import { VehicleService } from '../../admin/vehicles/vehicle.service'; // Adjust path as needed
-import { catchError, of } from 'rxjs'; // Import catchError and of
+import { AuthService } from '../auth.service'; // <--- Import AuthService (Adjust path)
+import { catchError, of } from 'rxjs';
 
 interface Feature {
   title: string;
@@ -35,9 +37,14 @@ export class LandingComponent implements OnInit {
   currentLang = 'en';
   activeSection = 'home';
 
+  // Rental Modal properties
   showRentalModal = false;
-  selectedVehicle: Voiture | null = null;
+  selectedVehicle: Voiture | null = null; // This holds the vehicle for the RENTAL modal
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
+
+  // --- NEW PROPERTIES FOR AUTH MODAL ---
+  showAuthModal = false; // <--- New property to control the auth modal
+  public pendingRentalVehicle: Voiture | null = null; // <--- Temporarily store the vehicle if auth is needed
 
   newsletterEmail = '';
   currentYear = new Date().getFullYear();
@@ -78,8 +85,6 @@ export class LandingComponent implements OnInit {
     { id: 2, question: 'faq.q2', answer: 'faq.a2', open: false },
     { id: 3, question: 'faq.q3', answer: 'faq.a3', open: false }
   ];
-  // Removed locations as it's no longer used for search input, but could be used elsewhere
-  // locations = ['location.city1', 'location.city2', 'location.city3'];
 
   socialLinks: { link: string; icon: string }[] = [
     { link: 'https://facebook.com', icon: 'fa-facebook' },
@@ -99,14 +104,12 @@ export class LandingComponent implements OnInit {
   newsletterMessage: string | null = null;
   newsletterError = false;
 
-   // --- NEW PROPERTIES FOR VEHICLE DATA & SEARCH ---
-   vehicles: Voiture[] = []; // Holds the full list fetched from the service
-   filteredVehicles: Voiture[] = []; // Holds the list currently displayed (filtered)
+   vehicles: Voiture[] = [];
+   filteredVehicles: Voiture[] = [];
    loadingVehicles = true;
    vehicleError: string | null = null;
 
-   searchVehicleName: string = ''; // Property to hold the vehicle name search term
-
+   searchVehicleName: string = '';
 
   private sectionOffsets: Map<string, { top: number, bottom: number }> = new Map();
   private offsetsCalculated = false;
@@ -117,19 +120,20 @@ export class LandingComponent implements OnInit {
     private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private cdr: ChangeDetectorRef,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private authService: AuthService, // <--- Inject AuthService
+    private router: Router // <--- Inject Router
   ) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initializeDarkMode();
       this.initializeLanguage();
-      this.fetchVehicles(); // Fetch vehicles on init
+      this.fetchVehicles();
     }
     this.initRentalDates();
   }
 
-   // Fetch vehicles from the service
    fetchVehicles(): void {
       this.loadingVehicles = true;
       this.vehicleError = null;
@@ -142,7 +146,7 @@ export class LandingComponent implements OnInit {
          })
       ).subscribe((data: Voiture[]) => {
          this.vehicles = data;
-         this.filteredVehicles = [...this.vehicles]; // Initialize filtered list with all vehicles
+         this.filteredVehicles = [...this.vehicles];
          console.log('Vehicles fetched:', this.vehicles);
          this.loadingVehicles = false;
 
@@ -155,58 +159,51 @@ export class LandingComponent implements OnInit {
       });
    }
 
-   // Method to perform the search filtering
    performSearch(event?: Event): void {
        if (event) {
-           event.preventDefault(); // Prevent default form submission page reload
+           event.preventDefault();
        }
 
        const searchTerm = this.searchVehicleName.trim().toLowerCase();
 
        if (!searchTerm) {
-           // If search term is empty, show all vehicles
            this.filteredVehicles = [...this.vehicles];
        } else {
-           // Filter vehicles where vname includes the search term (case-insensitive)
            this.filteredVehicles = this.vehicles.filter(vehicle =>
-               vehicle.vname?.toLowerCase().includes(searchTerm)
+               vehicle.vname?.toLowerCase().includes(searchTerm) ||
+               vehicle.modele?.toLowerCase().includes(searchTerm) || // Add other fields you want to search
+               vehicle.marque?.toLowerCase().includes(searchTerm)
            );
        }
-        // Optional: Scroll to the vehicles section after searching
-       // if (this.filteredVehicles.length > 0 || searchTerm) {
-       //      this.scrollToSection('#vehicles');
-       // }
    }
 
 
-  // Initialize dark mode based on localStorage, apply to body
   initializeDarkMode(): void {
       if (isPlatformBrowser(this.platformId)) {
           const darkMode = localStorage.getItem('darkMode');
           if (darkMode === 'enabled') {
             this.isDarkMode = true;
             document.body.classList.add('dark-mode');
-            document.documentElement.classList.add('dark'); // Keep for Tailwind dark variants
+            document.documentElement.classList.add('dark');
           } else {
             this.isDarkMode = false;
             document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark'); // Keep for Tailwind dark variants
+            document.documentElement.classList.remove('dark');
           }
       }
   }
 
-  // Toggle dark mode, apply to body
   toggleDarkMode(): void {
     this.isDarkMode = !this.isDarkMode;
     if (isPlatformBrowser(this.platformId)) {
       if (this.isDarkMode) {
         document.body.classList.add('dark-mode');
         localStorage.setItem('darkMode', 'enabled');
-        document.documentElement.classList.add('dark'); // Keep for Tailwind dark variants
+        document.documentElement.classList.add('dark');
       } else {
         document.body.classList.remove('dark-mode');
         localStorage.setItem('darkMode', 'disabled');
-        document.documentElement.classList.remove('dark'); // Keep for Tailwind dark variants
+        document.documentElement.classList.remove('dark');
       }
     }
   }
@@ -254,7 +251,6 @@ export class LandingComponent implements OnInit {
    @HostListener('window:scroll', ['$event'])
    onWindowScroll() {
      if (isPlatformBrowser(this.platformId)) {
-       // Recalculate offsets if filteredVehicles list changes significantly the first time it's populated
         if (!this.offsetsCalculated && this.filteredVehicles.length > 0 && this.navItems.length > 0) {
            this.calculateSectionOffsets();
         }
@@ -304,14 +300,13 @@ export class LandingComponent implements OnInit {
            const sectionId = item.link.substring(1);
            const element = document.getElementById(sectionId);
            if (element) {
-             const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+             const headerHeight = document.querySelector('header')?.offsetHeight || 80; // Adjust if needed
              const top = element.offsetTop - headerHeight - 1;
              const bottom = top + element.offsetHeight;
              this.sectionOffsets.set(sectionId, { top, bottom });
            }
          });
          this.offsetsCalculated = true;
-        console.log("Section offsets calculated:", this.sectionOffsets);
       }
    }
 
@@ -322,7 +317,7 @@ export class LandingComponent implements OnInit {
           const element = document.getElementById(sectionId);
           if(element) {
                if (isPlatformBrowser(this.platformId)) {
-                 const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+                 const headerHeight = document.querySelector('header')?.offsetHeight || 80; // Adjust if needed
                  const targetTop = element.offsetTop - headerHeight;
 
                  window.scrollTo({
@@ -335,13 +330,14 @@ export class LandingComponent implements OnInit {
              }
               this.activeSection = sectionId;
                if (isPlatformBrowser(this.platformId)) {
-                 setTimeout(() => {
+                 setTimeout(() => { // Use a timeout to wait for smooth scroll
                      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                     const elementTop = element.offsetTop - (document.querySelector('header')?.offsetHeight || 80);
-                     if (Math.abs(currentScroll - elementTop) < 20) {
+                     const elementTop = element.offsetTop - (document.querySelector('header')?.offsetHeight || 80); // Adjust header height
+                     // Check if we are close to the target position before updating URL
+                     if (Math.abs(currentScroll - elementTop) < 20) { // 20px tolerance
                           history.replaceState(null, '', link);
                      }
-                 }, 600);
+                 }, 600); // Match or slightly exceed smooth scroll duration
               }
           }
      } else if (this.mobileMenuOpen) {
@@ -351,22 +347,64 @@ export class LandingComponent implements OnInit {
 
 
   // --- MODAL HANDLING ---
+
+  // This is the method called when "Rent" button is clicked
   openRentalModal(vehicle: Voiture): void {
-    this.selectedVehicle = vehicle;
-    this.initRentalDates();
-    this.showRentalModal = true;
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = 'hidden';
+    if (this.authService.isLoggedIn()) {
+      // If user is logged in, proceed to show the rental details modal
+      this.selectedVehicle = vehicle;
+      this.initRentalDates();
+      this.showRentalModal = true;
+      if (isPlatformBrowser(this.platformId)) {
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      }
+    } else {
+      // If user is NOT logged in, show the authentication modal
+      this.pendingRentalVehicle = vehicle; // Store the vehicle they tried to rent
+      this.openAuthModal();
     }
   }
 
   closeRentalModal(): void {
     this.showRentalModal = false;
-    this.selectedVehicle = null;
+    this.selectedVehicle = null; // Clear selected vehicle when closing the rental modal
     if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''; // Restore scrolling
     }
   }
+
+  // --- NEW AUTH MODAL METHODS ---
+  openAuthModal(): void {
+     this.showAuthModal = true;
+     if (isPlatformBrowser(this.platformId)) {
+       document.body.style.overflow = 'hidden'; // Prevent scrolling
+     }
+  }
+
+  closeAuthModal(): void {
+     this.showAuthModal = false;
+     this.pendingRentalVehicle = null; // Clear the pending vehicle if auth modal is closed
+     if (isPlatformBrowser(this.platformId)) {
+       document.body.style.overflow = ''; // Restore scrolling
+     }
+  }
+
+  // Methods to navigate to login/signup pages
+  navigateToLogin(): void {
+     this.closeAuthModal(); // Close the auth modal
+     this.router.navigate(['/login']); // Navigate to your login route
+     // OPTIONAL: You might want to pass the pendingRentalVehicle ID or other state
+     // so the login page knows to redirect back here and potentially re-open the rental modal.
+     // This requires more complex state management (e.g., a redirect service)
+     // For simplicity here, we just navigate and the user will have to find the car again.
+  }
+
+  navigateToSignup(): void {
+     this.closeAuthModal(); // Close the auth modal
+     this.router.navigate(['/signup']); // Navigate to your signup route
+      // OPTIONAL: Similar considerations as navigateToLogin()
+  }
+
 
   submitRentalRequest(): void {
     if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
@@ -378,14 +416,29 @@ export class LandingComponent implements OnInit {
       return;
     }
 
+     // *** Important: At this point, you should have a logged-in user and the selectedVehicle ***
+     if (!this.selectedVehicle) {
+        console.error("Attempted to submit rental without a selected vehicle.");
+        alert("An error occurred. Please try again.");
+        return;
+     }
+
      const rentalDetailsToSend = {
-         vehicleId: this.selectedVehicle?.id,
+         vehicleId: this.selectedVehicle.id, // Use the ID from the selected vehicle
          pickupDate: this.rentalData.pickupDate,
          returnDate: this.rentalData.returnDate,
          insuranceOption: this.rentalData.insurance,
+         // Add userId here, retrieved from your Auth Service or state
+         // userId: this.authService.getCurrentUserId() // Example
      };
 
-     console.log('Rental Request Data:', rentalDetailsToSend);
+     console.log('Submitting Rental Request Data:', rentalDetailsToSend);
+
+     // --- Implement actual API call to create the rental here ---
+     // Example: this.rentalService.createRental(rentalDetailsToSend).subscribe(...)
+     // Handle success (show confirmation, clear data) or error (show error message)
+
+     // For now, simulate success:
      alert(this.translate.instant('modal.rental_submitted'));
      this.closeRentalModal();
   }
@@ -422,11 +475,12 @@ export class LandingComponent implements OnInit {
     }
 
     console.log('Subscribing newsletter for:', this.newsletterEmail);
+    // Simulate API call
     setTimeout(() => {
         this.newsletterMessage = this.translate.instant('footer.newsletter_success', { email: this.newsletterEmail });
         this.newsletterError = false;
         this.newsletterEmail = '';
-         setTimeout(() => this.newsletterMessage = null, 5000);
+         setTimeout(() => this.newsletterMessage = null, 5000); // Hide message after 5 seconds
     }, 1000);
   }
 }
