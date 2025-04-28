@@ -37,7 +37,7 @@ export class LoginComponent {
           }, 2000);
         } else if (this.loginService.hasRole('ROLE_ADMIN')) {
             setTimeout(() => {
-                this.router.navigate(['/dashboard']);
+                this.router.navigate(['/admin/dashboard']);
             }, 2000);
         }
         else {

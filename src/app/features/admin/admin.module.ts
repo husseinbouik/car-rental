@@ -12,6 +12,7 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BaseChartDirective } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AdminLayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BaseChartDirective
   ]
 })
 export class AdminModule { }

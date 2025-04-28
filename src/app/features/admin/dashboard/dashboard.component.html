@@ -1,1 +1,183 @@
-<p>dashboard works!</p>
+<!-- Base container with padding and centering -->
+<div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+
+  <!-- Title -->
+  <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Dashboard Overview</h2>
+
+  <!-- Filters Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+    <!-- Date Range Filter Card -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-700">Filter by Date Range</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div>
+          <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+          <input type="date" id="startDate"
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                 [(ngModel)]="startDate" (change)="onDateRangeChange()">
+        </div>
+        <div>
+          <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+          <input type="date" id="endDate"
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                 [(ngModel)]="endDate" (change)="onDateRangeChange()">
+        </div>
+        <div>
+           <!-- The change events on the inputs already trigger the fetch, this button is supplementary -->
+           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                   (click)="onDateRangeChange()">
+             Apply Date Filter
+           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Filter Card (Select Input) -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-700">Filter by Vehicle</h3>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+         <div>
+           <label for="vehicleSelect" class="block text-gray-700 text-sm font-bold mb-2">Select Vehicle</label>
+           <div class="relative">
+              <!-- Loading spinner for vehicle select -->
+              <div *ngIf="isLoadingVehicles" class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                 <svg class="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                 </svg>
+              </div>
+              <select id="vehicleSelect"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      [(ngModel)]="voitureId"
+                      (change)="onVoitureIdChange()"
+                      [disabled]="isLoadingVehicles">
+                 <option [ngValue]="null">-- Select a Vehicle --</option>
+                 <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+                    {{ getVehicleDisplayName(vehicle) }}
+                 </option>
+              </select>
+           </div>
+           <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm text-gray-500 mt-1 italic">No vehicles found.</p>
+         </div>
+          <div>
+            <!-- This button is less critical now as the select change triggers the fetch -->
+            <!-- Kept for consistency or if you add more specific vehicle filters -->
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                   (click)="onVoitureIdChange()">
+              Apply Vehicle Filter
+            </button>
+          </div>
+       </div>
+     </div>
+  </div>
+
+
+  <!-- Overall Metrics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Availability Rate Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
+      <h3 class="text-xl font-semibold mb-2 text-gray-700">Availability Rate (Selected Period)</h3>
+      <div class="flex justify-center items-center h-24">
+        <div *ngIf="isLoadingAvailability" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <p *ngIf="!isLoadingAvailability" class="text-5xl font-extrabold text-blue-600">
+          {{ formatPercentage(tauxDisponibilite) }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Cancellation Rate Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
+      <h3 class="text-xl font-semibold mb-2 text-gray-700">Cancellation Rate</h3>
+      <div class="flex justify-center items-center h-24">
+         <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-blue-600">
+           {{ formatPercentage(tauxAnnulation) }}
+        </p>
+      </div>
+    </div>
+
+     <!-- Total Revenue Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
+      <h3 class="text-xl font-semibold mb-2 text-gray-700">Total Revenue</h3>
+       <div class="flex justify-center items-center h-24">
+         <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-green-600">
+          {{ formatCurrency(totalRevenu) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Specific Metrics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <!-- Average Revenue per Vehicle Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
+      <h3 class="text-xl font-semibold mb-2 text-gray-700">Average Revenue per Vehicle (ID: {{ voitureId || 'N/A' }})</h3>
+       <div class="flex justify-center items-center h-24">
+         <div *ngIf="isLoadingAverageRevenueCar" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <ng-container *ngIf="!isLoadingAverageRevenueCar">
+           <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-purple-600">{{ formatCurrency(revenuMoyenParVoiture) }}</p>
+           <p *ngIf="voitureId === null" class="text-gray-500 italic text-lg">Select a vehicle above.</p>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Reservations per Vehicle Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
+      <h3 class="text-xl font-semibold mb-2 text-gray-700">Reservations per Vehicle (ID: {{ voitureId || 'N/A' }})</h3>
+       <div class="flex justify-center items-center h-24">
+         <div *ngIf="isLoadingReservationsCar" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+         <ng-container *ngIf="!isLoadingReservationsCar">
+           <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-orange-600">
+             {{ nombreReservationsParVoiture !== null ? nombreReservationsParVoiture : 'N/A' }}
+            </p>
+            <p *ngIf="voitureId === null" class="text-gray-500 italic text-lg">Select a vehicle above.</p>
+         </ng-container>
+       </div>
+     </div>
+  </div>
+
+  <!-- Average Duration Card -->
+  <div class="grid grid-cols-1 mb-8">
+     <div class="bg-white shadow-md rounded-lg p-6 text-center">
+       <h3 class="text-xl font-semibold mb-2 text-gray-700">Average Reservation Duration</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+         <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-teal-600">
+           {{ formatDuration(dureeMoyenneReservations) }}
+         </p>
+       </div>
+     </div>
+  </div>
+
+
+  <!-- Revenue by Period Chart Card -->
+  <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+    <h3 class="text-xl font-semibold mb-4 text-gray-700">Revenue by Period ({{ startDate || 'N/A' }} to {{ endDate || 'N/A' }})</h3>
+     <div *ngIf="isLoadingRevenuePeriod" class="text-center py-8">
+       <div class="animate-spin inline-block h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" role="status">
+         <span class="sr-only">Loading...</span>
+       </div>
+     </div>
+     <div *ngIf="!isLoadingRevenuePeriod">
+       <div class="relative h-96"> <!-- Use Tailwind height utility or style attribute -->
+           <!-- Canvas element for ng2-charts -->
+           <!-- Make sure ng2-charts is properly imported and the module is available -->
+           <!-- Example usage (uncomment if using ng2-charts): -->
+          <canvas baseChart
+            [data]="revenuParPeriodeChartData"
+            [options]="revenuParPeriodeChartOptions"
+            [type]="revenuParPeriodeChartType">
+          </canvas>
+          <!-- Or replace with your preferred charting library component -->
+       </div>
+        <div *ngIf="!isLoadingRevenuePeriod && (revenuParPeriodeChartData?.datasets?.[0]?.data?.length ?? 0) === 0" class="text-center text-gray-500 italic mt-4">
+          No revenue data available for the selected period.
+        </div>
+     </div>
+  </div>
+
+  <!-- Add more sections/cards here as needed -->
+
+</div>

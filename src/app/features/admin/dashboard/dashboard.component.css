@@ -1,0 +1,29 @@
+/* Add custom styles here if needed */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow */
+}
+
+.display-4 {
+    font-size: 2.5rem; /* Adjust size */
+    font-weight: 300;
+    line-height: 1.2;
+    color: #007bff; /* Example accent color */
+}
+
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+    margin: 1rem auto; /* Center spinner */
+}
+
+/* Make chart container take available height */
+.card-body > div[style*="height: 400px;"] {
+    position: relative; /* Needed for canvas sizing */
+}
+
+/* Optional: Style for specific metrics if needed */
+/*
+.card-title {
+  color: #555;
+}
+*/
