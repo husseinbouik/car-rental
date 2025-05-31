@@ -1,0 +1,133 @@
+<!-- Main Content Wrapper -->
+<div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8 min-h-screen">
+
+  <!-- Page Title -->
+  <h2 class="text-3xl font-bold mb-8 text-center theme-text-main">
+    {{ 'reservations.title' | translate }} <!-- Add translation key -->
+  </h2>
+
+  <!-- Loading or Error Messages -->
+  <div *ngIf="loadingReservations" class="text-center theme-primary-text text-xl py-8">
+      <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'reservations.loading' | translate }} <!-- Add translation key -->
+  </div>
+  <div *ngIf="reservationError" class="text-center text-red-600 dark:text-red-400 text-xl py-8">
+      <i class="fas fa-exclamation-circle mr-2"></i> {{ reservationError }}
+  </div>
+  <div *ngIf="!loadingReservations && !reservationError && reservations.length === 0" class="text-center theme-text-muted text-xl py-8">
+      {{ 'reservations.no_reservations' | translate }} <!-- Add translation key -->
+  </div>
+
+  <!-- Reservations Table -->
+  <div *ngIf="!loadingReservations && !reservationError && reservations.length > 0" class="overflow-x-auto theme-card-bg rounded-lg shadow-md">
+    <table class="min-w-full divide-y theme-border-secondary">
+      <thead class="theme-alternate-section-bg">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium theme-text-muted uppercase tracking-wider">
+            {{ 'reservations.table.vehicle' | translate }} <!-- Add translation key -->
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium theme-text-muted uppercase tracking-wider">
+            {{ 'reservations.table.pickup' | translate }} <!-- Add translation key -->
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium theme-text-muted uppercase tracking-wider">
+            {{ 'reservations.table.return' | translate }} <!-- Add translation key -->
+          </th>
+           <th scope="col" class="px-6 py-3 text-left text-xs font-medium theme-text-muted uppercase tracking-wider">
+            {{ 'reservations.table.total_price' | translate }} <!-- Add translation key -->
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium theme-text-muted uppercase tracking-wider">
+            {{ 'reservations.table.status' | translate }} <!-- Add translation key -->
+          </th>
+          <th scope="col" class="relative px-6 py-3">
+            <span class="sr-only">{{ 'reservations.table.actions' | translate }}</span> <!-- Add translation key -->
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y theme-border-secondary theme-text-main">
+        <tr *ngFor="let reservation of reservations" class="theme-card-bg hover:theme-hover-bg transition-colors">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <!-- Display vehicle name if available, fallback to ID -->
+            {{ reservation.voiture?.marque }} {{ reservation.voiture?.modele }} ({{ reservation.voitureId }})
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            {{ formatDate(reservation.dateDebut) }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            {{ formatDate(reservation.dateFin) }}
+          </td>
+           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            {{ formatCurrency(reservation.prixTotal) }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <span [ngClass]="{
+                            'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
+                            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': reservation.status === 'Confirmed' || reservation.status === 'Completed',
+                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300': reservation.status === 'Pending',
+                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': reservation.status === 'Cancelled',
+                            'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': true
+                        }">
+                           {{ ( 'reservations.status.' + reservation.status ) | translate }} <!-- Add translation key for status -->
+                        </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+             <!-- Show Cancel button only if status is 'Pending' (adjust logic as needed) -->
+            <button *ngIf="reservation.status === 'Pending'"
+                    (click)="openCancelConfirmModal(reservation)"
+                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-600 transition-colors focus:outline-none focus:underline">
+              {{ 'reservations.cancel_button' | translate }} <!-- Add translation key -->
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<!-- END MAIN CONTENT WRAPPER -->
+
+
+<!-- Cancel Confirmation Modal -->
+<!-- Placed outside the main content wrapper -->
+<div *ngIf="showCancelConfirmModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60] p-4">
+  <div class="theme-card-bg rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
+    <div class="p-6">
+      <div class="flex justify-end items-start">
+        <button (click)="closeCancelConfirmModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div class="text-center mb-6">
+         <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
+         <h3 class="text-2xl font-bold theme-text-main mb-2">{{ 'reservations.cancel_modal.title' | translate }}</h3> <!-- Add translation key -->
+         <p class="theme-text-muted">
+           {{ 'reservations.cancel_modal.message' | translate }} <!-- Add translation key -->
+         </p>
+         <p *ngIf="reservationToCancel" class="theme-text-muted italic mt-2">
+              {{ 'reservations.cancel_modal.reservation' | translate }}: #{{ reservationToCancel.id }} ({{ reservationToCancel.voiture?.marque }} {{ reservationToCancel.voiture?.modele }})
+         </p>
+      </div>
+
+       <!-- Cancellation Loading/Error -->
+      <div *ngIf="isCancelling" class="text-center text-blue-500 mb-4">
+           <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'reservations.cancel_modal.cancelling' | translate }} <!-- Add translation key -->
+      </div>
+       <div *ngIf="cancelError" class="text-center text-red-600 dark:text-red-400 mb-4">
+           <i class="fas fa-exclamation-circle mr-2"></i> {{ cancelError }}
+      </div>
+
+      <div class="flex justify-around gap-4">
+        <button (click)="closeCancelConfirmModal()"
+                class="theme-secondary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="isCancelling">
+          {{ 'reservations.cancel_modal.no_button' | translate }} <!-- Add translation key -->
+        </button>
+        <button (click)="confirmCancelReservation()"
+                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                 [disabled]="isCancelling">
+           {{ 'reservations.cancel_modal.yes_button' | translate }} <!-- Add translation key -->
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<!-- The sidebar container -->
+<div class="theme-card-bg text-gray-800 dark:text-gray-100 h-full flex flex-col transition-width duration-300 shadow-md"
+     [class.w-64]="!isCollapsed" [class.w-20]="isCollapsed">
+
+  <!-- Sidebar Header (e.g., logo or app name) -->
+  <div class="flex items-center p-4 border-b theme-border h-16 flex-shrink-0"
+       [class.justify-center]="isCollapsed" [class.w-full]="!isCollapsed">
+    <i class="fas fa-car text-xl text-blue-500"></i> <!-- Example brand icon -->
+    <span *ngIf="!isCollapsed" class="ml-2 text-lg font-semibold whitespace-nowrap overflow-hidden">
+       {{ 'brand' | translate }} <!-- Use translation key -->
+    </span>
+     <!-- Optional: Toggle button specific to the sidebar if needed -->
+     <!-- <button *ngIf="!isCollapsed" (click)="toggleOwnCollapse()" class="ml-auto text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+         <fa-icon [icon]="faChevronLeft"></fa-icon>
+     </button> -->
+  </div>
+
+  <!-- Navigation Links Area -->
+  <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+    <!-- Each navigation item -->
+    <!-- Apply routerLink and routerLinkActive -->
+    <a routerLink="/client-dashboard" routerLinkActive="theme-primary-bg text-white dark:bg-blue-600 dark:text-white"
+       class="flex items-center p-2 rounded-md hover:theme-hover-bg group relative overflow-hidden"
+       [class.justify-center]="isCollapsed">
+       <!-- Icon -->
+       <fa-icon [icon]="faHome" class="flex-shrink-0 text-blue-500 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white"></fa-icon>
+       <!-- Link Text -->
+       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.dashboard' | translate }}</span>
+       <!-- Tooltip for collapsed state -->
+        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:text-gray-100">{{ 'sidebar.dashboard' | translate }}</span>
+    </a>
+
+     <a routerLink="/vehicles" routerLinkActive="theme-primary-bg text-white dark:bg-blue-600 dark:text-white"
+       class="flex items-center p-2 rounded-md hover:theme-hover-bg group relative overflow-hidden"
+        [class.justify-center]="isCollapsed">
+       <fa-icon [icon]="faCarSide" class="flex-shrink-0 text-blue-500 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white"></fa-icon>
+       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.browse_vehicles' | translate }}</span>
+        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:text-gray-100">{{ 'sidebar.browse_vehicles' | translate }}</span>
+    </a>
+
+     <a routerLink="/my-reservations" routerLinkActive="theme-primary-bg text-white dark:bg-blue-600 dark:text-white"
+       class="flex items-center p-2 rounded-md hover:theme-hover-bg group relative overflow-hidden"
+       [class.justify-center]="isCollapsed">
+       <fa-icon [icon]="faBook" class="flex-shrink-0 text-blue-500 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white"></fa-icon>
+       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.my_reservations' | translate }}</span>
+        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:text-gray-100">{{ 'sidebar.my_reservations' | translate }}</span>
+    </a>
+
+    <!-- Add more navigation links here -->
+     <a routerLink="/profile" routerLinkActive="theme-primary-bg text-white dark:bg-blue-600 dark:text-white"
+       class="flex items-center p-2 rounded-md hover:theme-hover-bg group relative overflow-hidden"
+        [class.justify-center]="isCollapsed">
+       <fa-icon [icon]="faUser" class="flex-shrink-0 text-blue-500 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white"></fa-icon>
+       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.profile' | translate }}</span>
+       <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:text-gray-100">{{ 'sidebar.profile' | translate }}</span>
+    </a>
+
+  </nav>
+
+  <!-- Footer area in sidebar (e.g., Logout) -->
+  <div class="p-2 border-t theme-border flex-shrink-0">
+     <!-- Logout Button -->
+     <button (click)="logout()"
+             class="flex items-center p-2 rounded-md text-red-600 dark:text-red-400 hover:bg-red-500 hover:text-white dark:hover:bg-red-700 transition-colors w-full relative overflow-hidden"
+             [class.justify-center]="isCollapsed">
+        <fa-icon [icon]="faSignOutAlt" class="flex-shrink-0"></fa-icon>
+        <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.logout' | translate }}</span>
+         <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:text-gray-100">{{ 'sidebar.logout' | translate }}</span>
+     </button>
+  </div>
+</div>

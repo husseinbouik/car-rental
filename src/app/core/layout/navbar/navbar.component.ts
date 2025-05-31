@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../features/client/auth.service'; // Adjust path as necessary
 
 @Component({
   selector: 'app-navbar',
@@ -19,7 +20,12 @@ export class NavbarComponent {
   faMoon = faMoon;
   @Output() toggleSidebarEvent = new EventEmitter<void>();
   isDarkMode = false; // Initial state: light mode
-  constructor(private translate: TranslateService, @Inject(PLATFORM_ID) private platformId: object, private router: Router) {
+  constructor(
+    private translate: TranslateService,
+    @Inject(PLATFORM_ID) private platformId: object,
+    private router: Router,
+    private authService: AuthService // Inject Auth Service
+  ) {
     this.translate.setDefaultLang('en');  // Default language
     this.translate.use('en');  // Use English initially
   }
@@ -34,8 +40,7 @@ export class NavbarComponent {
     }
   }
   simpleLogout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('authToken');
+   this.authService.logout(); // Call the logout method from AuthService
     this.router.navigate(['/login']);
   }
   toggleDarkMode() {

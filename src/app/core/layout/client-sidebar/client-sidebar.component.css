@@ -1,0 +1,44 @@
+/* Custom styles for the sidebar */
+
+/* Transition width when isCollapsed changes */
+:host > div { /* Target the direct child div which has the width classes */
+    transition-property: width;
+    transition-duration: 300ms; /* Match Tailwind duration-300 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* Default Tailwind ease */
+}
+
+/* Style for the sidebar tooltip in collapsed state */
+.sidebar-tooltip {
+  visibility: hidden; /* Hide by default */
+  position: absolute;
+  left: 100%; /* Position to the right */
+  top: 50%;
+  transform: translateY(-50%); /* Center vertically */
+  white-space: nowrap; /* Prevent wrapping */
+  padding: 0.5rem 0.75rem; /* Match p-2 px-3 approximately */
+  border-radius: 0.25rem; /* Match rounded-md */
+  margin-left: 0.75rem; /* Space between sidebar edge and tooltip */
+  opacity: 0;
+  pointer-events: none; /* Prevent interactions with tooltip */
+  transition: opacity 0.3s ease; /* Smooth fade */
+  z-index: 50; /* Ensure it appears on top of content */
+  /* Theme background/text applied in HTML via theme-card-bg */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-md */
+}
+
+/* Show tooltip on hover over the navigation item link */
+nav a:hover .sidebar-tooltip,
+.p-2 button:hover .sidebar-tooltip /* Also apply to logout button */
+{
+  visibility: visible;
+  opacity: 1;
+}
+
+
+/* Example active state styling (replace with your theme class if preferred) */
+.theme-primary-bg { /* Ensure this class exists */
+  background-color: #3b82f6; /* Example: Tailwind blue-500 */
+}
+
+
+/* Add other theme-specific or custom styles if needed */

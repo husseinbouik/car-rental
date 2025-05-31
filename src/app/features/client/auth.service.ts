@@ -17,7 +17,11 @@ export class AuthService {
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/reset-password-request`, { email });
   }
-
+logout(): void {
+    // Clear authentication tokens or user data here
+  localStorage.removeItem('access_token');
+    localStorage.removeItem('authToken');
+  }
   // Reset password with token
   resetPassword(token: string, newPassword: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/reset-password`, { token, newPassword });
@@ -49,6 +53,15 @@ verifyEmail(token: string): Observable<any> {
     return false; // Set to true to simulate being logged in
   }
 
-  // You would have methods like login(credentials), signup(userData), logout() etc.
-}
-
+    getCurrentUserId(): number | null {
+        // Adjust this logic based on how you store the user info (e.g., in localStorage, a user property, etc.)
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+          const userObj = JSON.parse(userJson);
+          if (userObj && userObj.id) {
+            return userObj.id;
+          }
+        }
+        return null;
+      }
+    }

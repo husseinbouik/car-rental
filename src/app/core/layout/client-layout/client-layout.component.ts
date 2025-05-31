@@ -1,24 +1,51 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { RouterModule } from '@angular/router';
-import { ClientNavbarComponent } from '../client-navbar/client-navbar.component';
-import { Router } from '@angular/router';
+// MatSidenavModule is not strictly needed for a Tailwind flexbox layout
+// import { MatSidenavModule } from '@angular/material/sidenav';
+import { RouterModule, Router, RouterOutlet } from '@angular/router'; // Import RouterOutlet
+import { ClientNavbarComponent } from '../client-navbar/client-navbar.component'; // Adjust path
+import { ClientSidebarComponent } from '../client-sidebar/client-sidebar.component'; // Adjust path
 
 @Component({
   selector: 'app-client-layout',
-  imports: [CommonModule, MatSidenavModule,RouterModule, ClientNavbarComponent],
+  standalone: true, // Assuming standalone, adjust if part of a module
+  imports: [
+    CommonModule,
+    ClientNavbarComponent,
+    ClientSidebarComponent,
+    RouterModule, // Required for router-outlet and routerLink in children
+  ],
   templateUrl: './client-layout.component.html',
-  styleUrl: './client-layout.component.css'
+  styleUrl: './client-layout.component.css' // CSS file for layout adjustments
 })
 export class ClientLayoutComponent {
- isSidebarCollapsed = false;
+  isSidebarCollapsed = false;
+
   constructor(private router: Router) {}
 
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
-  isLoginPage(): boolean {
-    return this.router.url.includes('/login') || this.router.url.includes('/reset-password-request')|| this.router.url.includes('/signup')|| this.router.url.includes('/reset-password')|| this.router.url.includes('/verify-email')|| this.router.url.includes('/signup')|| this.router.url.includes('/reset-password')|| this.router.url.includes('');
+
+  // Method to check if the current route should *not* have the layout
+  isLayoutExcludedRoute(): boolean {
+    // Add all routes here that should be full-page without the header/sidebar layout
+    // Use startsWith or exact path matching depending on your routing setup
+    const excludedRoutes = [
+      '/',
+      '/login',
+      '/signup',
+      '/reset-password-request',
+      '/reset-password',
+      '/verify-email',
+      '/admin/',
+    ];
+
+    // Exclude '/vihcles' from the excluded routes
+    if (this.router.url.startsWith('/vehicles')) {
+      return false;
+    }
+    // Check if the current URL starts with any of the excluded routes
+    return excludedRoutes.some(route => this.router.url.startsWith(route));
   }
 }
