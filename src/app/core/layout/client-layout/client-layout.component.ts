@@ -41,8 +41,10 @@ export class ClientLayoutComponent {
       '/admin/',
     ];
 
-    // Exclude '/vihcles' from the excluded routes
     if (this.router.url.startsWith('/vehicles')) {
+      return false;
+    }
+     if (this.router.url.startsWith('/my-reservations')) {
       return false;
     }
     // Check if the current URL starts with any of the excluded routes

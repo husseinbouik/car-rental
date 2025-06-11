@@ -23,6 +23,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { LandingComponent } from './landing/landing.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { TranslateModule } from '@ngx-translate/core';
     ResetPasswordRequestComponent,
     ResetPasswordComponent,
     VerifyEmailComponent,
-    LandingComponent
+    LandingComponent,
+    VehicleBrowserComponent
   ],
   imports: [
     CommonModule,

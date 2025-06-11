@@ -36,7 +36,6 @@ export class MyReservationsComponent implements OnInit {
 
   ngOnInit(): void {
      if (!this.authService.isLoggedIn()) {
-        // Redirect to login if not authenticated
         alert(this.translate.instant('reservations.auth_required')); // Add translation key
         this.router.navigate(['/login']); // Adjust login route
         return; // Stop execution

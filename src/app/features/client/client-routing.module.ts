@@ -20,18 +20,11 @@ const routes: Routes = [
     path: '',
     component: LandingComponent
   },
-{
-    path: '', // The parent path is empty because the layout *is* the primary component
-    component: ClientLayoutComponent, // Load the layout component first
-    // Optional: Protect the entire client area
-    // canActivate: [AuthGuard],
-    children: [
       // { path: 'client-dashboard', component: ClientDashboardComponent, title: 'Dashboard' }, // Child routes are path segments
       { path: 'vehicles', component: VehicleBrowserComponent, title: 'Browse Vehicles' },
       { path: 'my-reservations', component: MyReservationsComponent, title: 'My Reservations' },
       // { path: 'profile', component: ProfileComponent, title: 'Profile' },
-    ]
-          },
+    
   { path: 'reset-password-request', component: ResetPasswordRequestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },

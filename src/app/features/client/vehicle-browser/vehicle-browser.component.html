@@ -32,7 +32,9 @@
   </div>
 
   <!-- Vehicle Grid Display -->
+ <!-- Vehicle Grid Display -->
   <div class="mb-12">
+    <!-- Loading or Error Messages (Keep these for user feedback) -->
     <div *ngIf="loadingVehicles" class="text-center theme-primary-text text-xl py-8">
         <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'vehicles.loading' | translate }}
     </div>
@@ -40,13 +42,16 @@
         <i class="fas fa-exclamation-circle mr-2"></i> {{ vehicleError }}
     </div>
     <div *ngIf="!loadingVehicles && !vehicleError && filteredVehicles.length === 0" class="text-center theme-text-muted text-xl py-8">
-        {{ searchVehicleName ? ('vehicles.no_matching_vehicles' | translate) : ('vehicles.no_vehicles_found' | translate) }} <!-- Add translation key -->
+        {{ searchVehicleName ? ('vehicles.no_matching_vehicles' | translate) : ('vehicles.no_vehicles_found' | translate) }}
     </div>
 
+    <!-- Vehicle Grid -->
+    <!-- The *ngIf here is correct - it only shows the grid if not loading, no error, AND there's data -->
     <div *ngIf="!loadingVehicles && !vehicleError && filteredVehicles.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <div *ngFor="let vehicle of filteredVehicles" class="theme-card-bg rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-xl hover:-translate-y-1">
         <div class="relative overflow-hidden h-48">
-          <img *ngIf="vehicle.photo" [src]="'data:image/jpeg;base64,' + vehicle.photo" [alt]="vehicle.vname || 'Vehicle Photo'" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+          <!-- Safe binding for src and alt text -->
+          <img *ngIf="vehicle.photo" [src]="'data:image/jpeg;base64,' + vehicle.photo" [alt]="(vehicle.vname || 'Vehicle Photo') | translate" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
            <!-- Optional: Placeholder image if no photo -->
            <div *ngIf="!vehicle.photo" class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">
               <i class="fas fa-image text-3xl"></i>
@@ -54,7 +59,9 @@
         </div>
         <div class="p-6">
           <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-semibold theme-text-main">{{ vehicle.vname }}</h3>
+            <!-- Use vname or combine brand/model -->
+            <h3 class="text-xl font-semibold theme-text-main">{{ vehicle.vname || (vehicle.marque + ' ' + vehicle.modele) || ('vehicle.untitled' | translate) }}</h3>
+             <!-- Add translation for untitled key -->
           </div>
           <p class="theme-text-muted mb-4">
               {{ vehicle.modele }}
@@ -68,10 +75,12 @@
 
           <div class="flex justify-between items-center mt-4">
             <div>
-              <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(vehicle.prixDeBase) }}</span>
+              <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(vehicle.prixDeBase ?? null) }}</span>
               <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
             </div>
-            <button (click)="openRentalModal(vehicle)" class="theme-primary-button font-medium py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button (click)="openRentalModal(vehicle)"
+                    class="theme-primary-button font-medium py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    [title]="'vehicle.rent' | translate"> <!-- Add title -->
               {{ 'vehicle.rent' | translate }}
             </button>
           </div>
