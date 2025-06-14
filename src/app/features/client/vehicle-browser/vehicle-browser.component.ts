@@ -1,15 +1,14 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { Voiture } from '../../admin/vehicles/vehicle.model'; // Adjust path
-import { VehicleService } from '../../admin/vehicles/vehicle.service'; // Adjust path
-import { AuthService } from '../auth.service'; // Adjust path relative to vehicle-browser
-import { ReservationService, CreateReservationPayload } from '../services/reservation.service'; // Adjust path
-import { catchError, of, throwError } from 'rxjs';
+import { Voiture } from '../../admin/vehicles/vehicle.model'; // Ensure this model is updated
+import { VehicleService } from '../../admin/vehicles/vehicle.service';
+import { AuthService } from '../auth.service';
+import { ReservationService, CreateReservationPayload } from '../services/reservation.service';
+import { catchError, of, throwError, finalize, Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-
 
 interface RentalData {
   pickupDate: string;
@@ -17,33 +16,62 @@ interface RentalData {
   insurance: string;
 }
 
+// Extended Voiture interface for display purposes within this component
+interface DisplayVoiture extends Voiture {
+  photoDisplayUrl?: string | null;
+  isLoadingPhoto?: boolean;
+  photoError?: boolean;
+}
+
 @Component({
   selector: 'app-vehicle-browser',
-  standalone: false, // Or false if part of a module
+  standalone: false,
   templateUrl: './vehicle-browser.component.html',
   styleUrls: ['./vehicle-browser.component.css']
 })
-export class VehicleBrowserComponent implements OnInit {
+export class VehicleBrowserComponent implements OnInit, OnDestroy {
+  // Vehicle lists
+  allVehicles: DisplayVoiture[] = [];
+  availableVehicles: DisplayVoiture[] = [];
+  filteredVehicles: DisplayVoiture[] = [];
 
-  // --- VEHICLE LISTING PROPERTIES ---
-  vehicles: Voiture[] = [];
-  filteredVehicles: Voiture[] = [];
-  loadingVehicles = true;
-  vehicleError: string | null = null;
-  searchVehicleName: string = '';
+  // Main Search Criteria & State
+  searchCriteria = {
+    name: '',
+    pickupDate: '',
+    returnDate: ''
+  };
+  minDateForSearch: string;
+  isMainSearchLoading = false;
+  mainSearchError: string | null = null;
 
-  // --- RENTAL MODAL PROPERTIES ---
+  // Loading states
+  loadingInitialVehicles = true;
+  checkingAvailabilityModal = false;
+
+  // Date selection for Rental Modal
+  showDateModal = false;
+  dateSelectionForModal = {
+    pickupDate: '',
+    returnDate: ''
+  };
+
+  // Rental modal
   showRentalModal = false;
-  selectedVehicle: Voiture | null = null;
+  selectedVehicle: DisplayVoiture | null = null; // Use DisplayVoiture
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
-  isSubmittingRental = false;
+
+  // Error states
+  listDisplayError: string | null = null;
+  dateModalError: string | null = null;
   rentalSubmissionError: string | null = null;
 
-  // --- AUTH MODAL PROPERTIES ---
+  isSubmittingRental = false;
   showAuthModal = false;
-  public pendingRentalVehicle: Voiture | null = null; // Vehicle user tried to rent before auth check
+  pendingRentalVehicle: DisplayVoiture | null = null; // Use DisplayVoiture
 
-  // --- SERVICE INJECTIONS ---
+  private photoSubscriptions: Subscription[] = [];
+
   constructor(
     private vehicleService: VehicleService,
     private authService: AuthService,
@@ -51,287 +79,333 @@ export class VehicleBrowserComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
-
-// src/app/client/vehicle-browser/vehicle-browser.component.ts (Revised ngOnInit for Public Access)
-ngOnInit(): void {
-   console.log('VehicleBrowserComponent: ngOnInit started.');
-
-   // --- No Authentication Check here if page is public ---
-   // if (!this.authService.isLoggedIn()) { ... }
-
-   if (isPlatformBrowser(this.platformId)) {
-     console.log('VehicleBrowserComponent: Running in browser, fetching vehicles and initializing dates.');
-     // fetchVehicles is called without auth check
-     this.fetchVehicles();
-     this.initRentalDates();
-   } else {
-      console.log('VehicleBrowserComponent: Not running in browser, skipping data fetch.');
-      this.loadingVehicles = false;
-   }
-    console.log('VehicleBrowserComponent: ngOnInit finished.');
- }
-
-  fetchVehicles(): void {
-    console.log('VehicleBrowserComponent: fetchVehicles method called.');
-    this.loadingVehicles = true;
-    this.vehicleError = null;
-
-    this.vehicleService.getVehicles().pipe(
-      catchError(error => {
-        console.error('VehicleBrowserComponent: Error fetching vehicles in catchError:', error);
-        // Log specific error details if available
-        if (error instanceof HttpErrorResponse) {
-            console.error('VehicleBrowserComponent: HTTP Status:', error.status);
-            console.error('VehicleBrowserComponent: HTTP Body:', error.error);
-        }
-        this.vehicleError = this.translate.instant('vehicles.error_fetching'); // Add this key to your translations
-        this.loadingVehicles = false;
-        console.log('VehicleBrowserComponent: Setting vehicles and filteredVehicles to empty array after error.');
-        return of([]); // Return an empty observable array on error
-      })
-    ).subscribe({
-       next: (data: Voiture[]) => {
-          console.log('VehicleBrowserComponent: fetchVehicles subscribe next callback reached.');
-          console.log('VehicleBrowserComponent: Received data:', data);
-          this.vehicles = data;
-          this.filteredVehicles = [...this.vehicles]; // Show all initially
-          console.log('VehicleBrowserComponent: vehicles array updated:', this.vehicles);
-          console.log('VehicleBrowserComponent: filteredVehicles array updated:', this.filteredVehicles);
-       },
-       error: (err) => {
-          // This error callback is typically redundant if catchError is used correctly,
-          // but including for completeness. catchError handles the error stream.
-          console.error('VehicleBrowserComponent: fetchVehicles subscribe error callback reached (should be handled by catchError):', err);
-          this.loadingVehicles = false; // Ensure loading is off
-       },
-       complete: () => {
-          console.log('VehicleBrowserComponent: fetchVehicles subscribe complete callback reached.');
-          this.loadingVehicles = false;
-          console.log('VehicleBrowserComponent: loadingVehicles set to false.');
-       }
-    });
-
-    console.log('VehicleBrowserComponent: fetchVehicles method finished (HTTP request sent).');
+  ) {
+    this.minDateForSearch = new Date().toISOString().split('T')[0];
   }
 
-  // --- SEARCH/FILTER ---
-  performSearch(event?: Event): void {
-    event?.preventDefault();
-     console.log('VehicleBrowserComponent: performSearch called with term:', this.searchVehicleName);
-
-    const searchTerm = this.searchVehicleName.trim().toLowerCase();
-
-    if (!searchTerm) {
-      console.log('VehicleBrowserComponent: Search term is empty, showing all vehicles.');
-      this.filteredVehicles = [...this.vehicles];
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.fetchAllVehicles();
+      this.initDefaultSearchDates();
+      this.initDefaultModalDates();
     } else {
-      console.log('VehicleBrowserComponent: Filtering vehicles by term:', searchTerm);
-      this.filteredVehicles = this.vehicles.filter(vehicle =>
-        vehicle.vname?.toLowerCase().includes(searchTerm) ||
-        vehicle.modele?.toLowerCase().includes(searchTerm) ||
-        vehicle.marque?.toLowerCase().includes(searchTerm)
-        // Add other relevant fields
-      );
-       console.log('VehicleBrowserComponent: Filtered vehicles:', this.filteredVehicles);
+      this.loadingInitialVehicles = false;
     }
   }
 
-  // --- DATE INITIALIZATION ---
-  initRentalDates(): void {
-     console.log('VehicleBrowserComponent: initRentalDates called.');
+  ngOnDestroy(): void {
+    this.photoSubscriptions.forEach(sub => sub.unsubscribe());
+    if (isPlatformBrowser(this.platformId)) {
+      const allDisplayVehicles = [...this.allVehicles, ...this.availableVehicles];
+      const uniqueVehicles = Array.from(new Set(allDisplayVehicles.map(v => v.id)))
+                                   .map(id => allDisplayVehicles.find(v => v.id === id));
+
+      uniqueVehicles.forEach(vehicle => {
+        if (vehicle && vehicle.photoDisplayUrl && vehicle.photoDisplayUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(vehicle.photoDisplayUrl);
+        }
+      });
+    }
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  initDefaultSearchDates(): void {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const pad = (num: number) => num.toString().padStart(2, '0');
-    const formatDate = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-    this.rentalData.pickupDate = formatDate(today);
-    this.rentalData.returnDate = formatDate(tomorrow);
-     console.log('VehicleBrowserComponent: Initial rental dates set:', this.rentalData.pickupDate, this.rentalData.returnDate);
+    this.searchCriteria.pickupDate = this.formatDate(today);
+    this.searchCriteria.returnDate = this.formatDate(tomorrow);
   }
 
-  // --- RENTAL MODAL HANDLING ---
-  openRentalModal(vehicle: Voiture): void {
-     console.log('VehicleBrowserComponent: openRentalModal called for vehicle:', vehicle);
-    // 1. Check Authentication (Should already be logged in to reach this component via AuthGuard)
-    if (this.authService.isLoggedIn()) { // Double check for safety
-      console.log('VehicleBrowserComponent: User is logged in, opening rental modal.');
-      this.selectedVehicle = vehicle;
-      this.initRentalDates(); // Reset dates to default
-      this.showRentalModal = true;
-      this.rentalSubmissionError = null; // Clear previous errors
-      if (isPlatformBrowser(this.platformId)) {
-        document.body.style.overflow = 'hidden';
-         console.log('VehicleBrowserComponent: Body overflow set to hidden.');
+  initDefaultModalDates(): void {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.dateSelectionForModal.pickupDate = this.formatDate(today);
+    this.dateSelectionForModal.returnDate = this.formatDate(tomorrow);
+    this.rentalData.pickupDate = this.dateSelectionForModal.pickupDate;
+    this.rentalData.returnDate = this.dateSelectionForModal.returnDate;
+  }
+
+  isVehicleInAvailableList(vehicle: DisplayVoiture): boolean {
+    if (!vehicle || vehicle.id === undefined || vehicle.id === null || this.availableVehicles.length === 0) {
+      return false;
+    }
+    return this.availableVehicles.some(av => av.id === vehicle.id);
+  }
+
+  loadVehiclePhoto(vehicle: DisplayVoiture): void {
+    if (!isPlatformBrowser(this.platformId) || !vehicle.id || vehicle.photoDisplayUrl || vehicle.isLoadingPhoto) {
+      return;
+    }
+    if (vehicle.photo && typeof vehicle.photo === 'string') {
+      if (vehicle.photo.startsWith('data:image')) {
+          vehicle.photoDisplayUrl = vehicle.photo;
+          return;
+      } else if (!vehicle.photo.startsWith('http')) {
+          vehicle.photoDisplayUrl = 'data:image/jpeg;base64,' + vehicle.photo; // Assuming JPEG
+          return;
+      }
+    }
+
+    vehicle.isLoadingPhoto = true;
+    vehicle.photoError = false;
+    const sub = this.vehicleService.getVehiclePhoto(vehicle.id).pipe(
+      finalize(() => vehicle.isLoadingPhoto = false)
+    ).subscribe({
+      next: (imageBlob) => {
+        if (imageBlob && imageBlob.size > 0) {
+          vehicle.photoDisplayUrl = URL.createObjectURL(imageBlob);
+        } else {
+          vehicle.photoError = true;
+        }
+      },
+      error: () => vehicle.photoError = true
+    });
+    this.photoSubscriptions.push(sub);
+  }
+
+  private processVehiclesForDisplay(vehicles: Voiture[]): DisplayVoiture[] {
+    return vehicles.map(v => {
+      const displayV: DisplayVoiture = { ...v, photoDisplayUrl: undefined, isLoadingPhoto: false, photoError: false };
+      this.loadVehiclePhoto(displayV); // Will first check for existing base64, then fetch if needed
+      return displayV;
+    });
+  }
+
+  fetchAllVehicles(): void {
+    this.loadingInitialVehicles = true;
+    this.listDisplayError = null;
+    this.vehicleService.getVehicles().pipe(
+      catchError(error => {
+        this.listDisplayError = this.translate.instant('vehicles.error_fetching');
+        return of([]);
+      }),
+      finalize(() => this.loadingInitialVehicles = false)
+    ).subscribe(vehicles => {
+      this.allVehicles = this.processVehiclesForDisplay(vehicles);
+      this.filteredVehicles = [...this.allVehicles];
+    });
+  }
+
+  performMainSearch(event?: Event): void {
+    if (event) event.preventDefault();
+    this.listDisplayError = null;
+    this.mainSearchError = null;
+    this.isMainSearchLoading = true;
+    this.availableVehicles = [];
+
+    const nameTerm = this.searchCriteria.name.toLowerCase().trim();
+    const pickup = this.searchCriteria.pickupDate;
+    const returnD = this.searchCriteria.returnDate;
+
+    if (pickup && returnD) {
+      const pDate = new Date(pickup);
+      const rDate = new Date(returnD);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      if (pDate < today) {
+        this.mainSearchError = this.translate.instant('modal.validation.pickup_date_past');
+        this.isMainSearchLoading = false; this.filteredVehicles = []; this.updateListDisplayMessage(); return;
+      }
+      if (rDate <= pDate) {
+        this.mainSearchError = this.translate.instant('modal.validation.return_date_after');
+        this.isMainSearchLoading = false; this.filteredVehicles = []; this.updateListDisplayMessage(); return;
+      }
+      this.vehicleService.getAvailableVehicles(pickup, returnD).pipe(
+        catchError(error => {
+          this.mainSearchError = this.translate.instant('vehicles.error_checking_availability');
+          return of([]);
+        }),
+        finalize(() => this.isMainSearchLoading = false)
+      ).subscribe(vehiclesFromApi => {
+        this.availableVehicles = this.processVehiclesForDisplay(vehiclesFromApi);
+        this.filteredVehicles = nameTerm
+          ? this.availableVehicles.filter(v => this.vehicleMatchesName(v, nameTerm))
+          : [...this.availableVehicles];
+        this.updateListDisplayMessage();
+      });
+    } else if (nameTerm) {
+      this.filteredVehicles = this.allVehicles.filter(v => this.vehicleMatchesName(v, nameTerm));
+      this.isMainSearchLoading = false; this.updateListDisplayMessage();
+    } else {
+      this.filteredVehicles = [...this.allVehicles];
+      this.isMainSearchLoading = false; this.updateListDisplayMessage();
+    }
+  }
+
+  private vehicleMatchesName(vehicle: DisplayVoiture, term: string): boolean {
+    return (typeof vehicle.vname === 'string' && vehicle.vname.toLowerCase().includes(term)) ||
+           (typeof vehicle.marque === 'string' && vehicle.marque.toLowerCase().includes(term)) ||
+           (typeof vehicle.modele === 'string' && vehicle.modele.toLowerCase().includes(term));
+  }
+
+  private updateListDisplayMessage(): void {
+    if (this.filteredVehicles.length === 0 && !this.isMainSearchLoading && !this.loadingInitialVehicles) {
+      if (this.searchCriteria.pickupDate && this.searchCriteria.returnDate) {
+        this.listDisplayError = this.translate.instant('vehicles.no_vehicles_for_dates_criteria');
+      } else if (this.searchCriteria.name) {
+        this.listDisplayError = this.translate.instant('vehicles.no_matching_vehicles');
+      } else if (this.allVehicles.length > 0) {
+         this.listDisplayError = this.translate.instant('vehicles.no_vehicles_found');
       }
     } else {
-       console.warn('VehicleBrowserComponent: openRentalModal called but user is NOT logged in. Showing auth modal.');
-      // This case should ideally not be reachable if component is protected by AuthGuard
-      this.pendingRentalVehicle = vehicle; // Store the vehicle
-      this.openAuthModal();
+      this.listDisplayError = null;
     }
+  }
+
+  resetMainSearchFilters(): void {
+    this.searchCriteria.name = '';
+    this.initDefaultSearchDates();
+    this.mainSearchError = null;
+    this.listDisplayError = null;
+    this.availableVehicles = [];
+    this.filteredVehicles = [...this.allVehicles];
+    this.isMainSearchLoading = false;
+    this.updateListDisplayMessage();
+  }
+
+  openRentalModal(vehicle: DisplayVoiture): void {
+    if (!this.authService.isLoggedIn()) {
+      this.pendingRentalVehicle = vehicle;
+      this.openAuthModal();
+      return;
+    }
+    this.selectedVehicle = vehicle;
+    this.dateModalError = null;
+    this.showDateModal = true;
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
+  }
+
+  closeDateModal(): void {
+    this.showDateModal = false;
+    this.dateModalError = null;
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
+  }
+
+  checkAvailabilityForModal(): void {
+    this.dateModalError = null;
+    if (!this.dateSelectionForModal.pickupDate || !this.dateSelectionForModal.returnDate) {
+      this.dateModalError = this.translate.instant('modal.validation.date_required'); return;
+    }
+    const pickup = new Date(this.dateSelectionForModal.pickupDate);
+    const returnD = new Date(this.dateSelectionForModal.returnDate);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    if (pickup < today) {
+      this.dateModalError = this.translate.instant('modal.validation.pickup_date_past'); return;
+    }
+    if (returnD <= pickup) {
+      this.dateModalError = this.translate.instant('modal.validation.return_date_after'); return;
+    }
+    this.checkingAvailabilityModal = true;
+    this.vehicleService.getAvailableVehicles(
+      this.dateSelectionForModal.pickupDate,
+      this.dateSelectionForModal.returnDate
+    ).pipe(
+      catchError(error => {
+        this.dateModalError = this.translate.instant('vehicles.error_checking_availability');
+        return of([]);
+      }),
+      finalize(() => this.checkingAvailabilityModal = false)
+    ).subscribe(availableVehiclesForModal => {
+      if (this.selectedVehicle && availableVehiclesForModal.some(v => v.id === this.selectedVehicle?.id)) {
+        this.rentalData.pickupDate = this.dateSelectionForModal.pickupDate;
+        this.rentalData.returnDate = this.dateSelectionForModal.returnDate;
+        this.closeDateModal();
+        this.showRentalModal = true;
+        if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
+      } else if (this.selectedVehicle) {
+        this.dateModalError = this.translate.instant('vehicles.not_available_dates');
+      } else {
+        this.closeDateModal();
+      }
+    });
   }
 
   closeRentalModal(): void {
-     console.log('VehicleBrowserComponent: closeRentalModal called.');
     this.showRentalModal = false;
     this.selectedVehicle = null;
-    this.rentalData = { pickupDate: '', returnDate: '', insurance: 'basic' }; // Reset form data
+    this.rentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
     this.isSubmittingRental = false;
     this.rentalSubmissionError = null;
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
-       console.log('VehicleBrowserComponent: Body overflow restored.');
-    }
+    this.initDefaultModalDates();
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
   }
 
   submitRentalRequest(): void {
-     console.log('VehicleBrowserComponent: submitRentalRequest called.');
-     if (!this.selectedVehicle) {
-        console.error("VehicleBrowserComponent: Attempted to submit rental without a selected vehicle.");
-        this.rentalSubmissionError = this.translate.instant('modal.error_general'); // Add error translation key
-        return;
-     }
-      console.log('VehicleBrowserComponent: Selected vehicle for rental:', this.selectedVehicle);
-
-     // Basic Date Validation
-     if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
-       console.warn('VehicleBrowserComponent: Date validation failed: Dates required.');
-       this.rentalSubmissionError = this.translate.instant('modal.validation.date_required');
-       return;
-     }
-     const pickupDate = new Date(this.rentalData.pickupDate);
-     const returnDate = new Date(this.rentalData.returnDate);
-
-     if (returnDate <= pickupDate) {
-       console.warn('VehicleBrowserComponent: Date validation failed: Return date not after pickup date.');
-       this.rentalSubmissionError = this.translate.instant('modal.validation.return_date_after');
-       return;
-     }
-      if (pickupDate < new Date(new Date().setHours(0,0,0,0))) { // Check if pickup is in the past
-         console.warn('VehicleBrowserComponent: Date validation failed: Pickup date in the past.');
-         this.rentalSubmissionError = this.translate.instant('modal.validation.pickup_date_future'); // Add translation key
-         return;
-     }
-     console.log('VehicleBrowserComponent: Date validation passed.');
-
-
-     const userId = this.authService.getCurrentUserId(); // Get user ID from Auth Service
-      if (userId === null || userId === undefined) {
-         console.error("VehicleBrowserComponent: User ID not available for rental submission, but user IS logged in?");
-         this.rentalSubmissionError = this.translate.instant('modal.error_auth_needed'); // Add translation key
-         // Decide how to handle this state - maybe navigate to login again?
-         // this.closeRentalModal();
-         // this.openAuthModal();
-         return;
-      }
-      console.log('VehicleBrowserComponent: User ID obtained:', userId);
-
-
-     this.isSubmittingRental = true;
-     this.rentalSubmissionError = null;
-
-     const payload: CreateReservationPayload = {
-         voitureId: this.selectedVehicle.id,
-         userId: userId,
-         dateDebut: this.rentalData.pickupDate, // Send as YYYY-MM-DD or convert to ISO if backend needs it
-         dateFin: this.rentalData.returnDate,     // Send as YYYY-MM-DD or convert to ISO if backend needs it
-         insuranceOption: this.rentalData.insurance,
-     };
-
-     console.log('VehicleBrowserComponent: Submitting Rental Request with payload:', payload);
-
-     this.reservationService.createReservation(payload).pipe(
-       catchError(error => {
-         console.error('VehicleBrowserComponent: Rental submission failed in catchError:', error);
-          // Check for specific error messages from backend if available in error.error
-          const backendErrorMessage = (error.error && typeof error.error === 'object') ?
-                                      (error.error.message || JSON.stringify(error.error)) :
-                                      (typeof error.error === 'string' ? error.error : null);
-
-         this.rentalSubmissionError = this.translate.instant('modal.error_submission') +
-                                     (backendErrorMessage ? `: ${backendErrorMessage}` : '');
-         this.isSubmittingRental = false;
-         console.log('VehicleBrowserComponent: Rental submission error displayed.');
-         return throwError(() => new Error('Rental submission failed')); // Rethrow or return empty observable
-       })
-     ).subscribe({
-       next: (reservation) => {
-         console.log('VehicleBrowserComponent: Rental submission subscribe next callback reached.');
-         console.log('VehicleBrowserComponent: Rental successful:', reservation);
-         alert(this.translate.instant('modal.rental_success', { reservationId: reservation.id })); // Add success translation
-         this.closeRentalModal();
-         console.log('VehicleBrowserComponent: Rental modal closed.');
-         // Optional: Redirect user to their reservations page
-         console.log('VehicleBrowserComponent: Navigating to /my-reservations');
-         this.router.navigate(['/my-reservations']); // Adjust route as needed
-       },
-       error: (err) => {
-           // This error callback is typically not hit if catchError is used correctly
-           console.error('VehicleBrowserComponent: Rental submission subscribe error callback reached (should be handled by catchError):', err);
-            this.isSubmittingRental = false;
-       },
-        complete: () => {
-           console.log('VehicleBrowserComponent: Rental submission subscribe complete callback reached.');
-           this.isSubmittingRental = false;
-           console.log('VehicleBrowserComponent: isSubmittingRental set to false.');
+    if (!this.selectedVehicle) {
+      this.rentalSubmissionError = this.translate.instant('modal.error_general'); return;
+    }
+    if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
+      this.rentalSubmissionError = this.translate.instant('modal.validation.date_required'); return;
+    }
+    const pickupDate = new Date(this.rentalData.pickupDate);
+    const returnDate = new Date(this.rentalData.returnDate);
+    const today = new Date(); today.setHours(0,0,0,0);
+    if (pickupDate < today) {
+      this.rentalSubmissionError = this.translate.instant('modal.validation.pickup_date_past'); return;
+    }
+    if (returnDate <= pickupDate) {
+      this.rentalSubmissionError = this.translate.instant('modal.validation.return_date_after'); return;
+    }
+    const userId = this.authService.getCurrentUserId();
+    if (userId === null || userId === undefined) {
+      this.rentalSubmissionError = this.translate.instant('modal.error_auth_needed_refresh'); return;
+    }
+    this.isSubmittingRental = true;
+    this.rentalSubmissionError = null;
+    const payload: CreateReservationPayload = {
+      voitureId: this.selectedVehicle.id, userId: userId,
+      dateDebut: this.rentalData.pickupDate, dateFin: this.rentalData.returnDate,
+      insuranceOption: this.rentalData.insurance,
+    };
+    this.reservationService.createReservation(payload).pipe(
+      catchError((error: HttpErrorResponse | Error) => {
+        let backendErrorMessage = 'An unknown error occurred.';
+        if (error instanceof HttpErrorResponse) {
+          backendErrorMessage = (error.error && typeof error.error === 'object') ?
+                                  (error.error.message || JSON.stringify(error.error)) :
+                                  (typeof error.error === 'string' ? error.error : error.message);
+        } else if (error instanceof Error) {
+          backendErrorMessage = error.message;
         }
-     });
-     console.log('VehicleBrowserComponent: submitRentalRequest method finished (Rental API request sent).');
+        this.rentalSubmissionError = `${this.translate.instant('modal.error_submission')} ${backendErrorMessage}`;
+        return throwError(() => error);
+      }),
+      finalize(() => this.isSubmittingRental = false)
+    ).subscribe({
+      next: (reservation) => {
+        alert(this.translate.instant('modal.rental_success', { reservationId: reservation.id }));
+        this.closeRentalModal();
+        this.router.navigate(['/my-reservations']);
+      },
+      error: (err) => console.error('VehicleBrowserComponent: Rental submission final error:', err)
+    });
   }
 
-  // --- AUTH MODAL HANDLING ---
   openAuthModal(): void {
-     console.log('VehicleBrowserComponent: openAuthModal called.');
-     this.showAuthModal = true;
-     if (isPlatformBrowser(this.platformId)) {
-       document.body.style.overflow = 'hidden';
-       console.log('VehicleBrowserComponent: Body overflow set to hidden for auth modal.');
-     }
+    this.showAuthModal = true;
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
   }
 
   closeAuthModal(): void {
-     console.log('VehicleBrowserComponent: closeAuthModal called.');
-     this.showAuthModal = false;
-     this.pendingRentalVehicle = null; // Clear pending vehicle if modal is closed without action
-     if (isPlatformBrowser(this.platformId)) {
-       document.body.style.overflow = '';
-       console.log('VehicleBrowserComponent: Body overflow restored after auth modal.');
-     }
+    this.showAuthModal = false; this.pendingRentalVehicle = null;
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
   }
 
-  navigateToLogin(): void {
-     console.log('VehicleBrowserComponent: Navigating to login.');
-     this.closeAuthModal();
-     this.router.navigate(['/login']); // Adjust your login route
-     // Potentially pass pending rental info as state or query params (more advanced)
+  navigateToLogin(): void { this.closeAuthModal(); this.router.navigate(['/login']); }
+  navigateToSignup(): void { this.closeAuthModal(); this.router.navigate(['/signup']); }
+
+  getTransmissionText(isAutomate: boolean | undefined | null): string {
+    if (isAutomate === true) return this.translate.instant('modal.transmission_auto');
+    if (isAutomate === false) return this.translate.instant('modal.transmission_manual');
+    return this.translate.instant('modal.transmission_unknown');
   }
 
-  navigateToSignup(): void {
-     console.log('VehicleBrowserComponent: Navigating to signup.');
-     this.closeAuthModal();
-     this.router.navigate(['/signup']); // Adjust your signup route
-     // Potentially pass pending rental info as state or query params (more advanced)
+  formatCurrency(value: number | null | undefined): string {
+    if (value === null || value === undefined) return 'N/A';
+    return value.toFixed(2) + ' €';
   }
-
-  // --- HELPER METHODS ---
-  getTransmissionText(isAutomate: boolean | undefined): string {
-     // console.log('VehicleBrowserComponent: getTransmissionText called with:', isAutomate);
-    if (isAutomate === true) {
-      return this.translate.instant('modal.transmission_auto'); // Add this key
-    } else if (isAutomate === false) {
-      return this.translate.instant('modal.transmission_manual'); // Add this key
-    }
-    return this.translate.instant('modal.transmission_unknown'); // Add this key
-  }
-    // Helper to format currency (re-using from dashboard if available or create here)
-    formatCurrency(value: number | null): string {
-        // console.log('VehicleBrowserComponent: formatCurrency called with:', value);
-        if (value === null || value === undefined) {
-            return 'N/A';
-        }
-        return value.toFixed(2) + ' €'; // Or your preferred currency symbol
-    }
 }
