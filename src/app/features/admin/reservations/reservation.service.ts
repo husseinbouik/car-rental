@@ -62,14 +62,16 @@ export class ReservationService {
   }
 
   private prepareReservationPayload(data: Partial<Reservation>): any {
+    console.log('client_id', data.client_id);
+    console.log('voiture_id', data.voiture_id);
     return {
       acompte: data.acompte,
       dateDebut: data.dateDebut,
       dateFin: data.dateFin,
       montantTotal: data.montantTotal,
       statut: data.statut,
-      client: { id: data.client_id },
-      voiture: { id: data.voiture_id },
+      clientId:  data.client_id ,
+      voitureId: data.voiture_id ,
       conducteurSecondaire: data.conducteur_secondaire_id
         ? { id: data.conducteur_secondaire_id }
         : null
