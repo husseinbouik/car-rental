@@ -47,6 +47,9 @@ export class ClientLayoutComponent {
      if (this.router.url.startsWith('/my-reservations')) {
       return false;
     }
+       if (this.router.url.startsWith('/profile')) {
+      return false;
+    }
     // Check if the current URL starts with any of the excluded routes
     return excludedRoutes.some(route => this.router.url.startsWith(route));
   }

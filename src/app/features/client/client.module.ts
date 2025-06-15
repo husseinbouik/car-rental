@@ -24,6 +24,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { LandingComponent } from './landing/landing.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.component';
+import { ProfilInfoComponent } from './profil-info/profil-info.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.compo
     ResetPasswordComponent,
     VerifyEmailComponent,
     LandingComponent,
-    VehicleBrowserComponent
+    VehicleBrowserComponent,
+    ProfilInfoComponent
   ],
   imports: [
     CommonModule,

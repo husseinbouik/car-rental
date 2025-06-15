@@ -12,6 +12,7 @@ import { LandingComponent } from './landing/landing.component';
 import { MyReservationsComponent } from './my-reservations/my-reservations.component';
 import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.component';
 import { ClientLayoutComponent } from '../../core/layout/client-layout/client-layout.component';
+import { ProfilInfoComponent } from './profil-info/profil-info.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -23,8 +24,8 @@ const routes: Routes = [
       // { path: 'client-dashboard', component: ClientDashboardComponent, title: 'Dashboard' }, // Child routes are path segments
       { path: 'vehicles', component: VehicleBrowserComponent, title: 'Browse Vehicles' },
       { path: 'my-reservations', component: MyReservationsComponent, title: 'My Reservations' },
-      // { path: 'profile', component: ProfileComponent, title: 'Profile' },
-    
+      { path: 'profile', component: ProfilInfoComponent, title: 'Profile' },
+
   { path: 'reset-password-request', component: ResetPasswordRequestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },

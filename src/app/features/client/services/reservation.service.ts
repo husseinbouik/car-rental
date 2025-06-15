@@ -1,6 +1,6 @@
 // src/app/services/reservation.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -9,7 +9,7 @@ import { AuthService } from '../auth.service';
 export interface Reservation {
   id: number;
   voitureId: number;
-  clientId: number;  // Changed from userId to match backend
+  clientId: number;
   dateDebut: string;
   dateFin: string;
   prixTotal: number;
@@ -26,7 +26,7 @@ export interface Reservation {
 
 export interface CreateReservationPayload {
   voitureId: number;
-  clientId: number;  // Changed from userId to match backend
+  clientId: number;
   dateDebut: string;
   dateFin: string;
   insuranceOption: string;
@@ -44,7 +44,7 @@ export class ReservationService {
   ) { }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('access_token') ;
+    const token = localStorage.getItem('access_token');
     if (!token) {
       throw new Error('No access token available');
     }
@@ -55,27 +55,11 @@ export class ReservationService {
     });
   }
 
-  private formatDateForBackend(dateString: string, isEndDate: boolean = false): string {
-    if (!dateString) throw new Error('Date string is required');
-
-    // If already in ISO format with time, return as-is
-    if (dateString.includes('T')) {
-      return dateString;
-    }
-
-    // Add appropriate time component
-    return isEndDate
-      ? `${dateString}T23:59:59`
-      : `${dateString}T00:00:00`;
-  }
-
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
-
     if (error.status === 403) {
       errorMessage = 'Authentication failed. Please log in again.';
     } else if (error.error) {
-      // Try to extract backend validation messages
       if (error.error.errors) {
         errorMessage = Object.values(error.error.errors).join('\n');
       } else if (error.error.message) {
@@ -84,37 +68,26 @@ export class ReservationService {
     } else {
       errorMessage = error.message || error.statusText;
     }
-
     console.error('API Error:', error);
     return throwError(() => new Error(errorMessage));
+  }
+
+  getUserReservations(userId: number): Observable<Reservation[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<Reservation[]>(`${this.apiUrl}/client/${userId}`, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   createReservation(payload: CreateReservationPayload): Observable<Reservation> {
     try {
       const headers = this.getAuthHeaders();
-
-      const formattedPayload = {
-        ...payload,
-        dateDebut: this.formatDateForBackend(payload.dateDebut),
-        dateFin: this.formatDateForBackend(payload.dateFin, true)
-      };
-
-      return this.http.post<Reservation>(this.apiUrl, formattedPayload, { headers }).pipe(
+      return this.http.post<Reservation>(this.apiUrl, payload, { headers }).pipe(
         catchError(this.handleError)
       );
     } catch (error) {
       return throwError(() => error);
     }
-  }
-
-
-
-  getUserReservations(userId: number): Observable<Reservation[]> {
-    const headers = this.getAuthHeaders();
-    const params = new HttpParams().set('userId', userId.toString());
-    return this.http.get<Reservation[]>(`${this.apiUrl}`, { headers, params }).pipe(
-      catchError(this.handleError)
-    );
   }
 
   cancelReservation(reservationId: number): Observable<Reservation> {

@@ -29,6 +29,9 @@ export class ClientService {
   getClientById(id: number | string): Observable<Client> {
     return this.http.get<Client>(`${this.apiUrl}/api/clients/${id}`, this.getAuthHeaders());
   }
+  getClientByUserId(userId: number | string): Observable<Client> {
+    return this.http.get<Client>(`${this.apiUrl}/api/clients/user/${userId}`, this.getAuthHeaders());
+  }
 
   createClient(formData: FormData): Observable<Client> {
     return this.http.post<Client>(`${this.apiUrl}/api/clients`, formData, this.getAuthHeaders());

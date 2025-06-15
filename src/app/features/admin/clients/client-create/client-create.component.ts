@@ -15,6 +15,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class ClientCreateComponent implements OnInit {
   client: Client = {
     id: 0,
+    userId:null,
     cinDelivreLe: '',
     permisDelivreAu: '',
     permisDelivreLe: '',

@@ -1,5 +1,6 @@
 export interface Client {
   id: number;
+  userId: number | null;
   cinDelivreLe: string | null;
   permisDelivreAu: string | null;
   permisDelivreLe: string | null;
