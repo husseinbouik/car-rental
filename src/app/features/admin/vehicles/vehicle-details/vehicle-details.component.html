@@ -2,7 +2,6 @@
   <!-- Header with Title and Edit Button -->
   <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
     <h2 class="text-xl sm:text-2xl font-semibold leading-tight">Vehicle Details</h2>
-    <!-- Edit Button -->
     <button *ngIf="voiture && voiture.id" (click)="goToEdit()"
             title="Edit Vehicle"
             class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
@@ -63,7 +62,7 @@
         <dt class="font-medium text-gray-400">Color:</dt>
         <dd class="mt-1">{{ voiture.couleur ?? 'N/A' }}</dd>
       </div>
-       <div>
+      <div>
         <dt class="font-medium text-gray-400">Fuel Type:</dt>
         <dd class="mt-1">{{ voiture.carburant ?? 'N/A' }}</dd>
       </div>
@@ -83,16 +82,19 @@
         <dt class="font-medium text-gray-400">Base Price:</dt>
         <dd class="mt-1">{{ voiture.prixDeBase | number:'1.2-2' }} €</dd>
       </div>
-       <!-- Photo Display -->
+      <!-- Photo Display -->
       <div>
-          <dt class="font-medium text-gray-400">Photo:</dt>
-          <dd class="mt-1">
-              <img *ngIf="voiture.photo" src="data:image/jpeg;base64, {{ voiture.photo}}" alt="Vehicle Photo" class="h-40 w-auto mx-auto">
-              <span *ngIf="!voiture.photo">No photo available.</span>
-          </dd>
+        <dt class="font-medium text-gray-400">Photo:</dt>
+        <dd class="mt-1">
+          <div *ngIf="vehiclePhotoUrl" class="flex justify-center">
+            <img [src]="vehiclePhotoUrl" alt="Vehicle Photo" class="h-40 w-auto rounded-md border border-gray-600">
+          </div>
+          <div *ngIf="!vehiclePhotoUrl" class="text-gray-400 text-center">
+            No photo available
+          </div>
+        </dd>
       </div>
     </div>
-
   </div>
 
   <!-- Go Back Button -->

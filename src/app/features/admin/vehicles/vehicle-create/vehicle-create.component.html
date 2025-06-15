@@ -1,4 +1,3 @@
-<!-- src/app/features/vehicles/vehicle-create/vehicle-create.component.html -->
 <div class="bg-[var(--primary-background-color)] text-[var(--text-color)] rounded-lg shadow-xl max-w-4xl mx-auto my-8">
   <!-- Header Section -->
   <div class="p-6 sm:p-8 border-b border-gray-700">
@@ -33,52 +32,50 @@
     <fieldset>
       <legend class="text-lg font-medium text-gray-200 mb-3">Vehicle Identification</legend>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-
-          <!-- Make (Required) -->
-          <div>
-            <label for="marque" class="block text-sm font-medium text-gray-300 mb-1">Make (Marque) <span class="text-red-500">*</span></label>
-            <input type="text" id="marque" [(ngModel)]="voiture.marque" name="marque" required #marque="ngModel"
-                   [class.border-red-500]="marque.invalid && (marque.dirty || marque.touched)"
-                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-             <div *ngIf="marque.invalid && (marque.dirty || marque.touched)" class="text-red-400 text-xs pt-1">
-                <span *ngIf="marque.errors?.['required']">Make is required.</span>
-            </div>
+        <!-- Make (Required) -->
+        <div>
+          <label for="marque" class="block text-sm font-medium text-gray-300 mb-1">Make (Marque) <span class="text-red-500">*</span></label>
+          <input type="text" id="marque" [(ngModel)]="voiture.marque" name="marque" required #marque="ngModel"
+                [class.border-red-500]="marque.invalid && (marque.dirty || marque.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="marque.invalid && (marque.dirty || marque.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="marque.errors?.['required']">Make is required.</span>
           </div>
+        </div>
 
-          <!-- Model (Required) -->
-          <div>
-            <label for="modele" class="block text-sm font-medium text-gray-300 mb-1">Model <span class="text-red-500">*</span></label>
-            <input type="text" id="modele" [(ngModel)]="voiture.modele" name="modele" required #modele="ngModel"
-                   [class.border-red-500]="modele.invalid && (modele.dirty || modele.touched)"
-                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-             <div *ngIf="modele.invalid && (modele.dirty || modele.touched)" class="text-red-400 text-xs pt-1">
-                <span *ngIf="modele.errors?.['required']">Model is required.</span>
-            </div>
+        <!-- Model (Required) -->
+        <div>
+          <label for="modele" class="block text-sm font-medium text-gray-300 mb-1">Model <span class="text-red-500">*</span></label>
+          <input type="text" id="modele" [(ngModel)]="voiture.modele" name="modele" required #modele="ngModel"
+                [class.border-red-500]="modele.invalid && (modele.dirty || modele.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="modele.invalid && (modele.dirty || modele.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="modele.errors?.['required']">Model is required.</span>
           </div>
+        </div>
 
-          <!-- License Plate (Required, Max 10 Chars) -->
-          <div>
-            <label for="matricule" class="block text-sm font-medium text-gray-300 mb-1">License Plate (Matricule) <span class="text-red-500">*</span></label>
-            <input type="text" id="matricule" [(ngModel)]="voiture.matricule" name="matricule"
-                  required
-                  maxlength="10"
-                  #matricule="ngModel"
-                  [class.border-red-500]="matricule.invalid && (matricule.dirty || matricule.touched)"
-                  class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <div *ngIf="matricule.invalid && (matricule.dirty || matricule.touched)" class="text-red-400 text-xs pt-1">
-              <span *ngIf="matricule.errors?.['required']">License Plate is required.</span>
-              <span *ngIf="matricule.errors?.['maxlength']">License Plate cannot exceed 10 characters.</span>
-            </div>
+        <!-- License Plate (Required, Max 10 Chars) -->
+        <div>
+          <label for="matricule" class="block text-sm font-medium text-gray-300 mb-1">License Plate (Matricule) <span class="text-red-500">*</span></label>
+          <input type="text" id="matricule" [(ngModel)]="voiture.matricule" name="matricule"
+                required
+                maxlength="10"
+                #matricule="ngModel"
+                [class.border-red-500]="matricule.invalid && (matricule.dirty || matricule.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="matricule.invalid && (matricule.dirty || matricule.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="matricule.errors?.['required']">License Plate is required.</span>
+            <span *ngIf="matricule.errors?.['maxlength']">License Plate cannot exceed 10 characters.</span>
           </div>
+        </div>
 
-          <!-- Display Name (Optional) - Full width -->
-          <div class="md:col-span-2">
-            <label for="vname" class="block text-sm font-medium text-gray-300 mb-1">Display Name (Optional)</label>
-            <input type="text" id="vname" [(ngModel)]="voiture.vname" name="vname" placeholder="e.g., Golf 7 Black GTI"
-                  class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <p class="text-xs text-gray-500 mt-1">A friendly name for easier identification (e.g., in dropdowns).</p>
-          </div>
-
+        <!-- Display Name (Optional) - Full width -->
+        <div class="md:col-span-2">
+          <label for="vname" class="block text-sm font-medium text-gray-300 mb-1">Display Name (Optional)</label>
+          <input type="text" id="vname" [(ngModel)]="voiture.vname" name="vname" placeholder="e.g., Golf 7 Black GTI"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <p class="text-xs text-gray-500 mt-1">A friendly name for easier identification (e.g., in dropdowns).</p>
+        </div>
       </div>
     </fieldset>
 
@@ -86,91 +83,100 @@
     <fieldset>
       <legend class="text-lg font-medium text-gray-200 mb-3">Specifications</legend>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-
-          <!-- Vehicle Type (Required) -->
-          <div>
-            <label for="type" class="block text-sm font-medium text-gray-300 mb-1">Vehicle Type <span class="text-red-500">*</span></label>
-            <input type="text" id="type" [(ngModel)]="voiture.type" name="type" required #type="ngModel" placeholder="e.g., Berline, SUV"
-                   [class.border-red-500]="type.invalid && (type.dirty || type.touched)"
-                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-             <div *ngIf="type.invalid && (type.dirty || type.touched)" class="text-red-400 text-xs pt-1">
-                <span *ngIf="type.errors?.['required']">Vehicle type is required.</span>
-            </div>
+        <!-- Vehicle Type (Required) -->
+        <div>
+          <label for="type" class="block text-sm font-medium text-gray-300 mb-1">Vehicle Type <span class="text-red-500">*</span></label>
+          <input type="text" id="type" [(ngModel)]="voiture.type" name="type" required #type="ngModel" placeholder="e.g., Berline, SUV"
+                [class.border-red-500]="type.invalid && (type.dirty || type.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="type.invalid && (type.dirty || type.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="type.errors?.['required']">Vehicle type is required.</span>
           </div>
+        </div>
 
-          <!-- Color (Required) -->
-          <div>
-            <label for="couleur" class="block text-sm font-medium text-gray-300 mb-1">Color <span class="text-red-500">*</span></label>
-            <input type="text" id="couleur" [(ngModel)]="voiture.couleur" name="couleur" required #couleur="ngModel"
-                   [class.border-red-500]="couleur.invalid && (couleur.dirty || couleur.touched)"
-                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-             <div *ngIf="couleur.invalid && (couleur.dirty || couleur.touched)" class="text-red-400 text-xs pt-1">
-                <span *ngIf="couleur.errors?.['required']">Color is required.</span>
-             </div>
+        <!-- Color (Required) -->
+        <div>
+          <label for="couleur" class="block text-sm font-medium text-gray-300 mb-1">Color <span class="text-red-500">*</span></label>
+          <input type="text" id="couleur" [(ngModel)]="voiture.couleur" name="couleur" required #couleur="ngModel"
+                [class.border-red-500]="couleur.invalid && (couleur.dirty || couleur.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="couleur.invalid && (couleur.dirty || couleur.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="couleur.errors?.['required']">Color is required.</span>
           </div>
+        </div>
 
-          <!-- Fuel Type (Required) -->
-          <div>
-            <label for="carburant" class="block text-sm font-medium text-gray-300 mb-1">Fuel Type <span class="text-red-500">*</span></label>
-            <input type="text" id="carburant" [(ngModel)]="voiture.carburant" name="carburant" required #carburant="ngModel" placeholder="e.g., Essence, Diesel"
-                  [class.border-red-500]="carburant.invalid && (carburant.dirty || carburant.touched)"
-                  class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-             <div *ngIf="carburant.invalid && (carburant.dirty || carburant.touched)" class="text-red-400 text-xs pt-1">
-                <span *ngIf="carburant.errors?.['required']">Fuel type is required.</span>
-            </div>
+        <!-- Fuel Type (Required) -->
+        <div>
+          <label for="carburant" class="block text-sm font-medium text-gray-300 mb-1">Fuel Type <span class="text-red-500">*</span></label>
+          <input type="text" id="carburant" [(ngModel)]="voiture.carburant" name="carburant" required #carburant="ngModel" placeholder="e.g., Essence, Diesel"
+                [class.border-red-500]="carburant.invalid && (carburant.dirty || carburant.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="carburant.invalid && (carburant.dirty || carburant.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="carburant.errors?.['required']">Fuel type is required.</span>
           </div>
+        </div>
 
-          <!-- Capacity (Required) -->
-          <div>
-            <label for="capacite" class="block text-sm font-medium text-gray-300 mb-1">Capacity (Seats) <span class="text-red-500">*</span></label>
-            <input type="number" id="capacite" [(ngModel)]="voiture.capacite" name="capacite" required min="1" #capacite="ngModel"
-                  [class.border-red-500]="capacite.invalid && (capacite.dirty || capacite.touched)"
-                  class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <div *ngIf="capacite.invalid && (capacite.dirty || capacite.touched)" class="text-red-400 text-xs pt-1">
-              <span *ngIf="capacite.errors?.['required']">Capacity is required.</span>
-              <span *ngIf="capacite.errors?.['min']">Capacity must be at least 1.</span>
-            </div>
+        <!-- Capacity (Required) -->
+        <div>
+          <label for="capacite" class="block text-sm font-medium text-gray-300 mb-1">Capacity (Seats) <span class="text-red-500">*</span></label>
+          <input type="number" id="capacite" [(ngModel)]="voiture.capacite" name="capacite" required min="1" #capacite="ngModel"
+                [class.border-red-500]="capacite.invalid && (capacite.dirty || capacite.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="capacite.invalid && (capacite.dirty || capacite.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="capacite.errors?.['required']">Capacity is required.</span>
+            <span *ngIf="capacite.errors?.['min']">Capacity must be at least 1.</span>
           </div>
+        </div>
 
-          <!-- Price (Required) -->
-          <div>
-            <label for="prixDeBase" class="block text-sm font-medium text-gray-300 mb-1">Base Price (€) <span class="text-red-500">*</span></label>
-            <input type="number" id="prixDeBase" [(ngModel)]="voiture.prixDeBase" name="prixDeBase" required min="0" step="0.01" #prixDeBase="ngModel" placeholder="e.g., 150.00"
-                   [class.border-red-500]="prixDeBase.invalid && (prixDeBase.dirty || prixDeBase.touched)"
-                   class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <div *ngIf="prixDeBase.invalid && (prixDeBase.dirty || prixDeBase.touched)" class="text-red-400 text-xs pt-1">
-              <span *ngIf="prixDeBase.errors?.['required']">Base price is required.</span>
-              <span *ngIf="prixDeBase.errors?.['min']">Price cannot be negative.</span>
-            </div>
+        <!-- Price (Required) -->
+        <div>
+          <label for="prixDeBase" class="block text-sm font-medium text-gray-300 mb-1">Base Price (€) <span class="text-red-500">*</span></label>
+          <input type="number" id="prixDeBase" [(ngModel)]="voiture.prixDeBase" name="prixDeBase" required min="0" step="0.01" #prixDeBase="ngModel" placeholder="e.g., 150.00"
+                [class.border-red-500]="prixDeBase.invalid && (prixDeBase.dirty || prixDeBase.touched)"
+                class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+          <div *ngIf="prixDeBase.invalid && (prixDeBase.dirty || prixDeBase.touched)" class="text-red-400 text-xs pt-1">
+            <span *ngIf="prixDeBase.errors?.['required']">Base price is required.</span>
+            <span *ngIf="prixDeBase.errors?.['min']">Price cannot be negative.</span>
           </div>
+        </div>
 
-          <!-- Automatic Transmission (Checkbox) -->
-          <div class="col-span-2 flex items-center">
-              <input type="checkbox" id="estAutomate" [(ngModel)]="voiture.estAutomate" name="estAutomate"
-                     class="form-checkbox h-4 w-4 text-blue-600 border-gray-500 rounded focus:ring-blue-500 bg-[var(--primary-background-color)]">
-              <label for="estAutomate" class="ml-3 text-sm font-medium text-gray-300">Automatic Transmission</label>
-          </div>
+        <!-- Automatic Transmission (Checkbox) -->
+        <div class="col-span-2 flex items-center">
+          <input type="checkbox" id="estAutomate" [(ngModel)]="voiture.estAutomate" name="estAutomate"
+                class="form-checkbox h-4 w-4 text-blue-600 border-gray-500 rounded focus:ring-blue-500 bg-[var(--primary-background-color)]">
+          <label for="estAutomate" class="ml-3 text-sm font-medium text-gray-300">Automatic Transmission</label>
+        </div>
       </div>
     </fieldset>
 
-     <!-- Photo Upload Fieldset -->
-     <fieldset>
-       <legend class="text-lg font-medium text-gray-200 mb-3">Vehicle Photo</legend>
-       <div class="grid grid-cols-1 gap-4">
-           <!-- File Input -->
-           <div>
-             <label for="photo" class="block text-sm font-medium text-gray-300 mb-1">Upload Photo</label>
-             <input type="file" id="photo" name="photo" accept="image/*" (change)="onFileSelected($event)"
-                    class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600/20 file:text-blue-300 hover:file:bg-blue-600/30">
-             <div *ngIf="selectedFile" class="mt-2 text-sm text-gray-400">{{ selectedFile.name }}</div>
-           </div>
-           <!-- Image Preview -->
-           <div *ngIf="imagePreview">
-               <img [src]="imagePreview" alt="Image Preview" class="h-4/6 w-auto mx-auto">
-           </div>
-       </div>
-     </fieldset>
+    <!-- Photo Upload Fieldset -->
+    <fieldset>
+      <legend class="text-lg font-medium text-gray-200 mb-3">Vehicle Photo</legend>
+      <div class="grid grid-cols-1 gap-4">
+        <!-- File Input -->
+        <div>
+          <label for="photo" class="block text-sm font-medium text-gray-300 mb-1">Upload Photo</label>
+          <input type="file" id="photo" name="photo" accept="image/*" (change)="onFileSelected($event)"
+                class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600/20 file:text-blue-300 hover:file:bg-blue-600/30">
+          <div *ngIf="selectedFile" class="mt-2 text-sm text-gray-400">{{ selectedFile.name }}</div>
+        </div>
 
+        <!-- Image Preview -->
+        <div class="flex flex-col items-center">
+          <div *ngIf="imagePreview" class="mb-4">
+            <h4 class="text-sm font-medium text-gray-300 mb-2">New Photo Preview</h4>
+            <img [src]="imagePreview" alt="New Photo Preview" class="h-40 w-auto rounded-md border border-gray-600">
+          </div>
+          <div *ngIf="!imagePreview && vehiclePhotoUrl" class="mb-4">
+            <h4 class="text-sm font-medium text-gray-300 mb-2">Current Photo</h4>
+            <img [src]="vehiclePhotoUrl" alt="Current Vehicle Photo" class="h-40 w-auto rounded-md border border-gray-600">
+          </div>
+          <div *ngIf="!imagePreview && !vehiclePhotoUrl" class="text-gray-400 text-sm">
+            No photo available
+          </div>
+        </div>
+      </div>
+    </fieldset>
 
     <!-- Action Buttons -->
     <div class="flex justify-end space-x-3 pt-8 mt-6">

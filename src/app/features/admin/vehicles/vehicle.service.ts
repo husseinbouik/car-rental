@@ -60,11 +60,10 @@ export class VehicleService {
   }
 
   // NEW METHOD to get vehicle photo
-  getVehiclePhoto(id: number): Observable<Blob> {
-    const authHeadersOptions = this.getAuthHeaders(false); // No 'Content-Type' needed for GETting a blob
+ getVehiclePhoto(id: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/api/voitures/${id}/photo`, {
-      headers: authHeadersOptions.headers,
-      responseType: 'blob' // Important: expect a Blob response
+      ...this.getAuthHeaders(false),
+      responseType: 'blob'
     }).pipe(
       catchError(error => {
         console.error(`API Error fetching photo for vehicle ${id}:`, error);

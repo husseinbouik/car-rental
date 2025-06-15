@@ -1,34 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize } from 'rxjs/operators'; // Import finalize
-import { VehicleService } from './../vehicle.service';
-import { Voiture } from '../vehicle.model'; // Ensure path is correct
+import { finalize } from 'rxjs/operators';
+import { VehicleService } from '../vehicle.service';
+import { Voiture } from '../vehicle.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-vehicle-details',
   standalone: false,
   templateUrl: './vehicle-details.component.html',
-  styleUrls: ['./vehicle-details.component.css'] // Corrected property name from styleUrl
+  styleUrls: ['./vehicle-details.component.css']
 })
 export class VehicleDetailsComponent implements OnInit {
   voiture: Voiture | undefined;
   isLoading = false;
   errorMessage: string | null = null;
   vehicleId: number | null = null;
+  vehiclePhotoUrl: SafeUrl | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private sanitizer: DomSanitizer
   ) {}
-  // Other properties and methods...
+
   ngOnInit(): void {
-    this.isLoading = true; // Start loading
+    this.isLoading = true;
     this.errorMessage = null;
     const idParam = this.route.snapshot.paramMap.get('id');
 
     if (idParam) {
-      this.vehicleId = +idParam; // Convert param to number
+      this.vehicleId = +idParam;
       if (!isNaN(this.vehicleId)) {
         this.loadVehicleDetails(this.vehicleId);
       } else {
@@ -41,20 +44,21 @@ export class VehicleDetailsComponent implements OnInit {
     }
   }
 
-  // Fetch vehicle details by ID
   loadVehicleDetails(id: number): void {
     this.isLoading = true;
     this.errorMessage = null;
+
     this.vehicleService.getVehicleById(id)
       .pipe(
-        finalize(() => this.isLoading = false) // Ensure loading stops
+        finalize(() => this.isLoading = false)
       )
       .subscribe({
         next: (vehicleData) => {
-          console.log("Fetched vehicle details:", vehicleData);
           this.voiture = vehicleData;
+          this.loadVehiclePhoto(id);
+
           if (!this.voiture) {
-             this.errorMessage = `Vehicle with ID ${id} not found.`;
+            this.errorMessage = `Vehicle with ID ${id} not found.`;
           }
         },
         error: (error) => {
@@ -65,16 +69,32 @@ export class VehicleDetailsComponent implements OnInit {
       });
   }
 
-  // Navigate back to the vehicles list
-  goBack(): void {
-    // Consider previous navigation state or default to list
-    this.router.navigate(['/admin/vehicles']); // Adjust route if necessary
+  loadVehiclePhoto(id: number): void {
+    this.vehicleService.getVehiclePhoto(id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.vehiclePhotoUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error loading vehicle photo:', error);
+        this.vehiclePhotoUrl = null;
+      }
+    });
   }
 
-  // Navigate to the edit page for this vehicle
+  goBack(): void {
+    this.router.navigate(['/admin/vehicles']);
+  }
+
   goToEdit(): void {
     if (this.voiture?.id) {
-      this.router.navigate(['/admin/vehicles/edit', this.voiture.id]); // Adjust route
+      this.router.navigate(['/admin/vehicles/edit', this.voiture.id]);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.vehiclePhotoUrl) {
+      URL.revokeObjectURL(this.vehiclePhotoUrl.toString());
     }
   }
 }
