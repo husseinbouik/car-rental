@@ -30,15 +30,30 @@ export class ClientService {
     return this.http.get<Client>(`${this.apiUrl}/api/clients/${id}`, this.getAuthHeaders());
   }
 
-  createClient(formData: FormData): Observable<Client> { // Changed to FormData
+  createClient(formData: FormData): Observable<Client> {
     return this.http.post<Client>(`${this.apiUrl}/api/clients`, formData, this.getAuthHeaders());
   }
 
-  updateClient(id: number, formData: FormData): Observable<Client> {  // Added id and changed to FormData
-      return this.http.put<Client>(`${this.apiUrl}/api/clients/${id}`, formData, this.getAuthHeaders());
+  updateClient(id: number, formData: FormData): Observable<Client> {
+    return this.http.put<Client>(`${this.apiUrl}/api/clients/${id}`, formData, this.getAuthHeaders());
   }
 
   deleteClient(id: number | string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/api/clients/${id}`, this.getAuthHeaders());
+  }
+
+  // Add these new methods for fetching photos
+  getCinPhoto(id: number | string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/api/clients/${id}/photo-cin`, {
+      ...this.getAuthHeaders(),
+      responseType: 'blob'
+    });
+  }
+
+  getPermisPhoto(id: number | string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/api/clients/${id}/photo-permis`, {
+      ...this.getAuthHeaders(),
+      responseType: 'blob'
+    });
   }
 }

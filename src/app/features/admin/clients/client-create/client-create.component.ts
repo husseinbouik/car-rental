@@ -1,10 +1,10 @@
-// src/app/features/clients/client-create/client-create.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ClientService } from '../client.service';
 import { Client } from '../client.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client-create',
@@ -44,14 +44,15 @@ export class ClientCreateComponent implements OnInit {
   photoCINFile: File | null = null;
   photoPermisFile: File | null = null;
 
-  // URLs for existing images
-  photoCINUrl: string | null = null;
-  photoPermisUrl: string | null = null;
+  // URLs for existing images (now using SafeUrl)
+  photoCINUrl: SafeUrl | null = null;
+  photoPermisUrl: SafeUrl | null = null;
 
   constructor(
     private clientService: ClientService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +82,8 @@ export class ClientCreateComponent implements OnInit {
   loadClientData(id: number): void {
     this.isLoading = true;
     this.errorMessage = null;
+
+    // First load the client data
     this.clientService.getClientById(id)
       .pipe(
         finalize(() => this.isLoading = false)
@@ -94,13 +97,9 @@ export class ClientCreateComponent implements OnInit {
               permisDelivreLe: this.formatDateForInput(data.permisDelivreLe),
             };
 
-            // Set existing image URLs
-            if (data.photoCIN) {
-              this.photoCINUrl = 'data:image/jpeg;base64,' + data.photoCIN;
-            }
-            if (data.photoPermis) {
-              this.photoPermisUrl = 'data:image/jpeg;base64,' + data.photoPermis;
-            }
+            // Load photos separately
+            this.loadCinPhoto(id);
+            this.loadPermisPhoto(id);
           } else {
             this.errorMessage = `Client with ID ${id} not found.`;
           }
@@ -110,6 +109,32 @@ export class ClientCreateComponent implements OnInit {
           this.errorMessage = `Failed to load client data (ID: ${id}). Please try again.`;
         },
       });
+  }
+
+  loadCinPhoto(id: number): void {
+    this.clientService.getCinPhoto(id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.photoCINUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error loading CIN photo:', error);
+        this.photoCINUrl = null;
+      }
+    });
+  }
+
+  loadPermisPhoto(id: number): void {
+    this.clientService.getPermisPhoto(id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.photoPermisUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error loading permis photo:', error);
+        this.photoPermisUrl = null;
+      }
+    });
   }
 
   formatDateForInput(dateString: string | null | undefined): string {
@@ -140,9 +165,19 @@ export class ClientCreateComponent implements OnInit {
       if (fileType === 'photoCIN') {
         this.photoCINFile = file;
         this.photoCINPreview = reader.result as string;
+        // Clear the existing URL if a new file is selected
+        if (this.photoCINUrl) {
+          URL.revokeObjectURL(this.photoCINUrl.toString());
+          this.photoCINUrl = null;
+        }
       } else {
         this.photoPermisFile = file;
         this.photoPermisPreview = reader.result as string;
+        // Clear the existing URL if a new file is selected
+        if (this.photoPermisUrl) {
+          URL.revokeObjectURL(this.photoPermisUrl.toString());
+          this.photoPermisUrl = null;
+        }
       }
     };
 
@@ -184,9 +219,16 @@ export class ClientCreateComponent implements OnInit {
 
     if (this.photoCINFile) {
       formData.append('photoCIN', this.photoCINFile, this.photoCINFile.name);
+    } else if (this.isEditMode && !this.photoCINPreview && !this.photoCINUrl) {
+      // If in edit mode and no file is selected and no existing photo, send null to delete
+      formData.append('photoCIN', 'null');
     }
+
     if (this.photoPermisFile) {
       formData.append('photoPermis', this.photoPermisFile, this.photoPermisFile.name);
+    } else if (this.isEditMode && !this.photoPermisPreview && !this.photoPermisUrl) {
+      // If in edit mode and no file is selected and no existing photo, send null to delete
+      formData.append('photoPermis', 'null');
     }
 
     const operation = this.isEditMode
@@ -219,5 +261,15 @@ export class ClientCreateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/admin/clients']);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up object URLs when component is destroyed
+    if (this.photoCINUrl) {
+      URL.revokeObjectURL(this.photoCINUrl.toString());
+    }
+    if (this.photoPermisUrl) {
+      URL.revokeObjectURL(this.photoPermisUrl.toString());
+    }
   }
 }

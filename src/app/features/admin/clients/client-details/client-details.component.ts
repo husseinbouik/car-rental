@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ClientService } from '../client.service';
 import { Client } from '../client.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client-details',
@@ -17,13 +18,14 @@ export class ClientDetailsComponent implements OnInit {
   clientId: number | null = null;
 
   // Image URLs for display
-  photoCINUrl: string | null = null;
-  photoPermisUrl: string | null = null;
+  photoCINUrl: SafeUrl | null = null;
+  photoPermisUrl: SafeUrl | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +50,7 @@ export class ClientDetailsComponent implements OnInit {
   loadClientDetails(id: number): void {
     this.isLoading = true;
     this.errorMessage = null;
+
     this.clientService.getClientById(id)
       .pipe(
         finalize(() => this.isLoading = false)
@@ -56,13 +59,11 @@ export class ClientDetailsComponent implements OnInit {
         next: (clientData) => {
           this.client = clientData;
 
-          // Set image URLs if they exist
-          if (this.client?.photoCIN) {
-            this.photoCINUrl = 'data:image/jpeg;base64,' + this.client.photoCIN;
-          }
-          if (this.client?.photoPermis) {
-            this.photoPermisUrl = 'data:image/jpeg;base64,' + this.client.photoPermis;
-          }
+          // Load CIN photo if available
+          this.loadCinPhoto(id);
+
+          // Load permis photo if available
+          this.loadPermisPhoto(id);
 
           if (!this.client) {
             this.errorMessage = `Client with ID ${id} not found.`;
@@ -76,6 +77,32 @@ export class ClientDetailsComponent implements OnInit {
       });
   }
 
+  loadCinPhoto(id: number): void {
+    this.clientService.getCinPhoto(id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.photoCINUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error loading CIN photo:', error);
+        this.photoCINUrl = null;
+      }
+    });
+  }
+
+  loadPermisPhoto(id: number): void {
+    this.clientService.getPermisPhoto(id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.photoPermisUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error loading permis photo:', error);
+        this.photoPermisUrl = null;
+      }
+    });
+  }
+
   goBack(): void {
     this.router.navigate(['/admin/clients']);
   }
@@ -83,6 +110,16 @@ export class ClientDetailsComponent implements OnInit {
   goToEdit(): void {
     if (this.client?.id) {
       this.router.navigate(['/admin/clients/edit', this.client.id]);
+    }
+  }
+
+  // Clean up object URLs when component is destroyed
+  ngOnDestroy(): void {
+    if (this.photoCINUrl) {
+      URL.revokeObjectURL(this.photoCINUrl.toString());
+    }
+    if (this.photoPermisUrl) {
+      URL.revokeObjectURL(this.photoPermisUrl.toString());
     }
   }
 }
