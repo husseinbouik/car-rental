@@ -50,13 +50,7 @@ verifyEmail(token: string): Observable<any> {
   }
 
     getCurrentUserId(): number | null {
-        const userJson = localStorage.getItem('user');
-        if (userJson) {
-          const userObj = JSON.parse(userJson);
-          if (userObj && userObj.id) {
-            return userObj.id;
-          }
-        }
-        return null;
+        const userId = localStorage.getItem('user_id');
+        return userId ? parseInt(userId, 10) : null;
       }
     }

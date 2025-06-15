@@ -334,56 +334,46 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
   }
 
-  submitRentalRequest(): void {
-    if (!this.selectedVehicle) {
-      this.rentalSubmissionError = this.translate.instant('modal.error_general'); return;
+ submitRentalRequest(): void {
+  if (!this.selectedVehicle) {
+    this.rentalSubmissionError = this.translate.instant('modal.error_general');
+    return;
+  }
+
+  try {
+    const clientId = this.authService.getCurrentUserId();
+    if (!clientId) {
+      throw new Error('User not authenticated');
     }
-    if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
-      this.rentalSubmissionError = this.translate.instant('modal.validation.date_required'); return;
-    }
-    const pickupDate = new Date(this.rentalData.pickupDate);
-    const returnDate = new Date(this.rentalData.returnDate);
-    const today = new Date(); today.setHours(0,0,0,0);
-    if (pickupDate < today) {
-      this.rentalSubmissionError = this.translate.instant('modal.validation.pickup_date_past'); return;
-    }
-    if (returnDate <= pickupDate) {
-      this.rentalSubmissionError = this.translate.instant('modal.validation.return_date_after'); return;
-    }
-    const userId = this.authService.getCurrentUserId();
-    if (userId === null || userId === undefined) {
-      this.rentalSubmissionError = this.translate.instant('modal.error_auth_needed_refresh'); return;
-    }
+
     this.isSubmittingRental = true;
     this.rentalSubmissionError = null;
+
     const payload: CreateReservationPayload = {
-      voitureId: this.selectedVehicle.id, userId: userId,
-      dateDebut: this.rentalData.pickupDate, dateFin: this.rentalData.returnDate,
-      insuranceOption: this.rentalData.insurance,
+      voitureId: this.selectedVehicle.id,
+      clientId: clientId,
+      dateDebut: this.rentalData.pickupDate,
+      dateFin: this.rentalData.returnDate,
+      insuranceOption: this.rentalData.insurance
     };
-    this.reservationService.createReservation(payload).pipe(
-      catchError((error: HttpErrorResponse | Error) => {
-        let backendErrorMessage = 'An unknown error occurred.';
-        if (error instanceof HttpErrorResponse) {
-          backendErrorMessage = (error.error && typeof error.error === 'object') ?
-                                  (error.error.message || JSON.stringify(error.error)) :
-                                  (typeof error.error === 'string' ? error.error : error.message);
-        } else if (error instanceof Error) {
-          backendErrorMessage = error.message;
-        }
-        this.rentalSubmissionError = `${this.translate.instant('modal.error_submission')} ${backendErrorMessage}`;
-        return throwError(() => error);
-      }),
-      finalize(() => this.isSubmittingRental = false)
-    ).subscribe({
+
+    this.reservationService.createReservation(payload).subscribe({
       next: (reservation) => {
         alert(this.translate.instant('modal.rental_success', { reservationId: reservation.id }));
         this.closeRentalModal();
         this.router.navigate(['/my-reservations']);
       },
-      error: (err) => console.error('VehicleBrowserComponent: Rental submission final error:', err)
+      error: (err) => {
+        this.rentalSubmissionError = err.message;
+        console.error('Reservation error:', err);
+      },
+      complete: () => this.isSubmittingRental = false
     });
+  } catch (error) {
+    this.isSubmittingRental = false;
+    this.rentalSubmissionError = error instanceof Error ? error.message : 'Unknown error';
   }
+}
 
   openAuthModal(): void {
     this.showAuthModal = true;
