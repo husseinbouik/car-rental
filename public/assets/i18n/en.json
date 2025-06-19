@@ -36,10 +36,13 @@
   },
   "search": {
     "title": "Quick Vehicle Search",
+    "vehicle_name": "Vehicle Name",
+    "vehicle_name_placeholder": "Enter vehicle name, brand, or model...",
     "pickup": "Pickup Location",
     "pickup_date": "Pickup Date",
     "return_date": "Return Date",
-    "button": "Search"
+    "button": "Search",
+    "reset_button": "Reset"
   },
   "location": {
     "city1": "New York",
@@ -52,12 +55,25 @@
     "loading": "Loading vehicles...",
     "error_fetching": "Failed to load vehicles. Please try again later.",
     "no_vehicles_found": "No vehicles found at the moment.",
+    "no_vehicles_found_system": "No vehicles found in the system.",
+    "no_vehicles_for_dates_criteria": "No vehicles available for the selected dates and criteria.",
+    "no_matching_vehicles": "No vehicles match your search criteria.",
+    "error_checking_availability": "Error checking vehicle availability. Please try again.",
+    "not_available_dates": "Vehicle is not available for the selected dates.",
     "view_all": "View All Vehicles"
   },
   "vehicle": {
     "day": "day",
     "rent": "Rent Now",
-    "seats": "seats"
+    "seats": "seats",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "generic_alt": "Vehicle Image",
+    "untitled": "Untitled Vehicle",
+    "photo_error": "Failed to load image"
+  },
+  "vehicle_browser": {
+    "title": "Vehicle Browser"
   },
   "features": {
     "title": "Why Choose Us?",
@@ -142,9 +158,18 @@
     "transmission_auto": "Automatic",
     "transmission_manual": "Manual",
     "transmission_unknown": "Unknown",
+    "select_dates": "Select Rental Dates",
+    "check_availability": "Check Availability",
+    "checking": "Checking...",
+    "selected_dates": "Selected Dates",
+    "change_dates": "Change Dates",
+    "submitting": "Submitting...",
+    "rental_success": "Rental request submitted successfully! Reservation ID: {{reservationId}}",
+    "error_general": "An error occurred. Please try again.",
     "validation": {
       "date_required": "Please select both pickup and return dates.",
-      "return_date_after": "Return date must be after pickup date."
+      "return_date_after": "Return date must be after pickup date.",
+      "pickup_date_past": "Pickup date cannot be in the past."
     },
     "rental_submitted": "Rental request submitted successfully! We'll contact you shortly."
   },
@@ -157,5 +182,79 @@
     "renting_vehicle": "You were trying to rent",
     "signin": "Sign In",
     "signup": "Sign Up"
+  },
+  "navbar": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode"
+  },
+  "reservations": {
+    "title": "My Reservations",
+    "loading": "Loading reservations...",
+    "no_reservations": "You don't have any reservations yet.",
+    "auth_required": "You need to be logged in to view your reservations.",
+    "error_auth": "Authentication error. Please log in again.",
+    "error_fetching": "Failed to load reservations. Please try again later.",
+    "error_general": "An error occurred. Please try again.",
+    "error_cancel": "Failed to cancel reservation",
+    "cancel_success": "Reservation #{{reservationId}} cancelled successfully!",
+    "cancel_not_allowed": "This reservation cannot be cancelled.",
+    "table": {
+      "vehicle": "Vehicle",
+      "pickup": "Pickup Date",
+      "return": "Return Date",
+      "total_price": "Total Price",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "Pending": "Pending",
+      "Confirmed": "Confirmed",
+      "Cancelled": "Cancelled",
+      "Completed": "Completed"
+    },
+    "cancel_button": "Cancel",
+    "cancel_modal": {
+      "title": "Cancel Reservation",
+      "message": "Are you sure you want to cancel this reservation? This action cannot be undone.",
+      "reservation": "Reservation",
+      "cancelling": "Cancelling...",
+      "no_button": "No, Keep It",
+      "yes_button": "Yes, Cancel"
+    }
+  },
+  "login": {
+    "title": "Sign In",
+    "username": "Username",
+    "password": "Password",
+    "signin": "Sign In",
+    "signing_in": "Signing in...",
+    "forgot_password": "Forgot password?",
+    "no_account": "Don't have an account?",
+    "signup_link": "Sign up"
+  },
+  "signup": {
+    "title": "Sign Up",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "signup": "Sign Up",
+    "processing": "Processing...",
+    "username_required": "Username must be at least 3 characters",
+    "email_required": "Please enter a valid email",
+    "password_required": "Password must be at least 6 characters",
+    "password_mismatch": "Passwords do not match",
+    "has_account": "You already have an account?",
+    "login_link": "Sign in"
+  },
+  "sidebar": {
+    "browse_vehicles": "Browse Vehicles",
+    "my_reservations": "My Reservations",
+    "profile": "Profile",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
   }
 }

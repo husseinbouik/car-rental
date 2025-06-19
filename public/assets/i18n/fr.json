@@ -36,10 +36,13 @@
   },
   "search": {
     "title": "Recherche rapide de véhicule",
+    "vehicle_name": "Nom du véhicule",
+    "vehicle_name_placeholder": "Entrez le nom, la marque ou le modèle...",
     "pickup": "Lieu de prise en charge",
     "pickup_date": "Date de prise en charge",
     "return_date": "Date de retour",
-    "button": "Rechercher"
+    "button": "Rechercher",
+    "reset_button": "Réinitialiser"
   },
   "location": {
     "city1": "New York",
@@ -52,12 +55,25 @@
     "loading": "Chargement des véhicules...",
     "error_fetching": "Échec du chargement des véhicules. Veuillez réessayer plus tard.",
     "no_vehicles_found": "Aucun véhicule trouvé pour le moment.",
+    "no_vehicles_found_system": "Aucun véhicule trouvé dans le système.",
+    "no_vehicles_for_dates_criteria": "Aucun véhicule disponible pour les dates et critères sélectionnés.",
+    "no_matching_vehicles": "Aucun véhicule ne correspond à vos critères de recherche.",
+    "error_checking_availability": "Erreur lors de la vérification de la disponibilité. Veuillez réessayer.",
+    "not_available_dates": "Le véhicule n'est pas disponible pour les dates sélectionnées.",
     "view_all": "Voir tous les véhicules"
   },
   "vehicle": {
     "day": "jour",
     "rent": "Louer maintenant",
-    "seats": "places"
+    "seats": "places",
+    "available": "Disponible",
+    "unavailable": "Indisponible",
+    "generic_alt": "Image du véhicule",
+    "untitled": "Véhicule sans titre",
+    "photo_error": "Échec du chargement de l'image"
+  },
+  "vehicle_browser": {
+    "title": "Navigateur de véhicules"
   },
   "features": {
     "title": "Pourquoi nous choisir ?",
@@ -142,9 +158,18 @@
     "transmission_auto": "Automatique",
     "transmission_manual": "Manuelle",
     "transmission_unknown": "Inconnue",
+    "select_dates": "Sélectionner les dates de location",
+    "check_availability": "Vérifier la disponibilité",
+    "checking": "Vérification...",
+    "selected_dates": "Dates sélectionnées",
+    "change_dates": "Modifier les dates",
+    "submitting": "Soumission...",
+    "rental_success": "Demande de location soumise avec succès ! ID de réservation : {{reservationId}}",
+    "error_general": "Une erreur s'est produite. Veuillez réessayer.",
     "validation": {
       "date_required": "Veuillez sélectionner les dates de prise en charge et de retour.",
-      "return_date_after": "La date de retour doit être postérieure à la date de prise en charge."
+      "return_date_after": "La date de retour doit être postérieure à la date de prise en charge.",
+      "pickup_date_past": "La date de prise en charge ne peut pas être dans le passé."
     },
     "rental_submitted": "Demande de location soumise avec succès ! Nous vous contacterons sous peu."
   },
@@ -157,5 +182,79 @@
     "renting_vehicle": "Vous essayiez de louer",
     "signin": "Se connecter",
     "signup": "S'inscrire"
+  },
+  "navbar": {
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "logout": "Déconnexion",
+    "light_mode": "Mode clair",
+    "dark_mode": "Mode sombre"
+  },
+  "reservations": {
+    "title": "Mes réservations",
+    "loading": "Chargement des réservations...",
+    "no_reservations": "Vous n'avez pas encore de réservations.",
+    "auth_required": "Vous devez être connecté pour voir vos réservations.",
+    "error_auth": "Erreur d'authentification. Veuillez vous reconnecter.",
+    "error_fetching": "Échec du chargement des réservations. Veuillez réessayer plus tard.",
+    "error_general": "Une erreur s'est produite. Veuillez réessayer.",
+    "error_cancel": "Échec de l'annulation de la réservation",
+    "cancel_success": "Réservation #{{reservationId}} annulée avec succès !",
+    "cancel_not_allowed": "Cette réservation ne peut pas être annulée.",
+    "table": {
+      "vehicle": "Véhicule",
+      "pickup": "Date de prise en charge",
+      "return": "Date de retour",
+      "total_price": "Prix total",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "Pending": "En attente",
+      "Confirmed": "Confirmée",
+      "Cancelled": "Annulée",
+      "Completed": "Terminée"
+    },
+    "cancel_button": "Annuler",
+    "cancel_modal": {
+      "title": "Annuler la réservation",
+      "message": "Êtes-vous sûr de vouloir annuler cette réservation ? Cette action ne peut pas être annulée.",
+      "reservation": "Réservation",
+      "cancelling": "Annulation...",
+      "no_button": "Non, la garder",
+      "yes_button": "Oui, annuler"
+    }
+  },
+  "login": {
+    "title": "Se connecter",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "signin": "Se connecter",
+    "signing_in": "Connexion...",
+    "forgot_password": "Mot de passe oublié ?",
+    "no_account": "Vous n'avez pas de compte ?",
+    "signup_link": "S'inscrire"
+  },
+  "signup": {
+    "title": "S'inscrire",
+    "username": "Nom d'utilisateur",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "signup": "S'inscrire",
+    "processing": "Traitement...",
+    "username_required": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+    "email_required": "Veuillez entrer un email valide",
+    "password_required": "Le mot de passe doit contenir au moins 6 caractères",
+    "password_mismatch": "Les mots de passe ne correspondent pas",
+    "has_account": "Vous avez déjà un compte ?",
+    "login_link": "Se connecter"
+  },
+  "sidebar": {
+    "browse_vehicles": "Parcourir les véhicules",
+    "my_reservations": "Mes réservations",
+    "profile": "Profil",
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord"
   }
 }
