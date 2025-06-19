@@ -1,0 +1,254 @@
+<!-- Payment Container -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ 'payment.title' | translate }}</h1>
+      <p class="text-gray-600 dark:text-gray-400">{{ 'payment.subtitle' | translate }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Payment Form Section -->
+      <div class="lg:col-span-2">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+          <!-- Form Header -->
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ 'payment.details' | translate }}</h2>
+          </div>
+
+          <div class="p-6">
+            <!-- Payment Method Selection -->
+            <div class="mb-8">
+              <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{ 'payment.method.title' | translate }}</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  [class.ring-2]="selectedPaymentMethod === 'card'"
+                  [class.ring-blue-500]="selectedPaymentMethod === 'card'"
+                  [class.bg-blue-50]="selectedPaymentMethod === 'card'"
+                  [class.border-blue-500]="selectedPaymentMethod === 'card'"
+                  class="relative p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-left"
+                  (click)="onPaymentMethodChange('card')">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                        <i class="fas fa-credit-card text-white text-sm"></i>
+                      </div>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">{{ 'payment.method.card' | translate }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Visa, Mastercard, Amex</p>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedPaymentMethod === 'card'" class="absolute top-2 right-2">
+                    <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                      <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  [class.ring-2]="selectedPaymentMethod === 'paypal'"
+                  [class.ring-blue-500]="selectedPaymentMethod === 'paypal'"
+                  [class.bg-blue-50]="selectedPaymentMethod === 'paypal'"
+                  [class.border-blue-500]="selectedPaymentMethod === 'paypal'"
+                  class="relative p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-left"
+                  (click)="onPaymentMethodChange('paypal')">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-6 bg-[#0070ba] rounded flex items-center justify-center">
+                        <i class="fab fa-paypal text-white text-sm"></i>
+                      </div>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">PayPal</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Pay with your PayPal account</p>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedPaymentMethod === 'paypal'" class="absolute top-2 right-2">
+                    <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                      <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Credit Card Form -->
+            <div *ngIf="selectedPaymentMethod === 'card'" class="space-y-6">
+              <!-- Card Number -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {{ 'payment.card.number' | translate }}
+                </label>
+                <div class="relative">
+                  <input
+                    type="text"
+                    [(ngModel)]="cardNumber"
+                    (input)="formatCardNumber($event)"
+                    maxlength="19"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    placeholder="1234 5678 9012 3456">
+                  <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <div class="flex space-x-1">
+                      <div class="w-8 h-5 bg-gradient-to-r from-blue-600 to-blue-800 rounded-sm"></div>
+                      <div class="w-8 h-5 bg-gradient-to-r from-red-600 to-red-800 rounded-sm"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {{ 'payment.card.name' | translate }}
+                </label>
+                <input
+                  type="text"
+                  [(ngModel)]="cardName"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                  placeholder="John Doe">
+              </div>
+
+              <!-- Expiry and CVV -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ 'payment.card.expiry' | translate }}
+                  </label>
+                  <input
+                    type="text"
+                    [(ngModel)]="expiryDate"
+                    (input)="formatExpiryDate($event)"
+                    maxlength="5"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    placeholder="MM/YY">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ 'payment.card.cvv' | translate }}
+                  </label>
+                  <input
+                    type="password"
+                    [(ngModel)]="cvv"
+                    maxlength="4"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    placeholder="123">
+                </div>
+              </div>
+
+              <!-- Billing Address -->
+              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{ 'payment.billing_address' | translate }}</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'payment.address.country' | translate }}</label>
+                    <select class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200">
+                      <option value="US">United States</option>
+                      <option value="CA">Canada</option>
+                      <option value="FR">France</option>
+                      <option value="DE">Germany</option>
+                      <option value="UK">United Kingdom</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'payment.address.postal_code' | translate }}</label>
+                    <input
+                      type="text"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                      placeholder="12345">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PayPal Section -->
+            <div *ngIf="selectedPaymentMethod === 'paypal'" class="text-center py-12">
+              <div class="w-16 h-16 bg-[#0070ba] rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fab fa-paypal text-white text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">{{ 'payment.paypal.title' | translate }}</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-6">{{ 'payment.paypal.description' | translate }}</p>
+              <button class="bg-[#0070ba] text-white px-8 py-3 rounded-lg hover:bg-[#003087] transition-colors duration-200 font-medium">
+                {{ 'payment.paypal.button' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Section -->
+      <div class="lg:col-span-1">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 sticky top-6">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'payment.summary.title' | translate }}</h3>
+          </div>
+
+          <div class="p-6">
+            <!-- Vehicle Details -->
+            <div class="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-car text-gray-500 dark:text-gray-400"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">{{ reservationDetails.vehicleName }}</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ reservationDetails.duration }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.base_price' | translate }}</span>
+                <span class="text-gray-900 dark:text-white">${{ reservationDetails.basePrice.toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.insurance' | translate }}</span>
+                <span class="text-gray-900 dark:text-white">${{ reservationDetails.insurancePrice.toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.taxes' | translate }}</span>
+                <span class="text-gray-900 dark:text-white">${{ reservationDetails.taxes.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="flex justify-between items-center mb-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'payment.summary.total' | translate }}</span>
+              <span class="text-2xl font-bold text-blue-600">${{ reservationDetails.total.toFixed(2) }}</span>
+            </div>
+
+            <!-- Pay Button -->
+            <button
+              (click)="onSubmit()"
+              [disabled]="isProcessing"
+              class="w-full bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center font-medium">
+              <div *ngIf="!isProcessing" class="flex items-center">
+                <i class="fas fa-lock mr-2"></i>
+                {{ 'payment.button.pay' | translate }}
+              </div>
+              <div *ngIf="isProcessing" class="flex items-center">
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+                {{ 'payment.processing' | translate }}
+              </div>
+            </button>
+
+            <!-- Security Note -->
+            <div class="mt-4 text-center">
+              <div class="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
+                <i class="fas fa-shield-alt mr-2"></i>
+                {{ 'payment.security_note' | translate }}
+              </div>
+              <div class="flex items-center justify-center mt-2 space-x-4">
+                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
+                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
+                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

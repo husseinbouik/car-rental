@@ -35,6 +35,140 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   availableVehicles: DisplayVoiture[] = [];
   filteredVehicles: DisplayVoiture[] = [];
 
+  // Static vehicle data
+  private staticVehicles: Voiture[] = [
+    {
+      id: 1,
+      vname: 'Mercedes C-Class',
+      marque: 'Mercedes',
+      modele: 'C-Class',
+      type: 'Sedan',
+      capacite: 5,
+      carburant: 'Diesel',
+      estAutomate: true,
+      prixDeBase: 80,
+      couleur: 'Black',
+      photo: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 2,
+      vname: 'BMW X3',
+      marque: 'BMW',
+      modele: 'X3',
+      type: 'SUV',
+      capacite: 5,
+      carburant: 'Gasoline',
+      estAutomate: true,
+      prixDeBase: 95,
+      couleur: 'White',
+      photo: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 3,
+      vname: 'Audi A4',
+      marque: 'Audi',
+      modele: 'A4',
+      type: 'Sedan',
+      capacite: 5,
+      carburant: 'Gasoline',
+      estAutomate: true,
+      prixDeBase: 85,
+      couleur: 'Silver',
+      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 4,
+      vname: 'Volkswagen Golf',
+      marque: 'Volkswagen',
+      modele: 'Golf',
+      type: 'Hatchback',
+      capacite: 5,
+      carburant: 'Diesel',
+      estAutomate: false,
+      prixDeBase: 45,
+      couleur: 'Blue',
+      photo: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 5,
+      vname: 'Toyota Camry',
+      marque: 'Toyota',
+      modele: 'Camry',
+      type: 'Sedan',
+      capacite: 5,
+      carburant: 'Hybrid',
+      estAutomate: true,
+      prixDeBase: 65,
+      couleur: 'Gray',
+      photo: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 6,
+      vname: 'Honda CR-V',
+      marque: 'Honda',
+      modele: 'CR-V',
+      type: 'SUV',
+      capacite: 5,
+      carburant: 'Gasoline',
+      estAutomate: true,
+      prixDeBase: 75,
+      couleur: 'Red',
+      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 7,
+      vname: 'Tesla Model 3',
+      marque: 'Tesla',
+      modele: 'Model 3',
+      type: 'Electric',
+      capacite: 5,
+      carburant: 'Electric',
+      estAutomate: true,
+      prixDeBase: 120,
+      couleur: 'White',
+      photo: 'https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 8,
+      vname: 'Porsche 911',
+      marque: 'Porsche',
+      modele: '911',
+      type: 'Sports',
+      capacite: 2,
+      carburant: 'Gasoline',
+      estAutomate: true,
+      prixDeBase: 250,
+      couleur: 'Red',
+      photo: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 9,
+      vname: 'Range Rover Sport',
+      marque: 'Land Rover',
+      modele: 'Range Rover Sport',
+      type: 'SUV',
+      capacite: 5,
+      carburant: 'Diesel',
+      estAutomate: true,
+      prixDeBase: 180,
+      couleur: 'Black',
+      photo: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop&crop=center'
+    },
+    {
+      id: 10,
+      vname: 'Lexus RX',
+      marque: 'Lexus',
+      modele: 'RX',
+      type: 'SUV',
+      capacite: 5,
+      carburant: 'Hybrid',
+      estAutomate: true,
+      prixDeBase: 110,
+      couleur: 'Silver',
+      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
+    }
+  ];
+
   // Main Search Criteria & State
   searchCriteria = {
     name: '',
@@ -141,31 +275,27 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId) || !vehicle.id || vehicle.photoDisplayUrl || vehicle.isLoadingPhoto) {
       return;
     }
-    if (vehicle.photo && typeof vehicle.photo === 'string') {
-      if (vehicle.photo.startsWith('data:image')) {
+
+    // Handle different photo formats
+    if (vehicle.photo) {
+      if (typeof vehicle.photo === 'string') {
+        if (vehicle.photo.startsWith('data:image')) {
           vehicle.photoDisplayUrl = vehicle.photo;
           return;
-      } else if (!vehicle.photo.startsWith('http')) {
-          vehicle.photoDisplayUrl = 'data:image/jpeg;base64,' + vehicle.photo; // Assuming JPEG
+        } else if (vehicle.photo.startsWith('http')) {
+          // Direct URL - use it as is
+          vehicle.photoDisplayUrl = vehicle.photo;
           return;
+        } else {
+          // Base64 encoded image
+          vehicle.photoDisplayUrl = 'data:image/jpeg;base64,' + vehicle.photo;
+          return;
+        }
       }
     }
 
-    vehicle.isLoadingPhoto = true;
-    vehicle.photoError = false;
-    const sub = this.vehicleService.getVehiclePhoto(vehicle.id).pipe(
-      finalize(() => vehicle.isLoadingPhoto = false)
-    ).subscribe({
-      next: (imageBlob) => {
-        if (imageBlob && imageBlob.size > 0) {
-          vehicle.photoDisplayUrl = URL.createObjectURL(imageBlob);
-        } else {
-          vehicle.photoError = true;
-        }
-      },
-      error: () => vehicle.photoError = true
-    });
-    this.photoSubscriptions.push(sub);
+    // If no photo URL is available, set error state
+    vehicle.photoError = true;
   }
 
   private processVehiclesForDisplay(vehicles: Voiture[]): DisplayVoiture[] {
@@ -179,16 +309,13 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   fetchAllVehicles(): void {
     this.loadingInitialVehicles = true;
     this.listDisplayError = null;
-    this.vehicleService.getVehicles().pipe(
-      catchError(error => {
-        this.listDisplayError = this.translate.instant('vehicles.error_fetching');
-        return of([]);
-      }),
-      finalize(() => this.loadingInitialVehicles = false)
-    ).subscribe(vehicles => {
-      this.allVehicles = this.processVehiclesForDisplay(vehicles);
+
+    // Simulate API delay
+    setTimeout(() => {
+      this.allVehicles = this.processVehiclesForDisplay(this.staticVehicles);
       this.filteredVehicles = [...this.allVehicles];
-    });
+      this.loadingInitialVehicles = false;
+    }, 500);
   }
 
   performMainSearch(event?: Event): void {
@@ -214,19 +341,17 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
         this.mainSearchError = this.translate.instant('modal.validation.return_date_after');
         this.isMainSearchLoading = false; this.filteredVehicles = []; this.updateListDisplayMessage(); return;
       }
-      this.vehicleService.getAvailableVehicles(pickup, returnD).pipe(
-        catchError(error => {
-          this.mainSearchError = this.translate.instant('vehicles.error_checking_availability');
-          return of([]);
-        }),
-        finalize(() => this.isMainSearchLoading = false)
-      ).subscribe(vehiclesFromApi => {
-        this.availableVehicles = this.processVehiclesForDisplay(vehiclesFromApi);
+
+      // Simulate availability check
+      setTimeout(() => {
+        // For static demo, all vehicles are available
+        this.availableVehicles = this.processVehiclesForDisplay(this.staticVehicles);
         this.filteredVehicles = nameTerm
           ? this.availableVehicles.filter(v => this.vehicleMatchesName(v, nameTerm))
           : [...this.availableVehicles];
+        this.isMainSearchLoading = false;
         this.updateListDisplayMessage();
-      });
+      }, 800);
     } else if (nameTerm) {
       this.filteredVehicles = this.allVehicles.filter(v => this.vehicleMatchesName(v, nameTerm));
       this.isMainSearchLoading = false; this.updateListDisplayMessage();
@@ -300,28 +425,19 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
       this.dateModalError = this.translate.instant('modal.validation.return_date_after'); return;
     }
     this.checkingAvailabilityModal = true;
-    this.vehicleService.getAvailableVehicles(
-      this.dateSelectionForModal.pickupDate,
-      this.dateSelectionForModal.returnDate
-    ).pipe(
-      catchError(error => {
-        this.dateModalError = this.translate.instant('vehicles.error_checking_availability');
-        return of([]);
-      }),
-      finalize(() => this.checkingAvailabilityModal = false)
-    ).subscribe(availableVehiclesForModal => {
-      if (this.selectedVehicle && availableVehiclesForModal.some(v => v.id === this.selectedVehicle?.id)) {
+
+    // Simulate availability check
+    setTimeout(() => {
+      // For static demo, vehicle is always available
+      if (this.selectedVehicle) {
         this.rentalData.pickupDate = this.dateSelectionForModal.pickupDate;
         this.rentalData.returnDate = this.dateSelectionForModal.returnDate;
         this.closeDateModal();
         this.showRentalModal = true;
         if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
-      } else if (this.selectedVehicle) {
-        this.dateModalError = this.translate.instant('vehicles.not_available_dates');
-      } else {
-        this.closeDateModal();
       }
-    });
+      this.checkingAvailabilityModal = false;
+    }, 800);
   }
 
   closeRentalModal(): void {
@@ -346,29 +462,22 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
       throw new Error('User not authenticated');
     }
 
-    this.isSubmittingRental = true;
-    this.rentalSubmissionError = null;
-
-    const payload: CreateReservationPayload = {
+    // Store reservation data in sessionStorage for payment component
+    const reservationData = {
       voitureId: this.selectedVehicle.id,
       clientId: clientId,
       dateDebut: this.rentalData.pickupDate,
       dateFin: this.rentalData.returnDate,
-      insuranceOption: this.rentalData.insurance
+      insuranceOption: this.rentalData.insurance,
+      vehicle: this.selectedVehicle
     };
 
-    this.reservationService.createReservation(payload).subscribe({
-      next: (reservation) => {
-        alert(this.translate.instant('modal.rental_success', { reservationId: reservation.id }));
-        this.closeRentalModal();
-        this.router.navigate(['/my-reservations']);
-      },
-      error: (err) => {
-        this.rentalSubmissionError = err.message;
-        console.error('Reservation error:', err);
-      },
-      complete: () => this.isSubmittingRental = false
-    });
+    sessionStorage.setItem('pendingReservation', JSON.stringify(reservationData));
+
+    // Close modal and redirect to payment
+    this.closeRentalModal();
+    this.router.navigate(['/payment']);
+
   } catch (error) {
     this.isSubmittingRental = false;
     this.rentalSubmissionError = error instanceof Error ? error.message : 'Unknown error';

@@ -65,12 +65,12 @@
         <tr *ngFor="let client of paginatedClients" class="transition hover:bg-[var(--hover-background-color)]">
           <!-- Data Cells -->
           <td class="py-2 px-4 font-medium">{{ client.id }}</td>
-          <td class="py-2 px-4">{{ client.cname ?? 'N/A' }}</td>
-          <td class="py-2 px-4 whitespace-nowrap">{{ client.tel ?? 'N/A' }}</td>
-          <td class="py-2 px-4 whitespace-nowrap">{{ client.cin ?? 'N/A' }}</td>
-          <td class="py-2 px-4 truncate max-w-xs" [title]="client.adresse">{{ client.adresse ?? 'N/A' }}</td> <!-- Truncate long addresses -->
-          <td class="py-2 px-4 whitespace-nowrap">{{ client.nationalite ?? 'N/A' }}</td>
-          <td class="py-2 px-4 whitespace-nowrap">{{ client.permis ?? 'N/A' }}</td>
+          <td class="py-2 px-4">{{ client.cname }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ client.tel }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ client.cin }}</td>
+          <td class="py-2 px-4 truncate max-w-xs" [title]="client.adresse">{{ client.adresse }}</td> <!-- Truncate long addresses -->
+          <td class="py-2 px-4 whitespace-nowrap">{{ client.nationalite }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ client.permis }}</td>
           <td class="py-2 px-4 text-center whitespace-nowrap">
             <div class="flex justify-center items-center space-x-1 sm:space-x-2">
               <!-- Action Buttons -->
@@ -115,7 +115,7 @@
                   [attr.aria-label]="'Go to page ' + page"
                   [attr.aria-current]="page === currentPage ? 'page' : null"
                   [ngClass]="{
-                      'bg-blue-500 text-white font-bold border-blue-500': page === currentPage, 
+                      'bg-blue-500 text-white font-bold border-blue-500': page === currentPage,
                       'hover:bg-[var(--hover-background-color)] border-gray-600': page !== currentPage
                   }"
                   class="px-3 py-1 border rounded-lg text-sm transition-colors duration-150 ease-in-out">

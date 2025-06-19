@@ -256,5 +256,50 @@
     "profile": "Profile",
     "logout": "Logout",
     "dashboard": "Dashboard"
+  },
+  "payment": {
+    "title": "Payment Details",
+    "subtitle": "Complete your reservation by providing payment information",
+    "details": "Payment Details",
+    "method": {
+      "title": "Select Payment Method",
+      "card": "Credit Card",
+      "paypal": "PayPal"
+    },
+    "card": {
+      "number": "Card Number",
+      "name": "Cardholder Name",
+      "expiry": "Expiry Date",
+      "cvv": "CVV"
+    },
+    "billing_address": "Billing Address",
+    "address": {
+      "country": "Country",
+      "postal_code": "Postal Code"
+    },
+    "paypal": {
+      "title": "Pay with PayPal",
+      "description": "You will be redirected to PayPal to complete your payment securely.",
+      "button": "Pay with PayPal"
+    },
+    "summary": {
+      "title": "Order Summary",
+      "base_price": "Base Price",
+      "insurance": "Insurance",
+      "taxes": "Taxes & Fees",
+      "total": "Total Amount"
+    },
+    "button": {
+      "pay": "Pay Now"
+    },
+    "security_note": "All payments are secure and encrypted",
+    "processing": "Processing payment...",
+    "success": "Payment successful!",
+    "success_message": "Thank you for your payment. Your reservation has been confirmed and you will receive a confirmation email shortly.",
+    "view_reservations": "View My Reservations",
+    "browse_more": "Browse More Vehicles",
+    "error": "Payment failed. Please try again.",
+    "no_reservation_data": "No reservation data found. Please start over.",
+    "invalid_reservation_data": "Invalid reservation data. Please try again."
   }
 }

@@ -256,5 +256,50 @@
     "profile": "Profil",
     "logout": "Déconnexion",
     "dashboard": "Tableau de bord"
+  },
+  "payment": {
+    "title": "Détails du paiement",
+    "subtitle": "Complétez votre réservation en fournissant les informations de paiement",
+    "details": "Détails du paiement",
+    "method": {
+      "title": "Sélectionnez le mode de paiement",
+      "card": "Carte de crédit",
+      "paypal": "PayPal"
+    },
+    "card": {
+      "number": "Numéro de carte",
+      "name": "Nom du titulaire",
+      "expiry": "Date d'expiration",
+      "cvv": "CVV"
+    },
+    "billing_address": "Adresse de facturation",
+    "address": {
+      "country": "Pays",
+      "postal_code": "Code postal"
+    },
+    "paypal": {
+      "title": "Payer avec PayPal",
+      "description": "Vous serez redirigé vers PayPal pour effectuer votre paiement en toute sécurité.",
+      "button": "Payer avec PayPal"
+    },
+    "summary": {
+      "title": "Résumé de la commande",
+      "base_price": "Prix de base",
+      "insurance": "Assurance",
+      "taxes": "Taxes et frais",
+      "total": "Montant total"
+    },
+    "button": {
+      "pay": "Payer maintenant"
+    },
+    "security_note": "Tous les paiements sont sécurisés et cryptés",
+    "processing": "Traitement du paiement...",
+    "success": "Paiement réussi !",
+    "success_message": "Merci pour votre paiement. Votre réservation a été confirmée et vous recevrez un email de confirmation sous peu.",
+    "view_reservations": "Voir mes réservations",
+    "browse_more": "Parcourir plus de véhicules",
+    "error": "Échec du paiement. Veuillez réessayer.",
+    "no_reservation_data": "Aucune donnée de réservation trouvée. Veuillez recommencer.",
+    "invalid_reservation_data": "Données de réservation invalides. Veuillez réessayer."
   }
 }

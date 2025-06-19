@@ -13,6 +13,9 @@ import { MyReservationsComponent } from './my-reservations/my-reservations.compo
 import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.component';
 import { ClientLayoutComponent } from '../../core/layout/client-layout/client-layout.component';
 import { ProfilInfoComponent } from './profil-info/profil-info.component';
+import { PaymentComponent } from './payment/payment.component';
+import { PaymentSuccessComponent } from './payment/payment-success.component';
+import { RoleGuard } from '../../guards/role-guard.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -29,6 +32,14 @@ const routes: Routes = [
   { path: 'reset-password-request', component: ResetPasswordRequestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
+  {
+    path: 'payment',
+    component: PaymentComponent
+  },
+  {
+    path: 'payment-success',
+    component: PaymentSuccessComponent
+  },
 
 
 
