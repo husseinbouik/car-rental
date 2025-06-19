@@ -514,3 +514,95 @@
     </div>
   </div>
 </div> -->
+
+<!-- Chatbot Popup -->
+<div class="fixed bottom-4 right-4 z-50">
+  <!-- Chatbot Toggle Button -->
+  <button *ngIf="!showChatbot"
+          (click)="toggleChatbot()"
+          class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300 animate-pulse-glow">
+    <i class="fas fa-comments text-xl"></i>
+  </button>
+
+  <!-- Chatbot Window -->
+  <div *ngIf="showChatbot"
+       class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-80 h-96 flex flex-col border border-gray-200 dark:border-gray-700 animate-slide-up chatbot-window">
+
+    <!-- Chatbot Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center animate-bounce-in">
+          <i class="fas fa-robot text-lg"></i>
+        </div>
+        <div>
+          <h3 class="font-semibold">DriveEasy Assistant</h3>
+          <p class="text-xs text-blue-100">Online • Ready to help</p>
+        </div>
+      </div>
+      <button (click)="toggleChatbot()"
+              class="text-white/80 hover:text-white p-1 rounded-full hover:bg-white/20 transition-colors">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900 chat-messages">
+      <div *ngFor="let message of chatbotMessages"
+           class="flex message-bubble"
+           [class.justify-end]="message.type === 'user'"
+           [class.justify-start]="message.type === 'bot'">
+
+        <!-- Bot Message -->
+        <div *ngIf="message.type === 'bot'"
+             class="max-w-xs bg-white dark:bg-gray-700 rounded-2xl rounded-tl-md px-4 py-3 shadow-sm border border-gray-200 dark:border-gray-600">
+          <p class="text-sm text-gray-800 dark:text-gray-200">{{ message.message }}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {{ message.timestamp | date:'shortTime' }}
+          </p>
+        </div>
+
+        <!-- User Message -->
+        <div *ngIf="message.type === 'user'"
+             class="max-w-xs bg-blue-600 text-white rounded-2xl rounded-tr-md px-4 py-3 shadow-sm">
+          <p class="text-sm">{{ message.message }}</p>
+          <p class="text-xs text-blue-200 mt-1">
+            {{ message.timestamp | date:'shortTime' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Replies -->
+      <div *ngIf="chatbotMessages.length === 1" class="space-y-2">
+        <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Quick questions:</p>
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button *ngFor="let reply of getQuickReplies()"
+                  (click)="sendQuickReply(reply)"
+                  class="bg-white dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-300 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors quick-reply-btn">
+            {{ reply }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
+      <div class="flex items-center space-x-2">
+        <div class="flex-1 relative">
+          <input type="text"
+                 [(ngModel)]="currentMessage"
+                 (keypress)="onMessageKeyPress($event)"
+                 placeholder="Type your message..."
+                 class="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent chat-input">
+          <button (click)="sendMessage()"
+                  [disabled]="!currentMessage.trim()"
+                  class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+        Press Enter to send • Shift+Enter for new line
+      </p>
+    </div>
+  </div>
+</div>

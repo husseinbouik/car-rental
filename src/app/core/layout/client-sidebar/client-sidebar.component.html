@@ -27,16 +27,13 @@
     <!-- routerLinkActive for active state -->
     <!-- Combined hover classes for visual feedback -->
     <!-- Added group class for icon coloring -->
-    <a routerLink="/client-dashboard" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
+    <!-- <a routerLink="/client-dashboard" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
        class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"
        [class.justify-center]="isCollapsed">
-       <!-- Icon: Initial color and hover/active group styling -->
        <fa-icon [icon]="faHome" class="flex-shrink-0 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-[.router-link-active]:text-white group-hover:text-blue-800 dark:group-hover:text-white"></fa-icon>
-       <!-- Link Text -->
        <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.dashboard' | translate }}</span>
-       <!-- Tooltip for collapsed state (custom CSS) -->
         <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.dashboard' | translate }}</span>
-    </a>
+    </a> -->
 
      <a routerLink="/vehicles" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
        class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"

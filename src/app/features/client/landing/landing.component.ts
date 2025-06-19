@@ -46,6 +46,13 @@ export class LandingComponent implements OnInit {
   showAuthModal = false; // <--- New property to control the auth modal
   public pendingRentalVehicle: Voiture | null = null; // <--- Temporarily store the vehicle if auth is needed
 
+  // --- NEW PROPERTIES FOR CHATBOT ---
+  showChatbot = false;
+  chatbotMessages: Array<{type: 'user' | 'bot', message: string, timestamp: Date}> = [
+    {type: 'bot', message: 'Hello! 👋 How can I help you with your car rental today?', timestamp: new Date()}
+  ];
+  currentMessage = '';
+
   newsletterEmail = '';
   currentYear = new Date().getFullYear();
 
@@ -482,5 +489,84 @@ export class LandingComponent implements OnInit {
         this.newsletterEmail = '';
          setTimeout(() => this.newsletterMessage = null, 5000); // Hide message after 5 seconds
     }, 1000);
+  }
+
+  // --- CHATBOT METHODS ---
+  toggleChatbot(): void {
+    this.showChatbot = !this.showChatbot;
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.showChatbot) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  }
+
+  sendMessage(): void {
+    if (!this.currentMessage.trim()) return;
+
+    // Add user message
+    this.chatbotMessages.push({
+      type: 'user',
+      message: this.currentMessage,
+      timestamp: new Date()
+    });
+
+    const userMessage = this.currentMessage.toLowerCase();
+    this.currentMessage = '';
+
+    // Simulate bot response
+    setTimeout(() => {
+      let botResponse = '';
+
+      if (userMessage.includes('hello') || userMessage.includes('hi') || userMessage.includes('hey')) {
+        botResponse = 'Hello! How can I assist you with your car rental needs today?';
+      } else if (userMessage.includes('price') || userMessage.includes('cost') || userMessage.includes('rate')) {
+        botResponse = 'Our car rental rates start from $25/day for economy cars. Premium vehicles range from $50-100/day. Would you like to see our current vehicle selection?';
+      } else if (userMessage.includes('available') || userMessage.includes('car') || userMessage.includes('vehicle')) {
+        botResponse = 'We have a wide selection of vehicles including economy, compact, SUV, and luxury cars. You can browse our fleet in the vehicles section above!';
+      } else if (userMessage.includes('book') || userMessage.includes('reserve') || userMessage.includes('rent')) {
+        botResponse = 'To book a car, simply click the "Rent" button on any vehicle you like. You\'ll need to be logged in to complete the booking.';
+      } else if (userMessage.includes('location') || userMessage.includes('pickup') || userMessage.includes('where')) {
+        botResponse = 'We have multiple pickup locations across the city. You can select your preferred location during the booking process.';
+      } else if (userMessage.includes('insurance') || userMessage.includes('coverage')) {
+        botResponse = 'We offer three insurance options: Basic ($10/day), Premium ($20/day), and Full Coverage ($30/day). Each provides different levels of protection.';
+      } else if (userMessage.includes('cancel') || userMessage.includes('refund')) {
+        botResponse = 'You can cancel your reservation up to 24 hours before pickup for a full refund. Cancellations within 24 hours may incur a small fee.';
+      } else if (userMessage.includes('help') || userMessage.includes('support')) {
+        botResponse = 'I\'m here to help! You can also contact our support team at +1 (555) 123-4567 or email us at support@driveeasy.com';
+      } else {
+        botResponse = 'I\'m not sure I understand. Could you please rephrase your question? I can help with pricing, availability, booking, locations, insurance, and general support.';
+      }
+
+      this.chatbotMessages.push({
+        type: 'bot',
+        message: botResponse,
+        timestamp: new Date()
+      });
+    }, 1000);
+  }
+
+  onMessageKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
+  getQuickReplies(): string[] {
+    return [
+      'What are your rates?',
+      'Show me available cars',
+      'How do I book?',
+      'Insurance options',
+      'Contact support'
+    ];
+  }
+
+  sendQuickReply(reply: string): void {
+    this.currentMessage = reply;
+    this.sendMessage();
   }
 }
