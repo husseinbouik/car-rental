@@ -3,32 +3,10 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ReservationService } from '../services/reservation.service';
+import { ClientService } from '../../admin/clients/client.service';
 import { catchError, of, EMPTY } from 'rxjs';
-
-interface StaticVehicle {
-  id: number;
-  vname: string;
-  marque: string;
-  modele: string;
-  type: string;
-  capacite: number;
-  carburant: string;
-  estAutomate: boolean;
-  prixDeBase: number;
-  couleur: string;
-  photo?: string;
-}
-
-interface StaticReservation {
-  id: number;
-  voitureId: number;
-  clientId: number;
-  dateDebut: string;
-  dateFin: string;
-  status: string;
-  prixTotal: number;
-  voiture?: StaticVehicle;
-}
+import { Reservation } from '../services/reservation.service';
 
 @Component({
   selector: 'app-my-reservations',
@@ -39,89 +17,13 @@ interface StaticReservation {
 })
 export class MyReservationsComponent implements OnInit {
 
-  reservations: StaticReservation[] = [];
+  reservations: Reservation[] = [];
   loadingReservations = true;
   reservationError: string | null = null;
 
-  // Static vehicle data
-  private staticVehicles: StaticVehicle[] = [
-    {
-      id: 1,
-      vname: 'Mercedes C-Class',
-      marque: 'Mercedes',
-      modele: 'C-Class',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Diesel',
-      estAutomate: true,
-      prixDeBase: 80,
-      couleur: 'Black'
-    },
-    {
-      id: 2,
-      vname: 'BMW X3',
-      marque: 'BMW',
-      modele: 'X3',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 95,
-      couleur: 'White'
-    },
-    {
-      id: 3,
-      vname: 'Audi A4',
-      marque: 'Audi',
-      modele: 'A4',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 85,
-      couleur: 'Silver'
-    },
-    {
-      id: 4,
-      vname: 'Volkswagen Golf',
-      marque: 'Volkswagen',
-      modele: 'Golf',
-      type: 'Hatchback',
-      capacite: 5,
-      carburant: 'Diesel',
-      estAutomate: false,
-      prixDeBase: 45,
-      couleur: 'Blue'
-    },
-    {
-      id: 5,
-      vname: 'Toyota Camry',
-      marque: 'Toyota',
-      modele: 'Camry',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Hybrid',
-      estAutomate: true,
-      prixDeBase: 65,
-      couleur: 'Gray'
-    },
-    {
-      id: 6,
-      vname: 'Honda CR-V',
-      marque: 'Honda',
-      modele: 'CR-V',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 75,
-      couleur: 'Red'
-    }
-  ];
-
   // --- CANCEL MODAL PROPERTIES ---
   showCancelConfirmModal = false;
-  reservationToCancel: StaticReservation | null = null;
+  reservationToCancel: Reservation | null = null;
   isCancelling = false;
   cancelError: string | null = null;
 
@@ -129,6 +31,8 @@ export class MyReservationsComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private translate: TranslateService,
+    private reservationService: ReservationService,
+    private clientService: ClientService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -148,48 +52,34 @@ export class MyReservationsComponent implements OnInit {
     this.loadingReservations = true;
     this.reservationError = null;
 
-    const userId = this.authService.getCurrentUserId();
+    // Use client_id instead of user_id
+    const clientId = this.authService.getCurrentClientId();
 
-    if (userId === null || userId === undefined) {
-       console.error("User ID not available to fetch reservations.");
+    if (clientId === null || clientId === undefined) {
+       console.error("Client ID not available to fetch reservations.");
        this.reservationError = this.translate.instant('reservations.error_auth');
        this.loadingReservations = false;
        return;
     }
 
-    // Simulate API delay
-    setTimeout(() => {
-      try {
-        // Get reservations from localStorage
-        const storedReservations = localStorage.getItem('userReservations');
-        if (storedReservations) {
-          const allReservations: StaticReservation[] = JSON.parse(storedReservations);
-          // Filter reservations for current user and enrich with vehicle data
-          this.reservations = allReservations
-            .filter(reservation => reservation.clientId === userId)
-            .map(reservation => ({
-              ...reservation,
-              voiture: this.getVehicleById(reservation.voitureId)
-            }));
-        } else {
-          this.reservations = [];
-        }
-
+    // Use the actual reservation service
+    this.reservationService.getUserReservations(clientId)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching reservations:', error);
+          this.reservationError = this.translate.instant('reservations.error_fetching');
+          this.loadingReservations = false;
+          return of([]);
+        })
+      )
+      .subscribe(reservations => {
+        this.reservations = reservations;
         this.loadingReservations = false;
-      } catch (error) {
-        console.error('Error fetching reservations:', error);
-        this.reservationError = this.translate.instant('reservations.error_fetching');
-        this.loadingReservations = false;
-      }
-    }, 500); // Simulate network delay
-  }
-
-  private getVehicleById(vehicleId: number): StaticVehicle | undefined {
-    return this.staticVehicles.find(vehicle => vehicle.id === vehicleId);
+      });
   }
 
   // --- CANCEL MODAL HANDLING ---
-  openCancelConfirmModal(reservation: StaticReservation): void {
+  openCancelConfirmModal(reservation: Reservation): void {
     this.reservationToCancel = reservation;
     this.showCancelConfirmModal = true;
     this.cancelError = null;
@@ -218,31 +108,22 @@ export class MyReservationsComponent implements OnInit {
     this.isCancelling = true;
     this.cancelError = null;
 
-    // Simulate API call delay
-    setTimeout(() => {
-      try {
-        // Update reservation in localStorage
-        const storedReservations = localStorage.getItem('userReservations');
-        if (storedReservations) {
-          const allReservations: StaticReservation[] = JSON.parse(storedReservations);
-          const updatedReservations = allReservations.map(reservation =>
-            reservation.id === this.reservationToCancel?.id
-              ? { ...reservation, status: 'Cancelled' }
-              : reservation
-          );
-          localStorage.setItem('userReservations', JSON.stringify(updatedReservations));
-        }
-
+    // Use the actual reservation service to cancel
+    this.reservationService.cancelReservation(this.reservationToCancel.id)
+      .pipe(
+        catchError(error => {
+          console.error('Cancellation failed:', error);
+          this.cancelError = this.translate.instant('reservations.error_cancel');
+          this.isCancelling = false;
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
         alert(this.translate.instant('reservations.cancel_success', { reservationId: this.reservationToCancel?.id }));
         this.closeCancelConfirmModal();
         this.fetchUserReservations(); // Refresh the list
-      } catch (error) {
-        console.error('Cancellation failed:', error);
-        this.cancelError = this.translate.instant('reservations.error_cancel');
-      } finally {
         this.isCancelling = false;
-      }
-    }, 1000); // Simulate network delay
+      });
   }
 
   // --- HELPER METHODS ---
@@ -269,9 +150,9 @@ export class MyReservationsComponent implements OnInit {
     return this.translate.instant('modal.transmission_unknown');
   }
 
-  getVehicleDisplayName(vehicle?: StaticVehicle): string {
-    if (!vehicle) return 'Unknown Vehicle';
-    return vehicle.vname || `${vehicle.marque} ${vehicle.modele}`;
+  getVehicleDisplayName(reservation: Reservation): string {
+    if (!reservation.voiture) return 'Unknown Vehicle';
+    return reservation.voiture.vname || `${reservation.voiture.marque} ${reservation.voiture.modele}`;
   }
 
   getRentalDuration(dateDebut: string, dateFin: string): string {

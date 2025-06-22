@@ -95,13 +95,20 @@ export class ProfilInfoComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
 
     const clientId = this.authService.getCurrentClientId();
-    if (!clientId) {
-      this.errorMessage = 'Client ID not found. Please log in again.';
+    const userId = this.authService.getCurrentUserId();
+
+    if (!clientId && !userId) {
+      this.errorMessage = 'Client ID and User ID not found. Please log in again.';
       this.isLoading = false;
       return;
     }
 
-    this.clientService.getClientById(clientId)
+    // Try to get client by client_id first, then by user_id as fallback
+    const clientObservable = clientId
+      ? this.clientService.getClientById(clientId)
+      : this.clientService.getClientByUserId(userId!);
+
+    clientObservable
       .pipe(
         catchError(error => {
           console.error('Error loading client profile:', error);
@@ -132,8 +139,8 @@ export class ProfilInfoComponent implements OnInit, OnDestroy {
             photoPermisUrl: undefined
           };
 
-          // Load photos
-          this.loadClientPhotos(clientId);
+          // Load photos using the client ID
+          this.loadClientPhotos(client.id!);
         }
         this.isLoading = false;
       });

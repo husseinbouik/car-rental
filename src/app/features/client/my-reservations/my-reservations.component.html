@@ -24,7 +24,7 @@
       <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
         <div class="text-white text-center">
           <i class="fas fa-car text-4xl mb-2"></i>
-          <p class="text-lg font-semibold">{{ getVehicleDisplayName(reservation.voiture) }}</p>
+          <p class="text-lg font-semibold">{{ getVehicleDisplayName(reservation) }}</p>
         </div>
       </div>
 
@@ -33,16 +33,16 @@
         <!-- Vehicle Name and Status -->
         <div class="flex justify-between items-start mb-4">
           <div>
-            <h3 class="text-xl font-semibold theme-text-main">{{ getVehicleDisplayName(reservation.voiture) }}</h3>
+            <h3 class="text-xl font-semibold theme-text-main">{{ getVehicleDisplayName(reservation) }}</h3>
             <p class="text-sm theme-text-muted">{{ reservation.voiture?.marque }} {{ reservation.voiture?.modele }}</p>
           </div>
           <span [ngClass]="{
             'px-3 py-1 text-xs font-semibold rounded-full': true,
-            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': reservation.status === 'Confirmed' || reservation.status === 'Completed',
-            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300': reservation.status === 'Pending',
-            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': reservation.status === 'Cancelled'
+            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': reservation.statut === 'Confirmed' || reservation.statut === 'Completed',
+            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300': reservation.statut === 'Pending',
+            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': reservation.statut === 'Cancelled'
           }">
-            {{ ( 'reservations.status.' + reservation.status ) | translate }}
+            {{ ( 'reservations.status.' + reservation.statut ) | translate }}
           </span>
         </div>
 
@@ -92,10 +92,10 @@
         <div class="flex justify-between items-center">
           <div>
             <p class="text-sm theme-text-muted">{{ 'reservations.table.total_price' | translate }}</p>
-            <p class="text-2xl font-bold theme-primary-text">{{ formatCurrency(reservation.prixTotal) }}</p>
+            <p class="text-2xl font-bold theme-primary-text">{{ formatCurrency(reservation.montantTotal) }}</p>
           </div>
           <div class="flex space-x-2">
-            <button *ngIf="reservation.status === 'Pending'"
+            <button *ngIf="reservation.statut === 'Pending'"
                     (click)="openCancelConfirmModal(reservation)"
                     class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               {{ 'reservations.cancel_button' | translate }}
@@ -126,7 +126,7 @@
            {{ 'reservations.cancel_modal.message' | translate }}
          </p>
          <p *ngIf="reservationToCancel" class="theme-text-muted italic mt-2">
-              {{ 'reservations.cancel_modal.reservation' | translate }}: #{{ reservationToCancel.id }} ({{ getVehicleDisplayName(reservationToCancel.voiture) }})
+              {{ 'reservations.cancel_modal.reservation' | translate }}: #{{ reservationToCancel.id }} ({{ getVehicleDisplayName(reservationToCancel) }})
          </p>
       </div>
 
