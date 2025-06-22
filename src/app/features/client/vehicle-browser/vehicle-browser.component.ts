@@ -60,6 +60,11 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   showRentalModal = false;
   selectedVehicle: DisplayVoiture | null = null;
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
+  isEditingDates = false;
+
+  // Success modal
+  showSuccessModal = false;
+  createdReservation: any = null;
 
   // Error states
   listDisplayError: string | null = null;
@@ -67,6 +72,10 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   rentalSubmissionError: string | null = null;
 
   isSubmittingRental = false;
+
+  // View and sorting
+  viewMode: 'grid' | 'list' = 'grid';
+  sortBy: string = 'name';
 
   private photoSubscriptions: Subscription[] = [];
 
@@ -537,5 +546,46 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
       return 'N/A';
     }
     return value.toFixed(2) + ' €';
+  }
+
+  setViewMode(mode: 'grid' | 'list'): void {
+    this.viewMode = mode;
+  }
+
+  onSortChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.sortBy = target.value;
+    this.sortVehicles();
+  }
+
+  private sortVehicles(): void {
+    this.filteredVehicles.sort((a, b) => {
+      switch (this.sortBy) {
+        case 'price-low':
+          return (a.prixDeBase || 0) - (b.prixDeBase || 0);
+        case 'price-high':
+          return (b.prixDeBase || 0) - (a.prixDeBase || 0);
+        case 'seats':
+          return (a.capacite || 0) - (b.capacite || 0);
+        case 'name':
+        default:
+          const nameA = (a.vname || a.marque || '').toLowerCase();
+          const nameB = (b.vname || b.marque || '').toLowerCase();
+          return nameA.localeCompare(nameB);
+      }
+    });
+  }
+
+  retryLoading(): void {
+    this.fetchAllVehicles();
+  }
+
+  reserveVehicle(vehicle: DisplayVoiture): void {
+    if (!this.isVehicleInAvailableList(vehicle)) {
+      return;
+    }
+    this.selectedVehicle = vehicle;
+    this.showRentalModal = true;
+    this.initDefaultModalDates();
   }
 }
