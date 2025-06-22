@@ -144,10 +144,10 @@
         <i class="fas fa-exclamation-circle mr-2"></i> {{ dateModalError }}
       </div>
       <div class="flex justify-end">
-        <button (click)="checkAvailabilityForModal()"
+        <button (click)="updateRentalDates()"
                 [disabled]="checkingAvailabilityModal || !dateSelectionForModal.pickupDate || !dateSelectionForModal.returnDate"
                 class="theme-primary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-          <span *ngIf="!checkingAvailabilityModal">{{ 'modal.check_availability' | translate }}</span>
+          <span *ngIf="!checkingAvailabilityModal">{{ 'modal.update_dates' | translate }}</span>
           <span *ngIf="checkingAvailabilityModal"><i class="fas fa-spinner fa-spin mr-2"></i> {{ 'modal.checking' | translate }}</span>
         </button>
       </div>
@@ -197,7 +197,7 @@
             <div><p class="text-xs theme-text-muted">{{ 'modal.pickup_date' | translate }}</p><p class="font-medium">{{ rentalData.pickupDate | date:'mediumDate' }}</p></div>
             <div><p class="text-xs theme-text-muted">{{ 'modal.return_date' | translate }}</p><p class="font-medium">{{ rentalData.returnDate | date:'mediumDate' }}</p></div>
             <div class="col-span-2">
-              <button type="button" (click)="showRentalModal = false; openRentalModal(selectedVehicle!)" class="text-sm text-blue-500 hover:text-blue-400">
+              <button type="button" (click)="showDateModal = true" class="text-sm text-blue-500 hover:text-blue-400">
                 <i class="fas fa-pencil-alt mr-1"></i> {{ 'modal.change_dates' | translate }}
               </button>
             </div>
@@ -229,37 +229,6 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-</div>
-
-<!-- Authentication Required Modal -->
-<div *ngIf="showAuthModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[80] p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
-    <div class="p-6 text-center">
-      <div class="flex justify-end mb-4">
-        <button (click)="closeAuthModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-      <div class="mb-6">
-        <i class="fas fa-user-lock text-blue-500 text-4xl mb-4"></i>
-        <h3 class="text-2xl font-bold theme-text-main mb-2">{{ 'auth_modal.title' | translate }}</h3>
-        <p class="theme-text-muted">{{ 'auth_modal.message' | translate }}</p>
-        <p *ngIf="pendingRentalVehicle" class="theme-text-muted italic mt-2">
-          {{ 'auth_modal.renting_vehicle' | translate }}: <strong>{{ pendingRentalVehicle.marque }} {{ pendingRentalVehicle.modele }}</strong>
-        </p>
-      </div>
-      <div class="flex flex-col space-y-4">
-        <button (click)="navigateToLogin()"
-                class="theme-primary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
-          {{ 'auth_modal.signin' | translate }}
-        </button>
-        <button (click)="navigateToSignup()"
-                class="theme-secondary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full">
-          {{ 'auth_modal.signup' | translate }}
-        </button>
-      </div>
     </div>
   </div>
 </div>

@@ -19,19 +19,19 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
       <div class="max-w-md w-full text-center">
         <fa-icon [icon]="faCheckCircle" class="text-6xl text-green-500 mb-6"></fa-icon>
         <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">
-          {{ 'payment.success' | translate }}
+          Payment Successful!
         </h1>
         <p class="text-gray-600 dark:text-gray-300 mb-8">
-          {{ 'payment.success_message' | translate }}
+          Thank you for your payment. Your reservation has been confirmed and you will receive a confirmation email shortly.
         </p>
         <div class="space-y-4">
           <a routerLink="/my-reservations"
              class="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-            {{ 'payment.view_reservations' | translate }}
+            View My Reservations
           </a>
-          <a routerLink="/vehicles"
+          <a routerLink="/vehicle-browser"
              class="block w-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-white py-3 px-6 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
-            {{ 'payment.browse_more' | translate }}
+            Browse More Vehicles
           </a>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { Voiture } from '../../admin/vehicles/vehicle.model'; // Ensure this model is updated
+import { Voiture } from '../../admin/vehicles/vehicle.model';
 import { VehicleService } from '../../admin/vehicles/vehicle.service';
 import { AuthService } from '../auth.service';
 import { ReservationService, CreateReservationPayload } from '../services/reservation.service';
@@ -35,140 +35,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   availableVehicles: DisplayVoiture[] = [];
   filteredVehicles: DisplayVoiture[] = [];
 
-  // Static vehicle data
-  private staticVehicles: Voiture[] = [
-    {
-      id: 1,
-      vname: 'Mercedes C-Class',
-      marque: 'Mercedes',
-      modele: 'C-Class',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Diesel',
-      estAutomate: true,
-      prixDeBase: 80,
-      couleur: 'Black',
-      photo: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 2,
-      vname: 'BMW X3',
-      marque: 'BMW',
-      modele: 'X3',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 95,
-      couleur: 'White',
-      photo: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 3,
-      vname: 'Audi A4',
-      marque: 'Audi',
-      modele: 'A4',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 85,
-      couleur: 'Silver',
-      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 4,
-      vname: 'Volkswagen Golf',
-      marque: 'Volkswagen',
-      modele: 'Golf',
-      type: 'Hatchback',
-      capacite: 5,
-      carburant: 'Diesel',
-      estAutomate: false,
-      prixDeBase: 45,
-      couleur: 'Blue',
-      photo: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 5,
-      vname: 'Toyota Camry',
-      marque: 'Toyota',
-      modele: 'Camry',
-      type: 'Sedan',
-      capacite: 5,
-      carburant: 'Hybrid',
-      estAutomate: true,
-      prixDeBase: 65,
-      couleur: 'Gray',
-      photo: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 6,
-      vname: 'Honda CR-V',
-      marque: 'Honda',
-      modele: 'CR-V',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 75,
-      couleur: 'Red',
-      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 7,
-      vname: 'Tesla Model 3',
-      marque: 'Tesla',
-      modele: 'Model 3',
-      type: 'Electric',
-      capacite: 5,
-      carburant: 'Electric',
-      estAutomate: true,
-      prixDeBase: 120,
-      couleur: 'White',
-      photo: 'https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 8,
-      vname: 'Porsche 911',
-      marque: 'Porsche',
-      modele: '911',
-      type: 'Sports',
-      capacite: 2,
-      carburant: 'Gasoline',
-      estAutomate: true,
-      prixDeBase: 250,
-      couleur: 'Red',
-      photo: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 9,
-      vname: 'Range Rover Sport',
-      marque: 'Land Rover',
-      modele: 'Range Rover Sport',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Diesel',
-      estAutomate: true,
-      prixDeBase: 180,
-      couleur: 'Black',
-      photo: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop&crop=center'
-    },
-    {
-      id: 10,
-      vname: 'Lexus RX',
-      marque: 'Lexus',
-      modele: 'RX',
-      type: 'SUV',
-      capacite: 5,
-      carburant: 'Hybrid',
-      estAutomate: true,
-      prixDeBase: 110,
-      couleur: 'Silver',
-      photo: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
-    }
-  ];
-
   // Main Search Criteria & State
   searchCriteria = {
     name: '',
@@ -192,7 +58,7 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
 
   // Rental modal
   showRentalModal = false;
-  selectedVehicle: DisplayVoiture | null = null; // Use DisplayVoiture
+  selectedVehicle: DisplayVoiture | null = null;
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
 
   // Error states
@@ -201,8 +67,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   rentalSubmissionError: string | null = null;
 
   isSubmittingRental = false;
-  showAuthModal = false;
-  pendingRentalVehicle: DisplayVoiture | null = null; // Use DisplayVoiture
 
   private photoSubscriptions: Subscription[] = [];
 
@@ -233,7 +97,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
       const allDisplayVehicles = [...this.allVehicles, ...this.availableVehicles];
       const uniqueVehicles = Array.from(new Set(allDisplayVehicles.map(v => v.id)))
                                    .map(id => allDisplayVehicles.find(v => v.id === id));
-
       uniqueVehicles.forEach(vehicle => {
         if (vehicle && vehicle.photoDisplayUrl && vehicle.photoDisplayUrl.startsWith('blob:')) {
           URL.revokeObjectURL(vehicle.photoDisplayUrl);
@@ -276,32 +139,57 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Handle different photo formats
+    vehicle.isLoadingPhoto = true;
+    vehicle.photoError = false;
+
+    // First check if we have base64 data (fallback)
     if (vehicle.photo) {
       if (typeof vehicle.photo === 'string') {
         if (vehicle.photo.startsWith('data:image')) {
           vehicle.photoDisplayUrl = vehicle.photo;
+          vehicle.isLoadingPhoto = false;
           return;
         } else if (vehicle.photo.startsWith('http')) {
-          // Direct URL - use it as is
           vehicle.photoDisplayUrl = vehicle.photo;
+          vehicle.isLoadingPhoto = false;
           return;
         } else {
-          // Base64 encoded image
+          // If it's base64 data, use it as fallback
           vehicle.photoDisplayUrl = 'data:image/jpeg;base64,' + vehicle.photo;
+          vehicle.isLoadingPhoto = false;
           return;
         }
       }
     }
 
-    // If no photo URL is available, set error state
-    vehicle.photoError = true;
+    // Use the API to fetch the photo
+    const subscription = this.vehicleService.getVehiclePhoto(vehicle.id!)
+      .pipe(
+        catchError(error => {
+          console.error(`Error loading photo for vehicle ${vehicle.id}:`, error);
+          vehicle.photoError = true;
+          vehicle.isLoadingPhoto = false;
+          return of(null);
+        })
+      )
+      .subscribe(blob => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          vehicle.photoDisplayUrl = url;
+          vehicle.photoError = false;
+        } else {
+          vehicle.photoError = true;
+        }
+        vehicle.isLoadingPhoto = false;
+      });
+
+    this.photoSubscriptions.push(subscription);
   }
 
   private processVehiclesForDisplay(vehicles: Voiture[]): DisplayVoiture[] {
     return vehicles.map(v => {
       const displayV: DisplayVoiture = { ...v, photoDisplayUrl: undefined, isLoadingPhoto: false, photoError: false };
-      this.loadVehiclePhoto(displayV); // Will first check for existing base64, then fetch if needed
+      this.loadVehiclePhoto(displayV);
       return displayV;
     });
   }
@@ -310,12 +198,20 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     this.loadingInitialVehicles = true;
     this.listDisplayError = null;
 
-    // Simulate API delay
-    setTimeout(() => {
-      this.allVehicles = this.processVehiclesForDisplay(this.staticVehicles);
-      this.filteredVehicles = [...this.allVehicles];
-      this.loadingInitialVehicles = false;
-    }, 500);
+    this.vehicleService.getVehicles()
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching vehicles:', error);
+          this.listDisplayError = error.message || this.translate.instant('vehicles.error_fetching');
+          this.loadingInitialVehicles = false;
+          return of([]);
+        })
+      )
+      .subscribe((vehicles: Voiture[]) => {
+        this.allVehicles = this.processVehiclesForDisplay(vehicles);
+        this.filteredVehicles = [...this.allVehicles];
+        this.loadingInitialVehicles = false;
+      });
   }
 
   performMainSearch(event?: Event): void {
@@ -341,17 +237,23 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
         this.mainSearchError = this.translate.instant('modal.validation.return_date_after');
         this.isMainSearchLoading = false; this.filteredVehicles = []; this.updateListDisplayMessage(); return;
       }
-
-      // Simulate availability check
-      setTimeout(() => {
-        // For static demo, all vehicles are available
-        this.availableVehicles = this.processVehiclesForDisplay(this.staticVehicles);
-        this.filteredVehicles = nameTerm
-          ? this.availableVehicles.filter(v => this.vehicleMatchesName(v, nameTerm))
-          : [...this.availableVehicles];
-        this.isMainSearchLoading = false;
-        this.updateListDisplayMessage();
-      }, 800);
+      this.vehicleService.getAvailableVehicles(pickup, returnD)
+        .pipe(
+          catchError(error => {
+            console.error('Error fetching available vehicles:', error);
+            this.listDisplayError = error.message || this.translate.instant('vehicles.error_fetching');
+            this.isMainSearchLoading = false;
+            return of([]);
+          })
+        )
+        .subscribe((vehicles: Voiture[]) => {
+          this.availableVehicles = this.processVehiclesForDisplay(vehicles);
+          this.filteredVehicles = nameTerm
+            ? this.availableVehicles.filter(v => this.vehicleMatchesName(v, nameTerm))
+            : [...this.availableVehicles];
+          this.isMainSearchLoading = false;
+          this.updateListDisplayMessage();
+        });
     } else if (nameTerm) {
       this.filteredVehicles = this.allVehicles.filter(v => this.vehicleMatchesName(v, nameTerm));
       this.isMainSearchLoading = false; this.updateListDisplayMessage();
@@ -393,109 +295,236 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   }
 
   openRentalModal(vehicle: DisplayVoiture): void {
-    if (!this.authService.isLoggedIn()) {
-      this.pendingRentalVehicle = vehicle;
-      this.openAuthModal();
-      return;
-    }
     this.selectedVehicle = vehicle;
-    this.dateModalError = null;
-    this.showDateModal = true;
-    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
+    this.showRentalModal = true;
+    this.initDefaultModalDates();
+    this.rentalData = { pickupDate: this.dateSelectionForModal.pickupDate, returnDate: this.dateSelectionForModal.returnDate, insurance: 'basic' };
   }
 
   closeDateModal(): void {
     this.showDateModal = false;
     this.dateModalError = null;
-    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
   }
 
   checkAvailabilityForModal(): void {
     this.dateModalError = null;
-    if (!this.dateSelectionForModal.pickupDate || !this.dateSelectionForModal.returnDate) {
-      this.dateModalError = this.translate.instant('modal.validation.date_required'); return;
-    }
-    const pickup = new Date(this.dateSelectionForModal.pickupDate);
-    const returnD = new Date(this.dateSelectionForModal.returnDate);
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    if (pickup < today) {
-      this.dateModalError = this.translate.instant('modal.validation.pickup_date_past'); return;
-    }
-    if (returnD <= pickup) {
-      this.dateModalError = this.translate.instant('modal.validation.return_date_after'); return;
-    }
     this.checkingAvailabilityModal = true;
-
-    // Simulate availability check
-    setTimeout(() => {
-      // For static demo, vehicle is always available
-      if (this.selectedVehicle) {
-        this.rentalData.pickupDate = this.dateSelectionForModal.pickupDate;
-        this.rentalData.returnDate = this.dateSelectionForModal.returnDate;
-        this.closeDateModal();
-        this.showRentalModal = true;
-        if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
-      }
+    const { pickupDate, returnDate } = this.dateSelectionForModal;
+    if (!pickupDate || !returnDate) {
+      this.dateModalError = this.translate.instant('modal.validation.dates_required');
       this.checkingAvailabilityModal = false;
-    }, 800);
+      return;
+    }
+    this.vehicleService.getAvailableVehicles(pickupDate, returnDate)
+      .pipe(
+        catchError(error => {
+          this.dateModalError = error.message || this.translate.instant('vehicles.error_fetching');
+          this.checkingAvailabilityModal = false;
+          return of([]);
+        })
+      )
+      .subscribe((vehicles: Voiture[]) => {
+        const found = vehicles.some(v => v.id === this.selectedVehicle?.id);
+        if (found) {
+          this.rentalData.pickupDate = pickupDate;
+          this.rentalData.returnDate = returnDate;
+          this.showDateModal = false;
+        } else {
+          this.dateModalError = this.translate.instant('modal.not_available_for_dates');
+        }
+        this.checkingAvailabilityModal = false;
+      });
+  }
+
+  updateRentalDates(): void {
+    if (!this.selectedVehicle) return;
+
+    this.dateModalError = null;
+    this.checkingAvailabilityModal = true;
+    const { pickupDate, returnDate } = this.dateSelectionForModal;
+
+    if (!pickupDate || !returnDate) {
+      this.dateModalError = this.translate.instant('modal.validation.dates_required');
+      this.checkingAvailabilityModal = false;
+      return;
+    }
+
+    // Validate dates
+    const pDate = new Date(pickupDate);
+    const rDate = new Date(returnDate);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+
+    if (pDate < today) {
+      this.dateModalError = this.translate.instant('modal.validation.pickup_date_past');
+      this.checkingAvailabilityModal = false;
+      return;
+    }
+    if (rDate <= pDate) {
+      this.dateModalError = this.translate.instant('modal.validation.return_date_after');
+      this.checkingAvailabilityModal = false;
+      return;
+    }
+
+    this.vehicleService.getAvailableVehicles(pickupDate, returnDate)
+      .pipe(
+        catchError(error => {
+          this.dateModalError = error.message || this.translate.instant('vehicles.error_fetching');
+          this.checkingAvailabilityModal = false;
+          return of([]);
+        })
+      )
+      .subscribe((vehicles: Voiture[]) => {
+        const found = vehicles.some(v => v.id === this.selectedVehicle?.id);
+        if (found) {
+          this.rentalData.pickupDate = pickupDate;
+          this.rentalData.returnDate = returnDate;
+          this.showDateModal = false;
+        } else {
+          this.dateModalError = this.translate.instant('modal.not_available_for_dates');
+        }
+        this.checkingAvailabilityModal = false;
+      });
   }
 
   closeRentalModal(): void {
     this.showRentalModal = false;
     this.selectedVehicle = null;
     this.rentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
-    this.isSubmittingRental = false;
     this.rentalSubmissionError = null;
-    this.initDefaultModalDates();
-    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
+    this.isSubmittingRental = false;
   }
 
- submitRentalRequest(): void {
-  if (!this.selectedVehicle) {
-    this.rentalSubmissionError = this.translate.instant('modal.error_general');
-    return;
-  }
+  submitRentalRequest(): void {
+    console.log('=== SUBMIT RENTAL REQUEST DEBUG ===');
+    console.log('Selected vehicle:', this.selectedVehicle);
+    console.log('Rental data:', this.rentalData);
 
-  try {
-    const clientId = this.authService.getCurrentUserId();
-    if (!clientId) {
-      throw new Error('User not authenticated');
+    if (!this.selectedVehicle) {
+      console.error('No selected vehicle found');
+      return;
     }
 
-    // Store reservation data in sessionStorage for payment component
+    this.isSubmittingRental = true;
+    this.rentalSubmissionError = null;
+
+    // Check availability before proceeding to payment
+    const dateDebut = this.toIsoDateTime(this.rentalData.pickupDate);
+    const dateFin = this.toIsoDateTime(this.rentalData.returnDate);
+
+    console.log('Checking availability for dates:', { dateDebut, dateFin });
+
+    this.vehicleService.getAvailableVehicles(this.rentalData.pickupDate, this.rentalData.returnDate)
+      .pipe(
+        catchError(error => {
+          console.error('Error checking availability:', error);
+          this.rentalSubmissionError = error.message || this.translate.instant('vehicles.error_checking_availability');
+          this.isSubmittingRental = false;
+          return of([]);
+        })
+      )
+      .subscribe((availableVehicles: Voiture[]) => {
+        console.log('Available vehicles received:', availableVehicles);
+        console.log('Looking for vehicle ID:', this.selectedVehicle?.id);
+
+        const isAvailable = availableVehicles.some(v => v.id === this.selectedVehicle?.id);
+        console.log('Vehicle available:', isAvailable);
+
+        if (!isAvailable) {
+          console.log('Vehicle not available, showing error');
+          this.rentalSubmissionError = this.translate.instant('modal.not_available_for_dates');
+          this.isSubmittingRental = false;
+          return;
+        }
+
+        // Vehicle is available, proceed to payment
+        console.log('Vehicle is available, proceeding to payment');
+        this.proceedToPayment();
+      });
+  }
+
+  private proceedToPayment(): void {
+    console.log('=== PROCEED TO PAYMENT DEBUG ===');
+    console.log('Selected vehicle:', this.selectedVehicle);
+    console.log('Current URL:', window.location.href);
+    console.log('Router URL:', this.router.url);
+
+    if (!this.selectedVehicle) {
+      console.error('No selected vehicle found');
+      return;
+    }
+
+    // Prepare reservation data for payment
     const reservationData = {
       voitureId: this.selectedVehicle.id,
-      clientId: clientId,
-      dateDebut: this.rentalData.pickupDate,
-      dateFin: this.rentalData.returnDate,
+      clientId: 1, // Default client ID for demo
+      dateDebut: this.toIsoDateTime(this.rentalData.pickupDate),
+      dateFin: this.toIsoDateTime(this.rentalData.returnDate),
       insuranceOption: this.rentalData.insurance,
       vehicle: this.selectedVehicle
     };
 
+    console.log('Reservation data to store:', reservationData);
+
+    // Store reservation data in sessionStorage for payment component
     sessionStorage.setItem('pendingReservation', JSON.stringify(reservationData));
+    console.log('Reservation data stored in sessionStorage');
 
-    // Close modal and redirect to payment
+    // Close modal and navigate to payment
     this.closeRentalModal();
-    this.router.navigate(['/payment']);
+    console.log('Modal closed, navigating to payment...');
 
-  } catch (error) {
-    this.isSubmittingRental = false;
-    this.rentalSubmissionError = error instanceof Error ? error.message : 'Unknown error';
+    // Try different navigation approaches
+    try {
+      // Try with absolute path first
+      console.log('Trying absolute path navigation...');
+      this.router.navigate(['/payment'], { replaceUrl: false }).then(() => {
+        console.log('Navigation to /payment successful');
+      }).catch(error => {
+        console.error('Absolute path navigation failed:', error);
+
+        // Try with relative path
+        console.log('Trying relative path navigation...');
+        this.router.navigate(['payment'], { replaceUrl: false }).then(() => {
+          console.log('Navigation to payment (relative) successful');
+        }).catch(error2 => {
+          console.error('Relative navigation also failed:', error2);
+
+          // Try window.location as fallback
+          console.log('Trying window.location fallback...');
+          window.location.href = window.location.origin + '/payment';
+        });
+      });
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // Fallback navigation
+      window.location.href = window.location.origin + '/payment';
+    }
+
+    console.log('=== END PROCEED TO PAYMENT DEBUG ===');
   }
-}
 
-  openAuthModal(): void {
-    this.showAuthModal = true;
-    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
+  private toIsoDateTime(date: string | undefined | null): string {
+    if (!date) return new Date().toISOString(); // fallback to now
+    if (date.includes('T')) {
+      // If it's already a valid ISO string, return as is
+      return date;
+    }
+    // If date is yyyy-MM-dd, convert to yyyy-MM-ddT00:00:00
+    // Validate format
+    const dateParts = date.split('-');
+    if (dateParts.length === 3) {
+      return `${dateParts[0]}-${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}T00:00:00`;
+    }
+    // Try to parse and convert
+    try {
+      const d = new Date(date);
+      if (!isNaN(d.getTime())) {
+        return d.toISOString().split('.')[0]; // yyyy-MM-ddTHH:mm:ss
+      }
+    } catch (e) {}
+    // Fallback: now
+    return new Date().toISOString().split('.')[0];
   }
-
-  closeAuthModal(): void {
-    this.showAuthModal = false; this.pendingRentalVehicle = null;
-    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
-  }
-
-  navigateToLogin(): void { this.closeAuthModal(); this.router.navigate(['/login']); }
-  navigateToSignup(): void { this.closeAuthModal(); this.router.navigate(['/signup']); }
 
   getTransmissionText(isAutomate: boolean | undefined | null): string {
     if (isAutomate === true) return this.translate.instant('modal.transmission_auto');
@@ -504,7 +533,9 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
   }
 
   formatCurrency(value: number | null | undefined): string {
-    if (value === null || value === undefined) return 'N/A';
+    if (value === null || value === undefined) {
+      return 'N/A';
+    }
     return value.toFixed(2) + ' €';
   }
 }

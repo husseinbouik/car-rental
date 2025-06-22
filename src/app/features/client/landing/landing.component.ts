@@ -1,5 +1,5 @@
 // src/app/landing/landing.component.ts
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { Router } from '@angular/router'; // <--- Import Router
 import { Voiture } from '../../admin/vehicles/vehicle.model'; // Adjust path as needed
 import { VehicleService } from '../../admin/vehicles/vehicle.service'; // Adjust path as needed
 import { AuthService } from '../auth.service'; // <--- Import AuthService (Adjust path)
-import { catchError, of } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 
 interface Feature {
   title: string;
@@ -22,6 +22,12 @@ interface RentalData {
   insurance: string;
 }
 
+// Extended Voiture interface for display purposes within this component
+interface DisplayVoiture extends Voiture {
+  photoDisplayUrl?: string | null;
+  isLoadingPhoto?: boolean;
+  photoError?: boolean;
+}
 
 @Component({
   selector: 'app-landing',
@@ -29,7 +35,7 @@ interface RentalData {
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent implements OnInit, OnDestroy {
 
   // --- PROPERTIES ---
   isDarkMode = false;
@@ -39,12 +45,12 @@ export class LandingComponent implements OnInit {
 
   // Rental Modal properties
   showRentalModal = false;
-  selectedVehicle: Voiture | null = null; // This holds the vehicle for the RENTAL modal
+  selectedVehicle: DisplayVoiture | null = null; // This holds the vehicle for the RENTAL modal
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
 
   // --- NEW PROPERTIES FOR AUTH MODAL ---
   showAuthModal = false; // <--- New property to control the auth modal
-  public pendingRentalVehicle: Voiture | null = null; // <--- Temporarily store the vehicle if auth is needed
+  public pendingRentalVehicle: DisplayVoiture | null = null; // <--- Temporarily store the vehicle if auth is needed
 
   // --- NEW PROPERTIES FOR CHATBOT ---
   showChatbot = false;
@@ -111,8 +117,8 @@ export class LandingComponent implements OnInit {
   newsletterMessage: string | null = null;
   newsletterError = false;
 
-   vehicles: Voiture[] = [];
-   filteredVehicles: Voiture[] = [];
+   vehicles: DisplayVoiture[] = [];
+   filteredVehicles: DisplayVoiture[] = [];
    loadingVehicles = true;
    vehicleError: string | null = null;
 
@@ -120,6 +126,7 @@ export class LandingComponent implements OnInit {
 
   private sectionOffsets: Map<string, { top: number, bottom: number }> = new Map();
   private offsetsCalculated = false;
+  private photoSubscriptions: Subscription[] = [];
 
 
   // --- CONSTRUCTOR & LIFECYCLE ---
@@ -152,7 +159,7 @@ export class LandingComponent implements OnInit {
            return of([]);
          })
       ).subscribe((data: Voiture[]) => {
-         this.vehicles = data;
+         this.vehicles = this.processVehiclesForDisplay(data);
          this.filteredVehicles = [...this.vehicles];
          console.log('Vehicles fetched:', this.vehicles);
          this.loadingVehicles = false;
@@ -164,6 +171,71 @@ export class LandingComponent implements OnInit {
                }, 100);
           }
       });
+   }
+
+   private processVehiclesForDisplay(vehicles: Voiture[]): DisplayVoiture[] {
+     return vehicles.map(vehicle => {
+       const displayVehicle: DisplayVoiture = {
+         ...vehicle,
+         photoDisplayUrl: undefined,
+         isLoadingPhoto: false,
+         photoError: false
+       };
+       this.loadVehiclePhoto(displayVehicle);
+       return displayVehicle;
+     });
+   }
+
+   loadVehiclePhoto(vehicle: DisplayVoiture): void {
+     if (!isPlatformBrowser(this.platformId) || !vehicle.id || vehicle.photoDisplayUrl || vehicle.isLoadingPhoto) {
+       return;
+     }
+
+     vehicle.isLoadingPhoto = true;
+     vehicle.photoError = false;
+
+     // First check if we have base64 data (fallback)
+     if (vehicle.photo) {
+       if (typeof vehicle.photo === 'string') {
+         if (vehicle.photo.startsWith('data:image')) {
+           vehicle.photoDisplayUrl = vehicle.photo;
+           vehicle.isLoadingPhoto = false;
+           return;
+         } else if (vehicle.photo.startsWith('http')) {
+           vehicle.photoDisplayUrl = vehicle.photo;
+           vehicle.isLoadingPhoto = false;
+           return;
+         } else {
+           // If it's base64 data, use it as fallback
+           vehicle.photoDisplayUrl = 'data:image/jpeg;base64,' + vehicle.photo;
+           vehicle.isLoadingPhoto = false;
+           return;
+         }
+       }
+     }
+
+     // Use the API to fetch the photo
+     const subscription = this.vehicleService.getVehiclePhoto(vehicle.id!)
+       .pipe(
+         catchError(error => {
+           console.error(`Error loading photo for vehicle ${vehicle.id}:`, error);
+           vehicle.photoError = true;
+           vehicle.isLoadingPhoto = false;
+           return of(null);
+         })
+       )
+       .subscribe(blob => {
+         if (blob) {
+           const url = URL.createObjectURL(blob);
+           vehicle.photoDisplayUrl = url;
+           vehicle.photoError = false;
+         } else {
+           vehicle.photoError = true;
+         }
+         vehicle.isLoadingPhoto = false;
+       });
+
+     this.photoSubscriptions.push(subscription);
    }
 
    performSearch(event?: Event): void {
@@ -356,7 +428,7 @@ export class LandingComponent implements OnInit {
   // --- MODAL HANDLING ---
 
   // This is the method called when "Rent" button is clicked
-  openRentalModal(vehicle: Voiture): void {
+  openRentalModal(vehicle: DisplayVoiture): void {
     if (this.authService.isLoggedIn()) {
       // If user is logged in, proceed to show the rental details modal
       this.selectedVehicle = vehicle;
@@ -568,5 +640,17 @@ export class LandingComponent implements OnInit {
   sendQuickReply(reply: string): void {
     this.currentMessage = reply;
     this.sendMessage();
+  }
+
+  ngOnDestroy(): void {
+    this.photoSubscriptions.forEach(subscription => subscription.unsubscribe());
+    if (isPlatformBrowser(this.platformId)) {
+      const allDisplayVehicles = [...this.vehicles];
+      allDisplayVehicles.forEach(vehicle => {
+        if (vehicle && vehicle.photoDisplayUrl && vehicle.photoDisplayUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(vehicle.photoDisplayUrl);
+        }
+      });
+    }
   }
 }

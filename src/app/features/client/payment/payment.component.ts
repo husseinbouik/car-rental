@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ReservationService, CreateReservationPayload } from '../services/reservation.service';
+import { catchError, of } from 'rxjs';
 
 interface ReservationData {
   voitureId: number;
@@ -47,20 +49,15 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private reservationService: ReservationService
   ) {}
 
   ngOnInit(): void {
-    // Check if user is logged in (simple check for static demo)
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     // Get reservation data from sessionStorage
     const storedData = sessionStorage.getItem('pendingReservation');
     if (!storedData) {
-      this.router.navigate(['/vehicles']);
+      this.router.navigate(['/vehicle-browser']);
       return;
     }
 
@@ -69,7 +66,7 @@ export class PaymentComponent implements OnInit {
       this.calculateReservationDetails();
     } catch (error) {
       console.error('Error parsing reservation data:', error);
-      this.router.navigate(['/vehicles']);
+      this.router.navigate(['/vehicle-browser']);
     }
   }
 
@@ -124,28 +121,49 @@ export class PaymentComponent implements OnInit {
 
     // Simulate payment processing delay
     setTimeout(() => {
-      // Create a mock reservation
-      const mockReservation = {
-        id: Math.floor(Math.random() * 10000) + 1000,
-        voitureId: this.reservationData?.voitureId,
-        clientId: this.reservationData?.clientId,
-        dateDebut: this.reservationData?.dateDebut,
-        dateFin: this.reservationData?.dateFin,
-        status: 'Confirmed',
-        prixTotal: this.reservationDetails.total,
-        voiture: this.reservationData?.vehicle
-      };
-
-      // Store the reservation in localStorage for the my-reservations component
-      const existingReservations = JSON.parse(localStorage.getItem('userReservations') || '[]');
-      existingReservations.push(mockReservation);
-      localStorage.setItem('userReservations', JSON.stringify(existingReservations));
-
-      // Clear the pending reservation
-      sessionStorage.removeItem('pendingReservation');
-
-      // Redirect to success page
-      this.router.navigate(['/payment-success']);
+      // After successful payment, create the reservation in the database
+      this.createReservationInDatabase();
     }, 2000);
+  }
+
+  private createReservationInDatabase(): void {
+    if (!this.reservationData) {
+      this.isProcessing = false;
+      return;
+    }
+
+    const payload: CreateReservationPayload = {
+      voitureId: this.reservationData.voitureId,
+      clientId: this.reservationData.clientId,
+      dateDebut: this.reservationData.dateDebut,
+      dateFin: this.reservationData.dateFin,
+      insuranceOption: this.reservationData.insuranceOption
+    };
+
+    console.log('Creating reservation in database:', payload);
+
+    this.reservationService.createReservation(payload)
+      .pipe(
+        catchError(error => {
+          console.error('Error creating reservation:', error);
+          alert('Payment successful but failed to create reservation. Please contact support.');
+          this.isProcessing = false;
+          return of(null);
+        })
+      )
+      .subscribe((result: any) => {
+        if (result) {
+          console.log('Reservation created successfully:', result);
+
+          // Clear the pending reservation
+          sessionStorage.removeItem('pendingReservation');
+
+          // Redirect to success page
+          this.router.navigate(['/payment-success']);
+        } else {
+          alert('Payment successful but failed to create reservation. Please contact support.');
+        }
+        this.isProcessing = false;
+      });
   }
 }

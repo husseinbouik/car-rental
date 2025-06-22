@@ -2,9 +2,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../auth.service';
+import { Voiture } from '../../admin/vehicles/vehicle.model';
 
 export interface Reservation {
   id: number;
@@ -12,16 +13,13 @@ export interface Reservation {
   clientId: number;
   dateDebut: string;
   dateFin: string;
-  prixTotal: number;
-  status: string;
+  montantTotal: number;
+  acompte: number;
+  statut: string;
   insuranceOption: string;
-  voiture?: {
-    id: number;
-    vname: string;
-    marque: string;
-    modele: string;
-    photo?: string;
-  };
+  voiture?: Voiture;
+  client?: any;
+  conducteurSecondaire?: any;
 }
 
 export interface CreateReservationPayload {
@@ -44,23 +42,29 @@ export class ReservationService {
   ) { }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error('No access token available');
-    }
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
+    const token = this.authService.getToken();
+    let headersConfig: { [name: string]: string } = {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
-    });
+    };
+
+    if (token) {
+      headersConfig['Authorization'] = `Bearer ${token}`;
+    }
+
+    return new HttpHeaders(headersConfig);
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
-    if (error.status === 403) {
+
+    if (error.status === 401 || error.status === 403) {
       errorMessage = 'Authentication failed. Please log in again.';
+      // Don't automatically logout, just return the error
     } else if (error.error) {
-      if (error.error.errors) {
+      if (typeof error.error === 'string' && error.error.includes('is not valid JSON')) {
+          errorMessage = 'Failed to parse server response. The data from the backend is not valid JSON.';
+      } else if (error.error.errors) {
         errorMessage = Object.values(error.error.errors).join('\n');
       } else if (error.error.message) {
         errorMessage = error.error.message;
@@ -68,33 +72,68 @@ export class ReservationService {
     } else {
       errorMessage = error.message || error.statusText;
     }
+
     console.error('API Error:', error);
     return throwError(() => new Error(errorMessage));
   }
 
   getUserReservations(userId: number): Observable<Reservation[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Reservation[]>(`${this.apiUrl}/client/${userId}`, { headers }).pipe(
-      catchError(this.handleError)
+    return this.http.get(`${this.apiUrl}/user/${userId}`, { headers, responseType: 'text' }).pipe(
+      map(text => {
+        let correctedText = text;
+        if (text.includes('"missions":]')) {
+          console.warn('Malformed JSON detected from backend ("missions":]). Applying client-side fix.');
+          correctedText = text.replace(/"missions":]/g, '"missions":[]');
+        }
+
+        const data = JSON.parse(correctedText);
+
+        if (data && !Array.isArray(data)) {
+          console.warn('API returned a single object for a list endpoint. Wrapping it in an array.');
+          return [data];
+        }
+
+        return data;
+      }),
+      catchError(this.handleError.bind(this))
     );
   }
 
   createReservation(payload: CreateReservationPayload): Observable<Reservation> {
-    try {
-      const headers = this.getAuthHeaders();
-      return this.http.post<Reservation>(this.apiUrl, payload, { headers }).pipe(
-        catchError(this.handleError)
-      );
-    } catch (error) {
-      return throwError(() => error);
+    const headers = this.getAuthHeaders();
+    const token = this.authService.getToken();
+
+    console.log('=== RESERVATION CREATION DEBUG ===');
+    console.log('Payload:', payload);
+    console.log('Token:', token);
+
+    if (token) {
+      try {
+        const payload = this.authService.decodeToken(token);
+        console.log('Decoded token payload:', payload);
+        console.log('Authorities:', payload?.authorities);
+        console.log('User ID:', payload?.user_id);
+        console.log('Client ID:', payload?.client_id);
+      } catch (e) {
+        console.error('Error decoding token:', e);
+      }
     }
+
+    console.log('Headers being sent:', headers);
+    console.log('Request URL:', this.apiUrl);
+    console.log('================================');
+
+    return this.http.post<Reservation>(this.apiUrl, payload, { headers }).pipe(
+      catchError(this.handleError.bind(this))
+    );
   }
 
   cancelReservation(reservationId: number): Observable<Reservation> {
     const headers = this.getAuthHeaders();
     const cancelPayload = { status: 'Cancelled' };
     return this.http.patch<Reservation>(`${this.apiUrl}/${reservationId}`, cancelPayload, { headers }).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 }
