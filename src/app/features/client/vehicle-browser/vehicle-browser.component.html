@@ -245,78 +245,6 @@
   </div>
 </div>
 
-<!-- Enhanced Date Selection Modal -->
-<div *ngIf="showDateModal" class="modal-overlay">
-  <div class="modal-content max-w-md">
-    <div class="modal-header">
-      <h3 class="text-2xl font-bold theme-text-main">
-        <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-        {{ 'modal.select_dates' | translate }}
-      </h3>
-      <button (click)="closeDateModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-        <i class="fas fa-times text-xl"></i>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="modal-pickup-date" class="form-label">
-          <i class="fas fa-calendar-plus mr-2 text-blue-500"></i>
-          {{ 'modal.pickup_date' | translate }}
-        </label>
-        <input
-          type="date"
-          id="modal-pickup-date"
-          [(ngModel)]="dateSelectionForModal.pickupDate"
-          name="modalPickupDate"
-          [min]="minDateForSearch"
-          class="form-input"
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="modal-return-date" class="form-label">
-          <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
-          {{ 'modal.return_date' | translate }}
-        </label>
-        <input
-          type="date"
-          id="modal-return-date"
-          [(ngModel)]="dateSelectionForModal.returnDate"
-          name="modalReturnDate"
-          [min]="dateSelectionForModal.pickupDate || minDateForSearch"
-          class="form-input"
-          required
-        >
-      </div>
-
-      <div *ngIf="dateModalError" class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <span>{{ dateModalError }}</span>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button (click)="closeDateModal()" class="btn btn-secondary">
-        Cancel
-      </button>
-      <button (click)="updateRentalDates()"
-              [disabled]="checkingAvailabilityModal || !dateSelectionForModal.pickupDate || !dateSelectionForModal.returnDate"
-              class="btn btn-primary">
-        <span *ngIf="!checkingAvailabilityModal">
-          <i class="fas fa-check mr-2"></i>
-          {{ 'modal.update_dates' | translate }}
-        </span>
-        <span *ngIf="checkingAvailabilityModal" class="btn-loading">
-          <i class="fas fa-spinner fa-spin mr-2"></i>
-          {{ 'modal.checking' | translate }}
-        </span>
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- Enhanced Rental Modal -->
 <div *ngIf="showRentalModal" class="modal-overlay">
   <div class="modal-content max-w-lg">
@@ -377,12 +305,25 @@
 
       <!-- Rental Form -->
       <form (ngSubmit)="submitRentalRequest()">
+        <!-- Date Selection Section -->
         <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-calendar mr-2 text-blue-500"></i>
-            {{ 'modal.selected_dates' | translate }}
-          </label>
-          <div class="p-4 border theme-border rounded-lg bg-gray-50 dark:bg-gray-800 grid grid-cols-2 gap-4">
+          <div class="flex items-center justify-between mb-3">
+            <label class="form-label">
+              <i class="fas fa-calendar mr-2 text-blue-500"></i>
+              {{ 'modal.selected_dates' | translate }}
+            </label>
+            <button
+              type="button"
+              (click)="toggleDateEditing()"
+              class="text-sm theme-primary-text hover:underline flex items-center"
+            >
+              <i class="fas" [class.fa-edit]="!isEditingDates" [class.fa-check]="isEditingDates"></i>
+              <span class="ml-1">{{ isEditingDates ? ('modal.save_dates' | translate) : ('modal.change_dates' | translate) }}</span>
+            </button>
+          </div>
+
+          <!-- Date Display Mode -->
+          <div *ngIf="!isEditingDates" class="p-4 border theme-border rounded-lg bg-gray-50 dark:bg-gray-800 grid grid-cols-2 gap-4">
             <div>
               <p class="text-xs theme-text-muted">{{ 'modal.pickup_date' | translate }}</p>
               <p class="font-medium">{{ rentalData.pickupDate | date:'mediumDate' }}</p>
@@ -391,10 +332,63 @@
               <p class="text-xs theme-text-muted">{{ 'modal.return_date' | translate }}</p>
               <p class="font-medium">{{ rentalData.returnDate | date:'mediumDate' }}</p>
             </div>
-            <div class="col-span-2">
-              <button type="button" (click)="showDateModal = true" class="text-sm theme-primary-text hover:underline">
-                <i class="fas fa-edit mr-1"></i>
-                {{ 'modal.change_dates' | translate }}
+          </div>
+
+          <!-- Date Edit Mode -->
+          <div *ngIf="isEditingDates" class="space-y-4">
+            <div>
+              <label for="modal-pickup-date" class="form-label">
+                <i class="fas fa-calendar-plus mr-2 text-blue-500"></i>
+                {{ 'modal.pickup_date' | translate }}
+              </label>
+              <input
+                type="date"
+                id="modal-pickup-date"
+                [(ngModel)]="rentalData.pickupDate"
+                name="modalPickupDate"
+                [min]="minDateForSearch"
+                class="form-input"
+                required
+              >
+            </div>
+
+            <div>
+              <label for="modal-return-date" class="form-label">
+                <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+                {{ 'modal.return_date' | translate }}
+              </label>
+              <input
+                type="date"
+                id="modal-return-date"
+                [(ngModel)]="rentalData.returnDate"
+                name="modalReturnDate"
+                [min]="rentalData.pickupDate || minDateForSearch"
+                class="form-input"
+                required
+              >
+            </div>
+
+            <div *ngIf="rentalSubmissionError" class="alert alert-error">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>{{ rentalSubmissionError }}</span>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                type="button"
+                (click)="updateDates()"
+                class="btn btn-primary flex-1"
+                [disabled]="!rentalData.pickupDate || !rentalData.returnDate"
+              >
+                <i class="fas fa-check mr-2"></i>
+                {{ 'modal.update_dates' | translate }}
+              </button>
+              <button
+                type="button"
+                (click)="toggleDateEditing()"
+                class="btn btn-secondary"
+              >
+                {{ 'modal.cancel' | translate }}
               </button>
             </div>
           </div>
@@ -419,10 +413,24 @@
               <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(selectedVehicle?.prixDeBase) }}</span>
               <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
             </div>
-            <button type="submit" class="btn btn-primary">
+          </div>
+        </div>
+
+        <!-- Confirm Button and Availability Message -->
+        <div class="mt-6">
+          <button type="submit" class="btn btn-primary w-full" [disabled]="!isVehicleAvailableForDates || isSubmittingRental">
+            <span *ngIf="!isSubmittingRental">
               <i class="fas fa-check mr-2"></i>
-              {{ 'modal.confirm' | translate }}
-            </button>
+              {{ 'modal.confirm_rental' | translate }}
+            </span>
+            <span *ngIf="isSubmittingRental">
+              <i class="fas fa-spinner fa-spin mr-2"></i>
+              {{ 'modal.submitting' | translate }}
+            </span>
+          </button>
+          <div *ngIf="availabilityMessage" class="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {{ availabilityMessage }}
           </div>
         </div>
       </form>

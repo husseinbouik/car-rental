@@ -663,11 +663,11 @@ body.dark-mode .alert-info {
 }
 
 .theme-alternate-section-bg {
-  background-color: var(--alternate-section-background);
+   background-color: var(--alternate-section-background);
 }
 
 .theme-text-main {
-  color: var(--text-color);
+   color: var(--text-color);
 }
 
 .theme-text-muted {
@@ -684,7 +684,7 @@ body.dark-mode .alert-info {
 
 .theme-input {
   background-color: var(--card-background);
-  border-color: var(--border-color);
+    border-color: var(--border-color);
   color: var(--text-color);
 }
 
@@ -718,7 +718,7 @@ body.dark-mode .alert-info {
 }
 
 .theme-star-color {
-  color: var(--star-color);
+    color: var(--star-color);
 }
 
 header.sticky {

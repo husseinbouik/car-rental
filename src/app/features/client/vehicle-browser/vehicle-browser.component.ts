@@ -47,20 +47,14 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
 
   // Loading states
   loadingInitialVehicles = true;
-  checkingAvailabilityModal = false;
-
-  // Date selection for Rental Modal
-  showDateModal = false;
-  dateSelectionForModal = {
-    pickupDate: '',
-    returnDate: ''
-  };
 
   // Rental modal
   showRentalModal = false;
   selectedVehicle: DisplayVoiture | null = null;
   rentalData: RentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
   isEditingDates = false;
+  isVehicleAvailableForDates = true;
+  availabilityMessage = '';
 
   // Success modal
   showSuccessModal = false;
@@ -68,7 +62,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
 
   // Error states
   listDisplayError: string | null = null;
-  dateModalError: string | null = null;
   rentalSubmissionError: string | null = null;
 
   isSubmittingRental = false;
@@ -94,7 +87,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       this.fetchAllVehicles();
       this.initDefaultSearchDates();
-      this.initDefaultModalDates();
     } else {
       this.loadingInitialVehicles = false;
     }
@@ -124,16 +116,6 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     tomorrow.setDate(tomorrow.getDate() + 1);
     this.searchCriteria.pickupDate = this.formatDate(today);
     this.searchCriteria.returnDate = this.formatDate(tomorrow);
-  }
-
-  initDefaultModalDates(): void {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    this.dateSelectionForModal.pickupDate = this.formatDate(today);
-    this.dateSelectionForModal.returnDate = this.formatDate(tomorrow);
-    this.rentalData.pickupDate = this.dateSelectionForModal.pickupDate;
-    this.rentalData.returnDate = this.dateSelectionForModal.returnDate;
   }
 
   isVehicleInAvailableList(vehicle: DisplayVoiture): boolean {
@@ -307,100 +289,76 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     this.selectedVehicle = vehicle;
     this.showRentalModal = true;
     this.initDefaultModalDates();
-    this.rentalData = { pickupDate: this.dateSelectionForModal.pickupDate, returnDate: this.dateSelectionForModal.returnDate, insurance: 'basic' };
-  }
-
-  closeDateModal(): void {
-    this.showDateModal = false;
-    this.dateModalError = null;
-  }
-
-  checkAvailabilityForModal(): void {
-    this.dateModalError = null;
-    this.checkingAvailabilityModal = true;
-    const { pickupDate, returnDate } = this.dateSelectionForModal;
-    if (!pickupDate || !returnDate) {
-      this.dateModalError = this.translate.instant('modal.validation.dates_required');
-      this.checkingAvailabilityModal = false;
-      return;
-    }
-    this.vehicleService.getAvailableVehicles(pickupDate, returnDate)
-      .pipe(
-        catchError(error => {
-          this.dateModalError = error.message || this.translate.instant('vehicles.error_fetching');
-          this.checkingAvailabilityModal = false;
-          return of([]);
-        })
-      )
-      .subscribe((vehicles: Voiture[]) => {
-        const found = vehicles.some(v => v.id === this.selectedVehicle?.id);
-        if (found) {
-          this.rentalData.pickupDate = pickupDate;
-          this.rentalData.returnDate = returnDate;
-          this.showDateModal = false;
-        } else {
-          this.dateModalError = this.translate.instant('modal.not_available_for_dates');
-        }
-        this.checkingAvailabilityModal = false;
-      });
-  }
-
-  updateRentalDates(): void {
-    if (!this.selectedVehicle) return;
-
-    this.dateModalError = null;
-    this.checkingAvailabilityModal = true;
-    const { pickupDate, returnDate } = this.dateSelectionForModal;
-
-    if (!pickupDate || !returnDate) {
-      this.dateModalError = this.translate.instant('modal.validation.dates_required');
-      this.checkingAvailabilityModal = false;
-      return;
-    }
-
-    // Validate dates
-    const pDate = new Date(pickupDate);
-    const rDate = new Date(returnDate);
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-
-    if (pDate < today) {
-      this.dateModalError = this.translate.instant('modal.validation.pickup_date_past');
-      this.checkingAvailabilityModal = false;
-      return;
-    }
-    if (rDate <= pDate) {
-      this.dateModalError = this.translate.instant('modal.validation.return_date_after');
-      this.checkingAvailabilityModal = false;
-      return;
-    }
-
-    this.vehicleService.getAvailableVehicles(pickupDate, returnDate)
-      .pipe(
-        catchError(error => {
-          this.dateModalError = error.message || this.translate.instant('vehicles.error_fetching');
-          this.checkingAvailabilityModal = false;
-          return of([]);
-        })
-      )
-      .subscribe((vehicles: Voiture[]) => {
-        const found = vehicles.some(v => v.id === this.selectedVehicle?.id);
-        if (found) {
-          this.rentalData.pickupDate = pickupDate;
-          this.rentalData.returnDate = returnDate;
-          this.showDateModal = false;
-        } else {
-          this.dateModalError = this.translate.instant('modal.not_available_for_dates');
-        }
-        this.checkingAvailabilityModal = false;
-      });
+    this.checkVehicleAvailability();
   }
 
   closeRentalModal(): void {
     this.showRentalModal = false;
     this.selectedVehicle = null;
-    this.rentalData = { pickupDate: '', returnDate: '', insurance: 'basic' };
     this.rentalSubmissionError = null;
-    this.isSubmittingRental = false;
+    this.isEditingDates = false;
+    this.isVehicleAvailableForDates = true;
+    this.availabilityMessage = '';
+  }
+
+  initDefaultModalDates(): void {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.rentalData.pickupDate = this.formatDate(today);
+    this.rentalData.returnDate = this.formatDate(tomorrow);
+  }
+
+  checkVehicleAvailability(): void {
+    if (!this.selectedVehicle || !this.rentalData.pickupDate || !this.rentalData.returnDate) {
+      return;
+    }
+
+    this.vehicleService.getAvailableVehicles(this.rentalData.pickupDate, this.rentalData.returnDate)
+      .pipe(
+        catchError(error => {
+          this.isVehicleAvailableForDates = false;
+          this.availabilityMessage = error.message || this.translate.instant('vehicles.error_fetching');
+          return of([]);
+        })
+      )
+      .subscribe((vehicles: Voiture[]) => {
+        const found = vehicles.some(v => v.id === this.selectedVehicle?.id);
+        this.isVehicleAvailableForDates = found;
+        this.availabilityMessage = found ? '' : this.translate.instant('modal.not_available_for_dates');
+      });
+  }
+
+  toggleDateEditing(): void {
+    this.isEditingDates = !this.isEditingDates;
+    if (!this.isEditingDates) {
+      // Reset to original dates when canceling edit
+      this.initDefaultModalDates();
+    }
+  }
+
+  updateDates(): void {
+    if (!this.rentalData.pickupDate || !this.rentalData.returnDate) {
+      this.rentalSubmissionError = 'Please select both pickup and return dates';
+      return;
+    }
+
+    const pickupDate = new Date(this.rentalData.pickupDate);
+    const returnDate = new Date(this.rentalData.returnDate);
+
+    if (pickupDate >= returnDate) {
+      this.rentalSubmissionError = 'Return date must be after pickup date';
+      return;
+    }
+
+    // Clear any previous errors
+    this.rentalSubmissionError = null;
+
+    // Check availability for the new dates
+    this.checkVehicleAvailability();
+
+    // Exit edit mode
+    this.isEditingDates = false;
   }
 
   submitRentalRequest(): void {
@@ -586,6 +544,5 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     }
     this.selectedVehicle = vehicle;
     this.showRentalModal = true;
-    this.initDefaultModalDates();
   }
 }
