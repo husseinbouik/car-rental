@@ -421,9 +421,10 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     }
 
     // Prepare reservation data for payment
+    const clientId = this.authService.getCurrentClientId();
     const reservationData = {
       voitureId: this.selectedVehicle.id,
-      clientId: 1, // Default client ID for demo
+      clientId: clientId || 1, // Use actual client ID or fallback to 1
       dateDebut: this.toIsoDateTime(this.rentalData.pickupDate),
       dateFin: this.toIsoDateTime(this.rentalData.returnDate),
       insuranceOption: this.rentalData.insurance,

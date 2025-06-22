@@ -108,23 +108,38 @@ export class ReservationService {
     console.log('Payload:', payload);
     console.log('Token:', token);
 
+    // Get client_id from token instead of payload
+    let clientId = payload.clientId;
     if (token) {
       try {
-        const payload = this.authService.decodeToken(token);
-        console.log('Decoded token payload:', payload);
-        console.log('Authorities:', payload?.authorities);
-        console.log('User ID:', payload?.user_id);
-        console.log('Client ID:', payload?.client_id);
+        const decodedPayload = this.authService.decodeToken(token);
+        console.log('Decoded token payload:', decodedPayload);
+        console.log('Authorities:', decodedPayload?.authorities);
+        console.log('User ID:', decodedPayload?.user_id);
+        console.log('Client ID from token:', decodedPayload?.client_id);
+
+        // Use client_id from token if available
+        if (decodedPayload?.client_id) {
+          clientId = decodedPayload.client_id;
+          console.log('Using client_id from token:', clientId);
+        }
       } catch (e) {
         console.error('Error decoding token:', e);
       }
     }
 
+    // Create updated payload with correct client_id
+    const updatedPayload = {
+      ...payload,
+      clientId: clientId
+    };
+
+    console.log('Updated payload with client_id:', updatedPayload);
     console.log('Headers being sent:', headers);
     console.log('Request URL:', this.apiUrl);
     console.log('================================');
 
-    return this.http.post<Reservation>(this.apiUrl, payload, { headers }).pipe(
+    return this.http.post<Reservation>(this.apiUrl, updatedPayload, { headers }).pipe(
       catchError(this.handleError.bind(this))
     );
   }

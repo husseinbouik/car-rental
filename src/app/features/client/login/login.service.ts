@@ -8,6 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 // Define an interface for your expected JWT payload to get type safety
 interface MyTokenPayload {
   user_id: number; // Or string, depending on what your backend sends
+  client_id?: number; // Add client_id to the payload
   authorities?: string[];
   sub?: string;
   iat?: number;
@@ -25,6 +26,7 @@ export class LoginService {
   // Define keys for localStorage items to avoid magic strings
   private readonly TOKEN_KEY = 'access_token';
   private readonly USER_ID_KEY = 'user_id';
+  private readonly CLIENT_ID_KEY = 'client_id';
 
   constructor(private http: HttpClient) {}
 
@@ -80,6 +82,14 @@ export class LoginService {
                 // This case should ideally be caught by jwtHelper.decodeToken throwing an error
                 console.warn('Could not decode JWT payload or payload is empty.');
               }
+
+              // Store client_id if available in the token
+              if (decodedPayload && decodedPayload.client_id !== undefined) {
+                localStorage.setItem(this.CLIENT_ID_KEY, decodedPayload.client_id.toString());
+                console.log('Client ID saved to localStorage:', decodedPayload.client_id);
+              } else if (decodedPayload) {
+                console.warn('client_id not found in JWT payload. Payload:', decodedPayload);
+              }
             } catch (error) {
               console.error('Error decoding JWT to get user_id:', error);
               // Optionally remove the token if it's invalid and cannot be decoded
@@ -95,7 +105,8 @@ export class LoginService {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_ID_KEY); // Remove user_id on logout
-    console.log('Logged out, token and user_id removed from localStorage');
+    localStorage.removeItem(this.CLIENT_ID_KEY); // Remove client_id on logout
+    console.log('Logged out, token, user_id and client_id removed from localStorage');
   }
 
   getToken(): string | null {
@@ -107,6 +118,15 @@ export class LoginService {
     if (userIdStr) {
       const userIdNum = parseInt(userIdStr, 10);
       return isNaN(userIdNum) ? null : userIdNum;
+    }
+    return null;
+  }
+
+  getClientId(): number | null {
+    const clientIdStr = localStorage.getItem(this.CLIENT_ID_KEY);
+    if (clientIdStr) {
+      const clientIdNum = parseInt(clientIdStr, 10);
+      return isNaN(clientIdNum) ? null : clientIdNum;
     }
     return null;
   }
