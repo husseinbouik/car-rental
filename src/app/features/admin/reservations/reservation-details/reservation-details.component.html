@@ -31,7 +31,7 @@
 
 
     <div class="space-y-4">
-      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-200">Reservation Info</h3>
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-400">Reservation Info</h3>
       <div>
         <dt class="font-medium text-gray-400">Reservation ID:</dt>
         <dd class="mt-1">{{ reservation.id }}</dd>
@@ -45,7 +45,7 @@
                     'bg-blue-200 text-blue-900': reservation.statut === 'Confirmed',
                     'bg-green-200 text-green-900': reservation.statut === 'Completed',
                     'bg-red-200 text-red-900': reservation.statut === 'Cancelled',
-                    'bg-gray-300 text-gray-800': !['Pending', 'Confirmed', 'Completed', 'Cancelled'].includes(reservation.statut ?? '')
+                    'bg-gray-300 text-gray-800': !['Pending', 'Confirmed', 'Completed', 'Cancelled'].includes(reservation.statut || '')
                 }">
             {{ reservation.statut }}
           </span>
@@ -73,23 +73,23 @@
     <div class="space-y-4">
 
 
-      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-200">Client</h3>
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 text-gray-400">Client</h3>
       <div *ngIf="reservation.client; else noClientData">
         <div>
           <dt class="font-medium text-gray-400">Name:</dt>
-          <dd class="mt-1">{{ reservation.client.cname ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.client.cname || 'N/A' }}</dd>
         </div>
         <div>
           <dt class="font-medium text-gray-400">Contact:</dt>
-          <dd class="mt-1">{{ reservation.client.tel ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.client.tel || 'N/A' }}</dd>
         </div>
          <div>
           <dt class="font-medium text-gray-400">CIN:</dt>
-          <dd class="mt-1">{{ reservation.client.cin ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.client.cin || 'N/A' }}</dd>
         </div>
         <div>
           <dt class="font-medium text-gray-400">Permis:</dt>
-          <dd class="mt-1">{{ reservation.client.permis ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.client.permis || 'N/A' }}</dd>
         </div>
 
          <a [routerLink]="['/admin/clients/details', reservation.client.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Client Details →</a>
@@ -99,19 +99,19 @@
       </ng-template>
 
 
-      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-200">Vehicle</h3>
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-400">Vehicle</h3>
       <div *ngIf="reservation.voiture; else noCarData">
         <div>
           <dt class="font-medium text-gray-400">Vehicle:</dt>
-          <dd class="mt-1">{{ reservation.voiture.marque ?? '' }} {{ reservation.voiture.modele ?? reservation.voiture.vname ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.voiture.marque || '' }} {{ reservation.voiture.modele || reservation.voiture.vname || 'N/A' }}</dd>
         </div>
         <div>
           <dt class="font-medium text-gray-400">Matricule:</dt>
-          <dd class="mt-1">{{ reservation.voiture.matricule ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.voiture.matricule || 'N/A' }}</dd>
         </div>
         <div>
           <dt class="font-medium text-gray-400">Type:</dt>
-          <dd class="mt-1">{{ reservation.voiture.type ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.voiture.type || 'N/A' }}</dd>
         </div>
 
         <a [routerLink]="['/admin/vehicles/details', reservation.voiture.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Vehicle Details →</a>
@@ -121,15 +121,15 @@
        </ng-template>
 
 
-      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-200">Secondary Driver</h3>
+      <h3 class="text-lg font-medium border-b border-gray-600 pb-1 mb-3 mt-6 text-gray-400">Secondary Driver</h3>
       <div *ngIf="reservation.conducteurSecondaire; else noSecondaryDriver">
         <div>
           <dt class="font-medium text-gray-400">Name:</dt>
-          <dd class="mt-1">{{ reservation.conducteurSecondaire.cname ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.conducteurSecondaire.cname || 'N/A' }}</dd>
         </div>
          <div>
           <dt class="font-medium text-gray-400">Contact:</dt>
-          <dd class="mt-1">{{ reservation.conducteurSecondaire.tel ?? 'N/A' }}</dd>
+          <dd class="mt-1">{{ reservation.conducteurSecondaire.tel || 'N/A' }}</dd>
         </div>
 
         <a [routerLink]="['/admin/clients/details', reservation.conducteurSecondaire.id]" class="text-blue-400 hover:text-blue-300 text-xs mt-1 inline-block">View Full Client Details →</a>

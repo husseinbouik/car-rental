@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AccessDeniedComponent } from '../features/access-denied/access-denied.component';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { RoleGuard } from '../guards/role-guard.guard';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -18,7 +19,8 @@ import { RoleGuard } from '../guards/role-guard.guard';
     RoleGuard
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    TranslateModule.forChild()
   ]
 
 })

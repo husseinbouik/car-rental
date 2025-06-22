@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ReservationsRoutingModule } from './reservations-routing.module';
 import { ReservationListComponent } from './reservations-list/reservations-list.component';
@@ -18,6 +19,7 @@ import { ReservationCreateComponent } from './reservation-create/reservation-cre
     CommonModule,
     ReservationsRoutingModule,
     FormsModule,
+    TranslateModule.forChild(),
   ]
 })
 export class ReservationsModule { }

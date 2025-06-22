@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { VehiclesRoutingModule } from './vehicles-routing.module';
 import { VehiclesListComponent } from './vehicles-list/vehicles-list.component';
@@ -26,6 +27,7 @@ import { VehicleDetailsComponent } from './vehicle-details/vehicle-details.compo
     MatIconModule,
     MatPaginatorModule,
     FormsModule,
+    TranslateModule.forChild(),
   ]
 })
 export class VehiclesModule { }

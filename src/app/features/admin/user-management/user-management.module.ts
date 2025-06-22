@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { UserManagementRoutingModule } from './user-management-routing.module';
 import { UserManagementListComponent } from './user-management-list/user-management-list.component';
@@ -11,7 +12,8 @@ import { UserManagementListComponent } from './user-management-list/user-managem
   ],
   imports: [
     CommonModule,
-    UserManagementRoutingModule
+    UserManagementRoutingModule,
+    TranslateModule.forChild()
   ]
 })
 export class UserManagementModule { }

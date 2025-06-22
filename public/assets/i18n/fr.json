@@ -42,6 +42,7 @@
     "pickup_date": "Date de prise en charge",
     "return_date": "Date de retour",
     "button": "Rechercher",
+    "searching": "Recherche...",
     "reset_button": "Réinitialiser"
   },
   "location": {
@@ -65,7 +66,10 @@
   },
   "vehicle": {
     "day": "jour",
+    "per_day": "par jour",
     "rent": "Louer maintenant",
+    "reserve": "Réserver",
+    "view_details": "Voir les détails",
     "seats": "places",
     "available": "Disponible",
     "unavailable": "Indisponible",
@@ -74,7 +78,19 @@
     "photo_error": "Échec du chargement de l'image"
   },
   "vehicle_browser": {
-    "title": "Navigateur de véhicules"
+    "title": "Navigateur de véhicules",
+    "subtitle": "Découvrez notre vaste flotte de véhicules. Trouvez la voiture parfaite pour votre voyage avec nos options de recherche et de filtrage avancées.",
+    "available_vehicles": "Véhicules disponibles",
+    "vehicle": "véhicule",
+    "vehicles": "véhicules",
+    "sort_by": "Trier par",
+    "sort_name": "Nom",
+    "sort_price_low": "Prix: Croissant",
+    "sort_price_high": "Prix: Décroissant",
+    "sort_seats": "Places",
+    "view": "Vue",
+    "loading_message": "Veuillez patienter pendant que nous chargeons notre flotte de véhicules...",
+    "try_again": "Réessayer"
   },
   "features": {
     "title": "Pourquoi nous choisir ?",
@@ -165,6 +181,8 @@
     "checking": "Vérification...",
     "selected_dates": "Dates sélectionnées",
     "change_dates": "Modifier les dates",
+    "save_dates": "Enregistrer les dates",
+    "cancel": "Annuler",
     "submitting": "Soumission...",
     "rental_success": "Demande de location soumise avec succès ! ID de réservation : {{reservationId}}",
     "error_creating_reservation": "Échec de la création de la réservation. Veuillez réessayer.",
@@ -177,7 +195,15 @@
       "return_date_after": "La date de retour doit être postérieure à la date de prise en charge.",
       "pickup_date_past": "La date de prise en charge ne peut pas être dans le passé."
     },
-    "rental_submitted": "Demande de location soumise avec succès ! Nous vous contacterons sous peu."
+    "rental_submitted": "Demande de location soumise avec succès ! Nous vous contacterons sous peu.",
+    "reservation_success": "Réservation réussie !",
+    "reservation_created": "Réservation prête",
+    "reservation_created_message": "Les détails de votre réservation sont prêts. Veuillez procéder au paiement pour finaliser votre réservation.",
+    "vehicle": "Véhicule",
+    "total_price": "Prix total",
+    "continue_browsing": "Continuer à parcourir",
+    "proceed_to_payment": "Procéder au paiement",
+    "view_reservations": "Voir mes réservations"
   },
   "defaultCarburant": "N/A",
   "defaultType": "Véhicule",
@@ -216,10 +242,10 @@
       "actions": "Actions"
     },
     "status": {
-      "Pending": "En attente",
-      "Confirmed": "Confirmée",
-      "Cancelled": "Annulée",
-      "Completed": "Terminée"
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "cancelled": "Annulée",
+      "completed": "Terminée"
     },
     "cancel_button": "Annuler",
     "cancel_modal": {
@@ -233,27 +259,53 @@
   },
   "login": {
     "title": "Se connecter",
+    "welcome": "Bon retour ! Veuillez vous connecter à votre compte.",
     "username": "Nom d'utilisateur",
+    "username_placeholder": "Entrez votre nom d'utilisateur",
     "password": "Mot de passe",
+    "password_placeholder": "Entrez votre mot de passe",
     "signin": "Se connecter",
-    "signing_in": "Connexion...",
+    "signing_in": "Connexion en cours...",
     "forgot_password": "Mot de passe oublié ?",
     "no_account": "Vous n'avez pas de compte ?",
-    "signup_link": "S'inscrire"
+    "signup_link": "S'inscrire maintenant",
+    "remember_me": "Se souvenir de moi",
+    "or_continue_with": "Ou continuer avec",
+    "demo_credentials": "Identifiants de démonstration",
+    "validation": {
+      "username_required": "Le nom d'utilisateur est requis",
+      "password_required": "Le mot de passe est requis"
+    }
   },
   "signup": {
     "title": "S'inscrire",
+    "subtitle": "Créez votre compte pour commencer à louer des voitures",
     "username": "Nom d'utilisateur",
-    "email": "Email",
+    "username_placeholder": "Choisissez un nom d'utilisateur",
+    "email": "Adresse email",
+    "email_placeholder": "Entrez votre adresse email",
     "password": "Mot de passe",
+    "password_placeholder": "Créez un mot de passe fort",
     "confirm_password": "Confirmer le mot de passe",
-    "signup": "S'inscrire",
-    "signing_up": "Inscription...",
-    "passwords_mismatch": "Les mots de passe ne correspondent pas.",
-    "signup_success": "Inscription réussie ! Veuillez vérifier votre email pour vérifier votre compte.",
-    "signup_error": "Échec de l'inscription. Veuillez réessayer.",
+    "confirm_password_placeholder": "Confirmez votre mot de passe",
+    "signup": "Créer un compte",
+    "processing": "Création du compte...",
     "has_account": "Vous avez déjà un compte ?",
-    "signin_link": "Se connecter"
+    "login_link": "Se connecter",
+    "terms_agreement": "J'accepte les",
+    "terms_of_service": "Conditions d'utilisation",
+    "and": "et la",
+    "privacy_policy": "Politique de confidentialité",
+    "validation": {
+      "username_required": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "email_required": "Veuillez entrer une adresse email valide",
+      "password_required": "Le mot de passe doit contenir au moins 6 caractères",
+      "password_mismatch": "Les mots de passe ne correspondent pas",
+      "username_good": "Le nom d'utilisateur semble bon !",
+      "email_good": "L'email semble bon !",
+      "password_good": "Le mot de passe répond aux exigences !",
+      "passwords_match": "Les mots de passe correspondent !"
+    }
   },
   "sidebar": {
     "browse_vehicles": "Parcourir les véhicules",
@@ -299,11 +351,108 @@
     "processing": "Traitement du paiement...",
     "security_note": "Vos informations de paiement sont sécurisées et chiffrées"
   },
+  "profile": {
+    "title": "Informations du profil",
+    "subtitle": "Gérez les informations de votre compte",
+    "loading": "Chargement de votre profil...",
+    "personal_info": "Informations personnelles",
+    "contact_info": "Informations de contact",
+    "identification_documents": "Documents d'identification",
+    "driving_license_info": "Informations sur le permis de conduire",
+    "photos": "Photos",
+    "security": "Sécurité",
+    "form": {
+      "first_name": "Nom complet",
+      "last_name": "Prénom",
+      "email": "Email",
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "nationality": "Nationalité",
+      "foreign_address": "Adresse étrangère (si applicable)",
+      "city": "Ville",
+      "country": "Pays",
+      "cin": "Numéro CIN / Carte d'identité",
+      "cin_issue_date": "Date de délivrance CIN / Carte d'identité",
+      "passport_number": "Numéro de passeport",
+      "passport_issuer": "Émetteur du passeport",
+      "license_number": "Numéro de permis",
+      "license_issue_date": "Date de délivrance du permis",
+      "license_issue_location": "Lieu de délivrance du permis",
+      "cin_photo": "Photo CIN",
+      "license_photo": "Photo du permis",
+      "new_cin_preview": "Aperçu nouveau CIN",
+      "current_cin": "CIN actuel",
+      "no_cin_photo": "Aucune photo CIN téléchargée",
+      "new_license_preview": "Aperçu nouveau permis",
+      "current_license": "Permis actuel",
+      "no_license_photo": "Aucune photo de permis téléchargée",
+      "required_fields": "sont obligatoires",
+      "current_password": "Mot de passe actuel",
+      "new_password": "Nouveau mot de passe",
+      "confirm_password": "Confirmer le mot de passe"
+    },
+    "buttons": {
+      "save": "Enregistrer les modifications",
+      "saving": "Enregistrement...",
+      "refresh": "Actualiser",
+      "cancel": "Annuler",
+      "change_password": "Changer le mot de passe"
+    },
+    "validation": {
+      "first_name_required": "Le nom complet est obligatoire",
+      "email_invalid": "Veuillez entrer une adresse email valide",
+      "phone_required": "Le numéro de téléphone est obligatoire",
+      "address_required": "L'adresse est obligatoire",
+      "nationality_required": "La nationalité est obligatoire",
+      "cin_required": "Le numéro CIN/Carte d'identité est obligatoire"
+    }
+  },
+  "reset_password": {
+    "title": "Réinitialiser le mot de passe",
+    "subtitle": "Entrez votre nouveau mot de passe",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "reset": "Réinitialiser le mot de passe",
+    "resetting": "Réinitialisation...",
+    "success": "Mot de passe réinitialisé avec succès !",
+    "validation": {
+      "password_required": "Le mot de passe est requis",
+      "password_mismatch": "Les mots de passe ne correspondent pas"
+    }
+  },
+  "reset_password_request": {
+    "title": "Demande de réinitialisation de mot de passe",
+    "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+    "email": "Adresse email",
+    "email_placeholder": "Entrez votre adresse email",
+    "request": "Envoyer le lien de réinitialisation",
+    "requesting": "Envoi...",
+    "success": "Lien de réinitialisation envoyé à votre email !",
+    "back_to_login": "Retour à la connexion"
+  },
+  "verify_email": {
+    "title": "Vérifiez votre email",
+    "subtitle": "Veuillez vérifier votre email et cliquer sur le lien de vérification",
+    "resend": "Renvoyer l'email de vérification",
+    "resending": "Envoi...",
+    "success": "Email de vérification envoyé !",
+    "back_to_login": "Retour à la connexion"
+  },
   "admin": {
     "dashboard": {
       "title": "Tableau de bord administrateur",
       "welcome": "Bienvenue dans le tableau de bord administrateur",
       "overview": "Aperçu du système",
+      "add_vehicle": "Ajouter un véhicule",
+      "create_reservation": "Créer une réservation",
+      "add_client": "Ajouter un client",
+      "recent_reservations": "Réservations récentes",
+      "no_recent_reservations": "Aucune réservation récente à afficher.",
+      "system_alerts": "Alertes système",
+      "no_alerts": "Aucune alerte système à ce moment.",
+      "revenue_chart": "Graphique des revenus",
+      "vehicle_usage": "Utilisation des véhicules",
+      "chart_placeholder": "Le graphique sera affiché ici",
       "stats": {
         "total_vehicles": "Total des véhicules",
         "total_reservations": "Total des réservations",
@@ -311,9 +460,8 @@
         "total_revenue": "Revenus totaux",
         "availability_rate": "Taux de disponibilité",
         "cancellation_rate": "Taux d'annulation",
-        "average_duration": "Durée moyenne",
-        "revenue_per_vehicle": "Revenus par véhicule",
-        "reservations_per_vehicle": "Réservations par véhicule"
+        "avg_rental_duration": "Durée moy. de location",
+        "monthly_growth": "Croissance mensuelle"
       },
       "filters": {
         "date_range": "Plage de dates",
@@ -329,6 +477,14 @@
         "reservations_period": "Réservations par période",
         "vehicle_usage": "Utilisation des véhicules",
         "monthly_stats": "Statistiques mensuelles"
+      },
+      "quick_actions": {
+        "manage_vehicles": "Gérer les véhicules",
+        "manage_vehicles_desc": "Ajouter, modifier ou supprimer des véhicules de votre flotte",
+        "view_reservations": "Voir les réservations",
+        "view_reservations_desc": "Surveiller toutes les réservations actuelles et passées",
+        "manage_clients": "Gérer les clients",
+        "manage_clients_desc": "Voir et gérer les informations des clients"
       }
     },
     "vehicles": {
@@ -353,9 +509,9 @@
           "license_plate": "Plaque d'immatriculation",
           "license_placeholder": "Entrez la plaque d'immatriculation",
           "type": "Type de véhicule",
-          "type_placeholder": "Sélectionnez le type de véhicule",
+          "type_placeholder": "Sélectionner le type de véhicule",
           "fuel_type": "Type de carburant",
-          "fuel_placeholder": "Sélectionnez le type de carburant",
+          "fuel_placeholder": "Sélectionner le type de carburant",
           "transmission": "Transmission",
           "transmission_auto": "Automatique",
           "transmission_manual": "Manuelle",
@@ -368,13 +524,13 @@
           "description": "Description",
           "description_placeholder": "Entrez la description du véhicule",
           "photo": "Photo du véhicule",
-          "photo_placeholder": "Télécharger la photo du véhicule"
+          "photo_placeholder": "Télécharger une photo du véhicule"
         },
         "buttons": {
           "create": "Créer le véhicule",
           "update": "Mettre à jour le véhicule",
           "cancel": "Annuler",
-          "saving": "Sauvegarde...",
+          "saving": "Enregistrement...",
           "creating": "Création...",
           "updating": "Mise à jour..."
         },
@@ -414,7 +570,20 @@
           "delete_success": "Véhicule supprimé avec succès !",
           "delete_error": "Échec de la suppression du véhicule. Veuillez réessayer.",
           "export_success": "Données des véhicules exportées avec succès !",
-          "export_error": "Échec de l'exportation des données des véhicules. Veuillez réessayer."
+          "export_error": "Échec de l'exportation des données des véhicules. Veuillez réessayer.",
+          "loading": "Chargement des véhicules...",
+          "no_vehicles": "Aucun véhicule disponible.",
+          "no_matching": "Aucun véhicule trouvé correspondant à \"{{searchTerm}}\"."
+        },
+        "pagination": {
+          "showing": "Affichage de",
+          "to": "à",
+          "of": "sur",
+          "entries": "entrées",
+          "filtered_from": "filtré parmi",
+          "total": "total",
+          "previous": "Précédent",
+          "next": "Suivant"
         }
       },
       "details": {
@@ -446,46 +615,48 @@
     },
     "reservations": {
       "title": "Gestion des réservations",
-      "subtitle": "Gérez toutes les réservations",
+      "subtitle": "Gérer toutes les réservations",
       "create": {
         "title": "Créer une nouvelle réservation",
         "subtitle": "Créer une nouvelle réservation pour un client",
         "edit_title": "Modifier la réservation",
         "edit_subtitle": "Mettre à jour les détails de la réservation",
         "steps": {
-          "dates": "Sélectionner les dates",
-          "vehicle": "Choisir le véhicule",
-          "details": "Compléter les détails"
+          "step1": "Sélectionner les dates",
+          "step2": "Choisir le véhicule",
+          "step3": "Compléter la réservation"
         },
         "form": {
-          "start_date": "Date de début",
-          "end_date": "Date de fin",
           "client": "Client",
           "select_client": "Sélectionner un client",
           "vehicle": "Véhicule",
-          "select_vehicle": "Sélectionner un véhicule",
+          "selected_vehicle": "Véhicule sélectionné",
+          "pickup_date": "Date de prise en charge",
+          "return_date": "Date de retour",
           "total_amount": "Montant total",
+          "deposit": "Acompte",
           "status": "Statut",
-          "notes": "Notes",
-          "notes_placeholder": "Entrez des notes supplémentaires"
+          "secondary_driver": "Conducteur secondaire",
+          "none": "Aucun / Non applicable"
         },
         "buttons": {
           "create": "Créer la réservation",
           "update": "Mettre à jour la réservation",
-          "check_availability": "Vérifier la disponibilité",
+          "cancel": "Annuler",
           "next": "Suivant",
           "previous": "Précédent",
-          "cancel": "Annuler"
+          "change": "Modifier"
         },
         "messages": {
           "create_success": "Réservation créée avec succès !",
           "update_success": "Réservation mise à jour avec succès !",
           "create_error": "Échec de la création de la réservation. Veuillez réessayer.",
           "update_error": "Échec de la mise à jour de la réservation. Veuillez réessayer.",
-          "availability_error": "Échec de la vérification de la disponibilité. Veuillez réessayer.",
-          "no_vehicles": "Aucun véhicule disponible pour les dates sélectionnées.",
-          "select_dates": "Veuillez sélectionner les dates de début et de fin.",
-          "invalid_dates": "La date de fin doit être postérieure à la date de début."
+          "load_error": "Échec du chargement des données de réservation. Veuillez réessayer.",
+          "vehicle_unavailable": "Attention : Le véhicule initialement sélectionné n'est plus disponible pour ces dates.",
+          "checking_availability": "Vérification de la disponibilité du véhicule...",
+          "no_vehicles_available": "Aucun véhicule disponible pour les dates sélectionnées.",
+          "try_different_dates": "Essayer des dates différentes"
         }
       },
       "list": {
@@ -493,14 +664,16 @@
         "search_placeholder": "Rechercher par ID, nom, voiture, statut...",
         "export": "Exporter vers Excel",
         "create": "Créer une nouvelle réservation",
+        "to": "à",
         "table": {
           "id": "ID",
           "client": "Client",
-          "vehicle": "Véhicule",
-          "start_date": "Date de début",
-          "end_date": "Date de fin",
-          "total_amount": "Montant total",
+          "car": "Voiture",
+          "dates": "Dates",
+          "total": "Total",
+          "deposit": "Acompte",
           "status": "Statut",
+          "sec_driver": "Cond. Sec.",
           "actions": "Actions"
         },
         "status": {
@@ -513,6 +686,21 @@
           "view": "Voir les détails",
           "edit": "Modifier",
           "delete": "Supprimer"
+        },
+        "messages": {
+          "loading": "Chargement des réservations...",
+          "no_reservations": "Aucune réservation disponible.",
+          "no_matching": "Aucune réservation trouvée correspondant à \"{{searchTerm}}\"."
+        },
+        "pagination": {
+          "showing": "Affichage de",
+          "to": "à",
+          "of": "sur",
+          "entries": "entrées",
+          "filtered_from": "filtré depuis",
+          "total": "total",
+          "previous": "Précédent",
+          "next": "Suivant"
         }
       },
       "details": {
@@ -528,49 +716,17 @@
     },
     "clients": {
       "title": "Gestion des clients",
-      "subtitle": "Gérez les informations des clients",
+      "subtitle": "Gérer les informations des clients",
       "create": {
         "title": "Créer un nouveau client",
         "subtitle": "Ajouter un nouveau client au système",
-        "edit_title": "Modifier le client",
-        "edit_subtitle": "Mettre à jour les informations du client",
-        "basic_info": "Informations de base",
-        "contact_info": "Informations de contact",
-        "documents": "Documents",
         "form": {
-          "full_name": "Nom complet",
-          "full_name_placeholder": "Entrez le nom complet du client",
+          "name": "Nom complet",
           "phone": "Numéro de téléphone",
-          "phone_placeholder": "Entrez le numéro de téléphone",
-          "email": "Email",
-          "email_placeholder": "Entrez l'adresse email",
+          "email": "Adresse email",
           "address": "Adresse",
-          "address_placeholder": "Entrez l'adresse",
-          "nationality": "Nationalité",
-          "nationality_placeholder": "Entrez la nationalité",
-          "foreign_address": "Adresse étrangère",
-          "foreign_address_placeholder": "Entrez l'adresse étrangère si applicable",
-          "cin": "Numéro CIN",
-          "cin_placeholder": "Entrez le numéro CIN",
-          "license": "Permis de conduire",
-          "license_placeholder": "Entrez le numéro du permis de conduire",
-          "cin_photo": "Photo CIN",
-          "license_photo": "Photo du permis"
-        },
-        "buttons": {
-          "create": "Créer le client",
-          "update": "Mettre à jour le client",
-          "cancel": "Annuler",
-          "saving": "Sauvegarde...",
-          "creating": "Création...",
-          "updating": "Mise à jour..."
-        },
-        "messages": {
-          "create_success": "Client créé avec succès !",
-          "update_success": "Client mis à jour avec succès !",
-          "create_error": "Échec de la création du client. Veuillez réessayer.",
-          "update_error": "Échec de la mise à jour du client. Veuillez réessayer.",
-          "load_error": "Échec du chargement des données du client. Veuillez réessayer."
+          "cin": "CIN",
+          "license": "Permis de conduire"
         }
       },
       "list": {
@@ -607,7 +763,7 @@
     },
     "payments": {
       "title": "Paiements et dépenses",
-      "subtitle": "Gérez les paiements et suivez les dépenses",
+      "subtitle": "Gérer les paiements et suivre les dépenses",
       "create": {
         "title": "Créer un paiement/dépense",
         "subtitle": "Ajouter un nouvel enregistrement de paiement ou de dépense",
@@ -621,7 +777,7 @@
           "description_placeholder": "Entrez la description",
           "date": "Date",
           "category": "Catégorie",
-          "category_placeholder": "Sélectionnez la catégorie"
+          "category_placeholder": "Sélectionner la catégorie"
         }
       },
       "list": {
@@ -639,7 +795,7 @@
     },
     "users": {
       "title": "Gestion des utilisateurs",
-      "subtitle": "Gérez les utilisateurs du système et les permissions",
+      "subtitle": "Gérer les utilisateurs du système et les permissions",
       "create": {
         "title": "Créer un nouvel utilisateur",
         "subtitle": "Ajouter un nouvel utilisateur au système",
@@ -671,7 +827,7 @@
       "success": "Opération terminée avec succès",
       "confirm": "Êtes-vous sûr ?",
       "cancel": "Annuler",
-      "save": "Sauvegarder",
+      "save": "Enregistrer",
       "edit": "Modifier",
       "delete": "Supprimer",
       "view": "Voir",
@@ -691,7 +847,7 @@
       "notes": "Notes",
       "required_field": "Ce champ est requis",
       "invalid_format": "Format invalide",
-      "save_changes": "Sauvegarder les modifications",
+      "save_changes": "Enregistrer les modifications",
       "discard_changes": "Annuler les modifications",
       "delete_confirm": "Êtes-vous sûr de vouloir supprimer cet élément ?",
       "delete_success": "Élément supprimé avec succès",
@@ -700,37 +856,7 @@
       "create_error": "Échec de la création de l'élément",
       "update_success": "Élément mis à jour avec succès",
       "update_error": "Échec de la mise à jour de l'élément"
-    }
-  },
-  "profile": {
-    "title": "Mon Profil",
-    "loading": "Chargement du profil...",
-    "error": "Échec du chargement des données du profil.",
-    "success": "Profil mis à jour avec succès !",
-    "uploading": "Téléchargement...",
-    "updating": "Mise à jour du profil...",
-    "update_error": "Échec de la mise à jour du profil",
-    "name": "Nom complet",
-    "phone": "Numéro de téléphone",
-    "address": "Adresse",
-    "nationality": "Nationalité",
-    "foreign_address": "Adresse à l'étranger",
-    "cin_number": "Numéro de CIN",
-    "cin_issue_date": "Date de délivrance de la CIN",
-    "passport_number": "Numéro de passeport",
-    "passport_issuer": "Passeport délivré par",
-    "license_number": "Numéro de permis",
-    "license_issue_date": "Date de délivrance du permis",
-    "license_issue_location": "Lieu de délivrance du permis",
-    "section_basic": "Informations de base",
-    "section_id": "Documents d'identité",
-    "section_license": "Permis de conduire",
-    "section_photos": "Photos des documents",
-    "cin_photo": "Photo de la CIN",
-    "permis_photo": "Photo du Permis",
-    "button_update": "Mettre à jour le profil"
-  },
-  "crud": {
+    },
     "generic": {
       "create_success": "{{item}} créé avec succès !",
       "create_error": "Échec de la création de {{item}}",
@@ -740,35 +866,35 @@
   },
   "ADMIN_CREATE_PAGES": {
     "VEHICLE": {
-      "UPDATE_SUBTITLE": "Mettre à jour les détails du véhicule ci-dessous.",
-      "CREATE_SUBTITLE": "Saisir les détails pour le nouveau véhicule.",
+      "UPDATE_SUBTITLE": "Mettez à jour les détails du véhicule ci-dessous.",
+      "CREATE_SUBTITLE": "Entrez les détails pour le nouveau véhicule.",
       "LOADING_DATA": "Chargement des données du véhicule...",
       "FIELDSET_IDENTIFICATION": "Identification du véhicule",
       "LABEL_MAKE": "Marque",
-      "ERROR_MAKE_REQUIRED": "La marque est obligatoire.",
+      "ERROR_MAKE_REQUIRED": "La marque est requise.",
       "LABEL_MODEL": "Modèle",
-      "ERROR_MODEL_REQUIRED": "Le modèle est obligatoire.",
+      "ERROR_MODEL_REQUIRED": "Le modèle est requis.",
       "LABEL_LICENSE_PLATE": "Plaque d'immatriculation",
-      "ERROR_LICENSE_PLATE_REQUIRED": "La plaque d'immatriculation est obligatoire.",
+      "ERROR_LICENSE_PLATE_REQUIRED": "La plaque d'immatriculation est requise.",
       "ERROR_LICENSE_PLATE_MAXLENGTH": "La plaque d'immatriculation ne peut pas dépasser 10 caractères.",
       "LABEL_DISPLAY_NAME": "Nom d'affichage (Optionnel)",
-      "PLACEHOLDER_DISPLAY_NAME": "ex: Golf 7 Noire GTI",
-      "HELP_DISPLAY_NAME": "Un nom amical pour une identification plus facile (par exemple, dans les listes déroulantes).",
+      "PLACEHOLDER_DISPLAY_NAME": "ex., Golf 7 Noir GTI",
+      "HELP_DISPLAY_NAME": "Un nom convivial pour une identification plus facile (ex., dans les menus déroulants).",
       "FIELDSET_SPECS": "Spécifications",
       "LABEL_TYPE": "Type de véhicule",
-      "PLACEHOLDER_TYPE": "ex: Berline, SUV",
-      "ERROR_TYPE_REQUIRED": "Le type de véhicule est obligatoire.",
+      "PLACEHOLDER_TYPE": "ex., Berline, SUV",
+      "ERROR_TYPE_REQUIRED": "Le type de véhicule est requis.",
       "LABEL_COLOR": "Couleur",
-      "ERROR_COLOR_REQUIRED": "La couleur est obligatoire.",
+      "ERROR_COLOR_REQUIRED": "La couleur est requise.",
       "LABEL_FUEL": "Type de carburant",
-      "PLACEHOLDER_FUEL": "ex: Essence, Diesel",
-      "ERROR_FUEL_REQUIRED": "Le type de carburant est obligatoire.",
-      "LABEL_CAPACITY": "Capacité (Sièges)",
-      "ERROR_CAPACITY_REQUIRED": "La capacité est obligatoire.",
+      "PLACEHOLDER_FUEL": "ex., Essence, Diesel",
+      "ERROR_FUEL_REQUIRED": "Le type de carburant est requis.",
+      "LABEL_CAPACITY": "Capacité (Places)",
+      "ERROR_CAPACITY_REQUIRED": "La capacité est requise.",
       "ERROR_CAPACITY_MIN": "La capacité doit être d'au moins 1.",
       "LABEL_PRICE": "Prix de base (€)",
-      "PLACEHOLDER_PRICE": "ex: 150.00",
-      "ERROR_PRICE_REQUIRED": "Le prix de base est obligatoire.",
+      "PLACEHOLDER_PRICE": "ex., 150.00",
+      "ERROR_PRICE_REQUIRED": "Le prix de base est requis.",
       "ERROR_PRICE_MIN": "Le prix ne peut pas être négatif.",
       "LABEL_AUTOMATIC": "Transmission automatique",
       "FIELDSET_PHOTO": "Photo du véhicule",
@@ -777,5 +903,13 @@
       "LABEL_CURRENT_PHOTO": "Photo actuelle",
       "NO_PHOTO": "Aucune photo disponible",
       "BUTTON_CANCEL": "Annuler",
+      "BUTTON_SAVING": "Enregistrement..."
+    }
+  },
+  "access_denied": {
+    "title": "Accès refusé",
+    "message": "Vous n'avez pas la permission d'accéder à cette page.",
+    "back_home": "Retour à l'accueil",
+    "contact_admin": "Contacter l'administrateur"
   }
 }

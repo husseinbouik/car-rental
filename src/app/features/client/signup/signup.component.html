@@ -1,17 +1,20 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
-  <div class="card w-full max-w-md">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-5 bg-pattern"></div>
+
+  <div class="card w-full max-w-md relative z-10">
     <div class="card-body p-8">
       <!-- Logo and Brand -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
-          <i class="fas fa-car text-2xl text-blue-600 dark:text-blue-400"></i>
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-6 shadow-lg">
+          <i class="fas fa-car text-3xl text-white"></i>
         </div>
-        <h1 class="text-3xl font-bold theme-text-main mb-2">DriveEasy</h1>
-        <p class="theme-text-muted">Create your account to start renting cars</p>
+        <h1 class="text-3xl font-bold theme-text-main mb-3">{{ 'brand' | translate }}</h1>
+        <p class="theme-text-muted text-lg">{{ 'signup.subtitle' | translate }}</p>
       </div>
 
       <!-- Error message -->
-      <div *ngIf="errorMessage" class="alert alert-error mb-6">
+      <div *ngIf="errorMessage" class="alert alert-error mb-6 animate-pulse">
         <i class="fas fa-exclamation-circle"></i>
         <span>{{ errorMessage }}</span>
       </div>
@@ -28,26 +31,32 @@
         <div class="form-group">
           <label for="username" class="form-label">
             <i class="fas fa-user mr-2 text-blue-500"></i>
-            Username
+            {{ 'signup.username' | translate }}
           </label>
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            class="form-input"
-            [class.error]="signupForm.get('username')?.invalid && signupForm.get('username')?.touched"
-            [class.success]="signupForm.get('username')?.valid && signupForm.get('username')?.touched"
-            placeholder="Choose a username"
-            required
-            autocomplete="username"
-          />
+          <div class="relative">
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-input"
+              [class.error]="signupForm.get('username')?.invalid && signupForm.get('username')?.touched"
+              [class.success]="signupForm.get('username')?.valid && signupForm.get('username')?.touched"
+              [placeholder]="'signup.username_placeholder' | translate"
+              required
+              autocomplete="username"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <i *ngIf="signupForm.get('username')?.valid && signupForm.get('username')?.touched" class="fas fa-check text-green-500"></i>
+              <i *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched" class="fas fa-times text-red-500"></i>
+            </div>
+          </div>
           <div *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched" class="form-error">
             <i class="fas fa-exclamation-circle"></i>
-            <span>Username must be at least 3 characters</span>
+            <span>{{ 'signup.validation.username_required' | translate }}</span>
           </div>
           <div *ngIf="signupForm.get('username')?.valid && signupForm.get('username')?.touched" class="form-success">
             <i class="fas fa-check-circle"></i>
-            <span>Username looks good!</span>
+            <span>{{ 'signup.validation.username_good' | translate }}</span>
           </div>
         </div>
 
@@ -55,26 +64,32 @@
         <div class="form-group">
           <label for="email" class="form-label">
             <i class="fas fa-envelope mr-2 text-blue-500"></i>
-            Email Address
+            {{ 'signup.email' | translate }}
           </label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="form-input"
-            [class.error]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
-            [class.success]="signupForm.get('email')?.valid && signupForm.get('email')?.touched"
-            placeholder="Enter your email address"
-            required
-            autocomplete="email"
-          />
+          <div class="relative">
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              [class.error]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+              [class.success]="signupForm.get('email')?.valid && signupForm.get('email')?.touched"
+              [placeholder]="'signup.email_placeholder' | translate"
+              required
+              autocomplete="email"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <i *ngIf="signupForm.get('email')?.valid && signupForm.get('email')?.touched" class="fas fa-check text-green-500"></i>
+              <i *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="fas fa-times text-red-500"></i>
+            </div>
+          </div>
           <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="form-error">
             <i class="fas fa-exclamation-circle"></i>
-            <span>Please enter a valid email address</span>
+            <span>{{ 'signup.validation.email_required' | translate }}</span>
           </div>
           <div *ngIf="signupForm.get('email')?.valid && signupForm.get('email')?.touched" class="form-success">
             <i class="fas fa-check-circle"></i>
-            <span>Email looks good!</span>
+            <span>{{ 'signup.validation.email_good' | translate }}</span>
           </div>
         </div>
 
@@ -82,26 +97,35 @@
         <div class="form-group">
           <label for="password" class="form-label">
             <i class="fas fa-lock mr-2 text-blue-500"></i>
-            Password
+            {{ 'signup.password' | translate }}
           </label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-input"
-            [class.error]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
-            [class.success]="signupForm.get('password')?.valid && signupForm.get('password')?.touched"
-            placeholder="Create a strong password"
-            required
-            autocomplete="new-password"
-          />
+          <div class="relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="form-input pr-12"
+              [class.error]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+              [class.success]="signupForm.get('password')?.valid && signupForm.get('password')?.touched"
+              [placeholder]="'signup.password_placeholder' | translate"
+              required
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
           <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="form-error">
             <i class="fas fa-exclamation-circle"></i>
-            <span>Password must be at least 6 characters</span>
+            <span>{{ 'signup.validation.password_required' | translate }}</span>
           </div>
           <div *ngIf="signupForm.get('password')?.valid && signupForm.get('password')?.touched" class="form-success">
             <i class="fas fa-check-circle"></i>
-            <span>Password meets requirements!</span>
+            <span>{{ 'signup.validation.password_good' | translate }}</span>
           </div>
         </div>
 
@@ -109,26 +133,35 @@
         <div class="form-group">
           <label for="confirmPassword" class="form-label">
             <i class="fas fa-lock mr-2 text-blue-500"></i>
-            Confirm Password
+            {{ 'signup.confirm_password' | translate }}
           </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            class="form-input"
-            [class.error]="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched"
-            [class.success]="!signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.valid && signupForm.get('confirmPassword')?.touched"
-            placeholder="Confirm your password"
-            required
-            autocomplete="new-password"
-          />
+          <div class="relative">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="form-input pr-12"
+              [class.error]="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched"
+              [class.success]="!signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.valid && signupForm.get('confirmPassword')?.touched"
+              [placeholder]="'signup.confirm_password_placeholder' | translate"
+              required
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
           <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched" class="form-error">
             <i class="fas fa-exclamation-circle"></i>
-            <span>Passwords do not match</span>
+            <span>{{ 'signup.validation.password_mismatch' | translate }}</span>
           </div>
           <div *ngIf="!signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.valid && signupForm.get('confirmPassword')?.touched" class="form-success">
             <i class="fas fa-check-circle"></i>
-            <span>Passwords match!</span>
+            <span>{{ 'signup.validation.passwords_match' | translate }}</span>
           </div>
         </div>
 
@@ -141,10 +174,10 @@
               required
             />
             <span class="text-sm theme-text-muted">
-              I agree to the
-              <a href="#" class="theme-primary-text hover:underline">Terms of Service</a>
-              and
-              <a href="#" class="theme-primary-text hover:underline">Privacy Policy</a>
+              {{ 'signup.terms_agreement' | translate }}
+              <a href="#" class="theme-primary-text hover:underline">{{ 'signup.terms_of_service' | translate }}</a>
+              {{ 'signup.and' | translate }}
+              <a href="#" class="theme-primary-text hover:underline">{{ 'signup.privacy_policy' | translate }}</a>
             </span>
           </label>
         </div>
@@ -157,24 +190,24 @@
         >
           <span *ngIf="!isLoading">
             <i class="fas fa-user-plus mr-2"></i>
-            Create Account
+            {{ 'signup.signup' | translate }}
           </span>
           <span *ngIf="isLoading" class="btn-loading">
             <i class="fas fa-spinner fa-spin mr-2"></i>
-            Creating Account...
+            {{ 'signup.processing' | translate }}
           </span>
         </button>
       </form>
 
       <!-- Additional Links -->
-      <div class="mt-8 text-center">
-        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <span class="text-sm theme-text-muted">Already have an account?</span>
+      <div class="mt-8 space-y-4 text-center">
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+          <span class="text-sm theme-text-muted">{{ 'signup.has_account' | translate }}</span>
           <a
             routerLink="/login"
             class="text-sm theme-primary-text hover:underline ml-1 transition-colors font-medium"
           >
-            Sign in here
+            {{ 'signup.login_link' | translate }}
           </a>
         </div>
       </div>
@@ -186,27 +219,27 @@
             <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white dark:bg-gray-800 theme-text-muted">Or sign up with</span>
+            <span class="px-4 bg-white dark:bg-gray-800 theme-text-muted">Or sign up with</span>
           </div>
         </div>
 
         <div class="mt-6 grid grid-cols-2 gap-3">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary group"
             disabled
           >
-            <i class="fab fa-google text-red-500"></i>
-            <span class="hidden sm:inline">Google</span>
+            <i class="fab fa-google text-red-500 group-hover:text-red-600 transition-colors"></i>
+            <span class="hidden sm:inline ml-2">Google</span>
           </button>
 
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary group"
             disabled
           >
-            <i class="fab fa-facebook text-blue-600"></i>
-            <span class="hidden sm:inline">Facebook</span>
+            <i class="fab fa-facebook text-blue-600 group-hover:text-blue-700 transition-colors"></i>
+            <span class="hidden sm:inline ml-2">Facebook</span>
           </button>
         </div>
       </div>

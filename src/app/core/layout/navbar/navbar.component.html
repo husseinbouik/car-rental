@@ -5,14 +5,25 @@
     </button>
   </div>
   <div class="flex items-center space-x-4">
-    <select (change)="switchLanguage($event)" class="bg-white text-black px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
-      <option value="en">English</option>
-      <option value="fr">French</option>
+    <!-- Language Selector -->
+    <select [(ngModel)]="currentLang" (change)="switchLanguage($event)"
+            class="bg-white text-black px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
+      <option value="en">{{ 'lang.en' | translate }}</option>
+      <option value="fr">{{ 'lang.fr' | translate }}</option>
     </select>
-    <button (click)="toggleDarkMode()">
-      <fa-icon [icon]="faSun" *ngIf="!isDarkMode"></fa-icon> <fa-icon [icon]="faMoon" *ngIf="isDarkMode"></fa-icon> {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+
+    <!-- Dark Mode Toggle -->
+    <button (click)="toggleDarkMode()" class="text-white hover:text-gray-300 focus:outline-none">
+      <fa-icon [icon]="faSun" *ngIf="!isDarkMode"></fa-icon>
+      <fa-icon [icon]="faMoon" *ngIf="isDarkMode"></fa-icon>
+      <span class="ml-1 hidden md:inline">
+        {{ isDarkMode ? ('navbar.light_mode' | translate) : ('navbar.dark_mode' | translate) }}
+      </span>
     </button>
+
     <span>👤 Admin</span>
-    <button (click)="simpleLogout()" class="bg-[var(--primary-color)] text-white px-3 py-1 rounded-md">Logout</button>
+    <button (click)="simpleLogout()" class="bg-[var(--primary-color)] text-white px-3 py-1 rounded-md">
+      {{ 'navbar.logout' | translate }}
+    </button>
   </div>
 </nav>

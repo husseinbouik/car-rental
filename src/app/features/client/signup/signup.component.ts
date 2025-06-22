@@ -13,7 +13,9 @@ export class SignupComponent {
   signupForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
-  successMessage: string | null = null; // Add success message property
+  successMessage: string | null = null;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private router: Router,
@@ -28,6 +30,14 @@ export class SignupComponent {
     });
 
     this.signupForm.setValidators(this.passwordMatchValidator);
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   passwordMatchValidator(form: AbstractControl) {
@@ -45,11 +55,10 @@ export class SignupComponent {
       const { username, password, email } = this.signupForm.value;
 
       this.signupService.register({ username, password, email }).subscribe({
-// In the signup component's onSubmit method
-next: (response) => {
-  this.isLoading = false;
-  this.successMessage = "Inscription réussie! Un email de vérification a été envoyé à votre adresse email.";
-},
+        next: (response) => {
+          this.isLoading = false;
+          this.successMessage = "Inscription réussie! Un email de vérification a été envoyé à votre adresse email.";
+        },
         error: (error) => {
           this.isLoading = false;
 
@@ -67,6 +76,4 @@ next: (response) => {
       });
     }
   }
-
-
 }

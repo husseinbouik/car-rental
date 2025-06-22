@@ -1,47 +1,43 @@
-<!-- Enhanced Dashboard Container -->
-<div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
-
-  <!-- Enhanced Page Title -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold theme-text-main mb-4">
-      <i class="fas fa-chart-line mr-3 text-blue-500"></i>
-      Dashboard Overview
+<!-- Main Content Wrapper -->
+<div class="container mx-auto px-4 py-8 min-h-screen">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold theme-text-main mb-2">
+      {{ 'admin.dashboard.title' | translate }}
     </h1>
-    <p class="theme-text-muted text-lg max-w-3xl mx-auto">
-      Monitor your car rental business performance with real-time metrics and insights
+    <p class="theme-text-muted">
+      {{ 'admin.dashboard.welcome' | translate }}
     </p>
   </div>
 
-  <!-- Enhanced Filters Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+  <!-- Overview Section -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold theme-text-main mb-6">
+      {{ 'admin.dashboard.overview' | translate }}
+    </h2>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
     <!-- Date Range Filter Card -->
     <div class="card">
       <div class="card-header">
         <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-          Filter by Date Range
+          <i class="fas fa-calendar mr-2 text-blue-500"></i>
+          {{ 'admin.dashboard.filters.date_range' | translate }}
         </h3>
       </div>
       <div class="card-body">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
           <div class="form-group">
-            <label for="startDate" class="form-label">Start Date</label>
-            <input type="date" id="startDate"
-                   class="form-input"
-                   [(ngModel)]="startDate" (change)="onDateRangeChange()">
+            <label for="startDate" class="form-label">{{ 'admin.dashboard.filters.start_date' | translate }}</label>
+            <input type="date" id="startDate" [(ngModel)]="startDate" (change)="onDateChange()"
+                   class="form-input">
           </div>
           <div class="form-group">
-            <label for="endDate" class="form-label">End Date</label>
-            <input type="date" id="endDate"
-                   class="form-input"
-                   [(ngModel)]="endDate" (change)="onDateRangeChange()">
-          </div>
-          <div>
-            <button class="btn btn-primary btn-full"
-                    (click)="onDateRangeChange()">
-              <i class="fas fa-filter mr-2"></i>
-              Apply Filter
-            </button>
+            <label for="endDate" class="form-label">{{ 'admin.dashboard.filters.end_date' | translate }}</label>
+            <input type="date" id="endDate" [(ngModel)]="endDate" (change)="onDateChange()"
+                   class="form-input">
           </div>
         </div>
       </div>
@@ -52,13 +48,13 @@
       <div class="card-header">
         <h3 class="text-xl font-semibold theme-text-main">
           <i class="fas fa-car mr-2 text-blue-500"></i>
-          Filter by Vehicle
+          {{ 'admin.dashboard.filters.vehicle_filter' | translate }}
         </h3>
       </div>
       <div class="card-body">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
           <div class="form-group">
-            <label for="vehicleSelect" class="form-label">Select Vehicle</label>
+            <label for="vehicleSelect" class="form-label">{{ 'admin.dashboard.filters.select_vehicle' | translate }}</label>
             <div class="relative">
               <!-- Loading spinner for vehicle select -->
               <div *ngIf="isLoadingVehicles" class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -69,249 +65,301 @@
                       [(ngModel)]="voitureId"
                       (change)="onVoitureIdChange()"
                       [disabled]="isLoadingVehicles">
-                <option [ngValue]="null">-- Select a Vehicle --</option>
+                <option [ngValue]="null">-- {{ 'admin.dashboard.filters.select_vehicle' | translate }} --</option>
                 <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
                   {{ getVehicleDisplayName(vehicle) }}
                 </option>
               </select>
             </div>
-            <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm theme-text-muted mt-1 italic">No vehicles found.</p>
+            <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm theme-text-muted mt-1 italic">
+              {{ 'admin.common.no_data' | translate }}
+            </p>
           </div>
           <div>
             <button class="btn btn-primary btn-full"
                    (click)="onVoitureIdChange()">
               <i class="fas fa-search mr-2"></i>
-              Apply Filter
+              {{ 'admin.dashboard.filters.apply_filters' | translate }}
             </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Quick Actions Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-bolt mr-2 text-yellow-500"></i>
+          {{ 'admin.dashboard.quick_actions' | translate }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="space-y-3">
+          <button class="btn btn-primary btn-full" routerLink="/admin/vehicles/create">
+            <i class="fas fa-plus mr-2"></i>
+            {{ 'admin.dashboard.add_vehicle' | translate }}
+          </button>
+          <button class="btn btn-success btn-full" routerLink="/admin/reservations/create">
+            <i class="fas fa-calendar-plus mr-2"></i>
+            {{ 'admin.dashboard.create_reservation' | translate }}
+          </button>
+          <button class="btn btn-info btn-full" routerLink="/admin/clients/create">
+            <i class="fas fa-user-plus mr-2"></i>
+            {{ 'admin.dashboard.add_client' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Enhanced Overall Metrics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Availability Rate Card -->
-    <div class="card text-center">
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <!-- Total Vehicles Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-6">
-          <i class="fas fa-percentage text-2xl text-blue-600 dark:text-blue-400"></i>
+          <i class="fas fa-car text-2xl text-blue-600 dark:text-blue-400"></i>
         </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Availability Rate</h3>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_vehicles' | translate }}</h3>
         <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingAvailability" class="loading-spinner"></div>
-          <p *ngIf="!isLoadingAvailability" class="text-5xl font-extrabold text-blue-600">
-            {{ formatPercentage(tauxDisponibilite) }}
-          </p>
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-blue-600">
+              {{ totalVehicles !== null ? totalVehicles : 'N/A' }}
+            </p>
+          </ng-container>
         </div>
-        <p class="theme-text-muted text-sm">Selected Period</p>
       </div>
     </div>
 
-    <!-- Cancellation Rate Card -->
-    <div class="card text-center">
+    <!-- Total Reservations Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-6">
-          <i class="fas fa-times-circle text-2xl text-red-600 dark:text-red-400"></i>
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-6">
+          <i class="fas fa-calendar-check text-2xl text-green-600 dark:text-green-400"></i>
         </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Cancellation Rate</h3>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_reservations' | translate }}</h3>
         <div class="flex justify-center items-center h-24">
           <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-red-600">
-            {{ formatPercentage(tauxAnnulation) }}
-          </p>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-green-600">
+              {{ totalReservations !== null ? totalReservations : 'N/A' }}
+            </p>
+          </ng-container>
         </div>
-        <p class="theme-text-muted text-sm">Overall Performance</p>
+      </div>
+    </div>
+
+    <!-- Total Clients Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full mb-6">
+          <i class="fas fa-users text-2xl text-purple-600 dark:text-purple-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_clients' | translate }}</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-purple-600">
+              {{ totalClients !== null ? totalClients : 'N/A' }}
+            </p>
+          </ng-container>
+        </div>
       </div>
     </div>
 
     <!-- Total Revenue Card -->
-    <div class="card text-center">
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-6">
-          <i class="fas fa-dollar-sign text-2xl text-green-600 dark:text-green-400"></i>
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full mb-6">
+          <i class="fas fa-euro-sign text-2xl text-yellow-600 dark:text-yellow-400"></i>
         </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Total Revenue</h3>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_revenue' | translate }}</h3>
         <div class="flex justify-center items-center h-24">
           <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-green-600">
-            {{ formatCurrency(totalRevenu) }}
-          </p>
-        </div>
-        <p class="theme-text-muted text-sm">Period Total</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Enhanced Vehicle Specific Metrics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-    <!-- Average Revenue per Vehicle Card -->
-    <div class="card text-center">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full mb-6">
-          <i class="fas fa-chart-bar text-2xl text-purple-600 dark:text-purple-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Average Revenue per Vehicle</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingAverageRevenueCar" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingAverageRevenueCar">
-            <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-purple-600">{{ formatCurrency(revenuMoyenParVoiture) }}</p>
-            <p *ngIf="voitureId === null" class="theme-text-muted italic text-lg">Select a vehicle above</p>
-          </ng-container>
-        </div>
-        <p class="theme-text-muted text-sm">Vehicle ID: {{ voitureId || 'N/A' }}</p>
-      </div>
-    </div>
-
-    <!-- Reservations per Vehicle Card -->
-    <div class="card text-center">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 dark:bg-orange-900 rounded-full mb-6">
-          <i class="fas fa-calendar-check text-2xl text-orange-600 dark:text-orange-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Reservations per Vehicle</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingReservationsCar" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingReservationsCar">
-            <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-orange-600">
-              {{ nombreReservationsParVoiture !== null ? nombreReservationsParVoiture : 'N/A' }}
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-yellow-600">
+              {{ totalRevenu !== null ? (totalRevenu | number:'1.0-0') + '€' : 'N/A' }}
             </p>
-            <p *ngIf="voitureId === null" class="theme-text-muted italic text-lg">Select a vehicle above</p>
           </ng-container>
         </div>
-        <p class="theme-text-muted text-sm">Vehicle ID: {{ voitureId || 'N/A' }}</p>
       </div>
     </div>
   </div>
 
-  <!-- Enhanced Average Duration Card -->
-  <div class="grid grid-cols-1 mb-12">
-    <div class="card text-center">
+  <!-- Additional Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <!-- Availability Rate Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-6">
+          <i class="fas fa-percentage text-2xl text-indigo-600 dark:text-indigo-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.availability_rate' | translate }}</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingAvailability" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingAvailability">
+            <p class="text-5xl font-extrabold text-indigo-600">
+              {{ tauxDisponibilite !== null ? (tauxDisponibilite | number:'1.1-1') + '%' : 'N/A' }}
+            </p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancellation Rate Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-6">
+          <i class="fas fa-times-circle text-2xl text-red-600 dark:text-red-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.cancellation_rate' | translate }}</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-red-600">
+              {{ tauxAnnulation !== null ? (tauxAnnulation | number:'1.1-1') + '%' : 'N/A' }}
+            </p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Average Rental Duration Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900 rounded-full mb-6">
           <i class="fas fa-clock text-2xl text-teal-600 dark:text-teal-400"></i>
         </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">Average Reservation Duration</h3>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.avg_rental_duration' | translate }}</h3>
         <div class="flex justify-center items-center h-24">
           <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-teal-600">
-            {{ formatDuration(dureeMoyenneReservations) }}
-          </p>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-teal-600">
+              {{ avgRentalDuration !== null ? (avgRentalDuration | number:'1.0-1') + ' days' : 'N/A' }}
+            </p>
+          </ng-container>
         </div>
-        <p class="theme-text-muted text-sm">Overall Average</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Enhanced Revenue Chart Card -->
-  <div class="card mb-12">
-    <div class="card-header">
-      <h3 class="text-xl font-semibold theme-text-main">
-        <i class="fas fa-chart-line mr-2 text-blue-500"></i>
-        Revenue by Period ({{ startDate || 'N/A' }} to {{ endDate || 'N/A' }})
-      </h3>
-    </div>
-    <div class="card-body">
-      <div *ngIf="isLoadingRevenuePeriod" class="text-center py-12">
-        <div class="loading-spinner mx-auto mb-4"></div>
-        <p class="theme-text-muted">Loading revenue data...</p>
-      </div>
-      <div *ngIf="!isLoadingRevenuePeriod">
-        <div class="relative h-96">
-          <!-- Canvas element for ng2-charts -->
-          <canvas baseChart
-            [data]="revenuParPeriodeChartData"
-            [options]="revenuParPeriodeChartOptions"
-            [type]="revenuParPeriodeChartType">
-          </canvas>
-        </div>
-        <div *ngIf="!isLoadingRevenuePeriod && (revenuParPeriodeChartData?.datasets?.[0]?.data?.length ?? 0) === 0" class="text-center py-8">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
-            <i class="fas fa-chart-line text-2xl text-gray-400"></i>
-          </div>
-          <p class="theme-text-muted">No revenue data available for the selected period.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Actions Section -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
-      <div class="card-body p-6">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
-          <i class="fas fa-car text-xl text-blue-600 dark:text-blue-400"></i>
-        </div>
-        <h4 class="font-semibold theme-text-main mb-2">Manage Vehicles</h4>
-        <p class="text-sm theme-text-muted">Add, edit, or remove vehicles from your fleet</p>
       </div>
     </div>
 
-    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
-      <div class="card-body p-6">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full mb-4">
-          <i class="fas fa-calendar-alt text-xl text-green-600 dark:text-green-400"></i>
+    <!-- Monthly Growth Card -->
+    <div class="card text-center hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-100 dark:bg-pink-900 rounded-full mb-6">
+          <i class="fas fa-chart-line text-2xl text-pink-600 dark:text-pink-400"></i>
         </div>
-        <h4 class="font-semibold theme-text-main mb-2">View Reservations</h4>
-        <p class="text-sm theme-text-muted">Monitor all current and past reservations</p>
-      </div>
-    </div>
-
-    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
-      <div class="card-body p-6">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full mb-4">
-          <i class="fas fa-users text-xl text-purple-600 dark:text-purple-400"></i>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.monthly_growth' | translate }}</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingOverallMetrics">
+            <p class="text-5xl font-extrabold text-pink-600">
+              {{ monthlyGrowth !== null ? (monthlyGrowth | number:'1.1-1') + '%' : 'N/A' }}
+            </p>
+          </ng-container>
         </div>
-        <h4 class="font-semibold theme-text-main mb-2">Manage Clients</h4>
-        <p class="text-sm theme-text-muted">View and manage client information</p>
       </div>
     </div>
   </div>
 
   <!-- Recent Activity Section -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="text-xl font-semibold theme-text-main">
-        <i class="fas fa-history mr-2 text-blue-500"></i>
-        Recent Activity
-      </h3>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+    <!-- Recent Reservations -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+          {{ 'admin.dashboard.recent_reservations' | translate }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="isLoadingRecentReservations" class="text-center py-8">
+          <div class="loading-spinner mx-auto mb-4"></div>
+          <p class="theme-text-muted">{{ 'admin.common.loading' | translate }}</p>
+        </div>
+        <div *ngIf="!isLoadingRecentReservations && recentReservations.length === 0" class="text-center py-8">
+          <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
+          <p class="theme-text-muted">{{ 'admin.dashboard.no_recent_reservations' | translate }}</p>
+        </div>
+        <div *ngIf="!isLoadingRecentReservations && recentReservations.length > 0" class="space-y-4">
+          <div *ngFor="let reservation of recentReservations" class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-calendar-check text-blue-600 dark:text-blue-400"></i>
+              </div>
+              <div>
+                <p class="font-medium theme-text-main">{{ reservation.voiture?.vname || 'Unknown Vehicle' }}</p>
+                <p class="text-sm theme-text-muted">{{ reservation.dateDebut | date:'short' }}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-medium text-green-600">{{ reservation.montantTotal }}€</p>
+              <p class="text-sm theme-text-muted">{{ reservation.statut }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="space-y-4">
-        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-4">
-            <i class="fas fa-check text-green-600 dark:text-green-400"></i>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium theme-text-main">New reservation created</p>
-            <p class="text-sm theme-text-muted">Vehicle #123 was rented for 3 days</p>
-          </div>
-          <span class="text-sm theme-text-muted">2 hours ago</span>
-        </div>
 
-        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-4">
-            <i class="fas fa-car text-blue-600 dark:text-blue-400"></i>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium theme-text-main">New vehicle added</p>
-            <p class="text-sm theme-text-muted">2023 Toyota Camry added to fleet</p>
-          </div>
-          <span class="text-sm theme-text-muted">1 day ago</span>
+    <!-- System Alerts -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-bell mr-2 text-yellow-500"></i>
+          {{ 'admin.dashboard.system_alerts' | translate }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="systemAlerts.length === 0" class="text-center py-8">
+          <i class="fas fa-check-circle text-4xl text-green-400 mb-4"></i>
+          <p class="theme-text-muted">{{ 'admin.dashboard.no_alerts' | translate }}</p>
         </div>
-
-        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mr-4">
-            <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
+        <div *ngIf="systemAlerts.length > 0" class="space-y-4">
+          <div *ngFor="let alert of systemAlerts"
+               [class]="'p-4 rounded-lg border-l-4 ' + getAlertClass(alert.type)">
+            <div class="flex items-start space-x-3">
+              <i [class]="getAlertIcon(alert.type)" class="mt-1"></i>
+              <div class="flex-1">
+                <p class="font-medium">{{ alert.title }}</p>
+                <p class="text-sm theme-text-muted">{{ alert.message }}</p>
+                <p class="text-xs theme-text-muted mt-1">{{ alert.timestamp | date:'short' }}</p>
+              </div>
+            </div>
           </div>
-          <div class="flex-1">
-            <p class="font-medium theme-text-main">Maintenance reminder</p>
-            <p class="text-sm theme-text-muted">Vehicle #456 due for service</p>
-          </div>
-          <span class="text-sm theme-text-muted">3 days ago</span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Charts Section (Placeholder) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-chart-bar mr-2 text-blue-500"></i>
+          {{ 'admin.dashboard.revenue_chart' | translate }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p class="theme-text-muted">{{ 'admin.dashboard.chart_placeholder' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-chart-pie mr-2 text-green-500"></i>
+          {{ 'admin.dashboard.vehicle_usage' | translate }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p class="theme-text-muted">{{ 'admin.dashboard.chart_placeholder' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

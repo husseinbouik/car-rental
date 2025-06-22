@@ -29,6 +29,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   revenuMoyenParVoiture: number | null = null;
   nombreReservationsParVoiture: number | null = null;
 
+  // --- Additional Statistics Properties ---
+  totalVehicles: number | null = null;
+  totalReservations: number | null = null;
+  totalClients: number | null = null;
+  avgRentalDuration: number | null = null;
+  monthlyGrowth: number | null = null;
+
   // --- Input Properties ---
   startDate: string;
   endDate: string;
@@ -44,7 +51,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoadingAverageRevenueCar = false;
   isLoadingReservationsCar = false;
   isLoadingOverallMetrics = false;
+  isLoadingRecentReservations = false;
 
+  // --- Recent Activity Properties ---
+  recentReservations: any[] = [];
+  systemAlerts: Array<{
+    type: 'info' | 'warning' | 'error' | 'success';
+    title: string;
+    message: string;
+    timestamp: Date;
+  }> = [
+    {
+      type: 'info',
+      title: 'System Update',
+      message: 'Dashboard has been updated with new features',
+      timestamp: new Date()
+    },
+    {
+      type: 'warning',
+      title: 'Low Vehicle Availability',
+      message: 'Some vehicles are running low on availability',
+      timestamp: new Date(Date.now() - 3600000)
+    }
+  ];
 
   // --- Chart Properties (Revenu par Période) ---
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
@@ -100,6 +129,108 @@ export class DashboardComponent implements OnInit, OnDestroy {
   };
   public revenuParPeriodeChartType: 'line' = 'line';
 
+  // --- Additional Chart Properties for Template ---
+  public revenueChartData: ChartData<'line'> = {
+    datasets: [
+      {
+        data: [],
+        label: 'Revenue',
+        tension: 0.3,
+        fill: 'origin',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      }
+    ],
+    labels: []
+  };
+  public revenueChartType: 'line' = 'line';
+  public revenueChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+          tooltipFormat: 'MMM dd, yyyy',
+          displayFormats: {
+            day: 'MMM dd'
+          }
+        },
+        title: {
+          display: true,
+          text: 'Date'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Revenue (€)'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Revenue by Period'
+      }
+    }
+  };
+
+  public reservationsChartData: ChartData<'line'> = {
+    datasets: [
+      {
+        data: [],
+        label: 'Reservations',
+        tension: 0.3,
+        fill: 'origin',
+        borderColor: 'rgba(34, 197, 94, 1)',
+        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+      }
+    ],
+    labels: []
+  };
+  public reservationsChartType: 'line' = 'line';
+  public reservationsChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+          tooltipFormat: 'MMM dd, yyyy',
+          displayFormats: {
+            day: 'MMM dd'
+          }
+        },
+        title: {
+          display: true,
+          text: 'Date'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Reservations'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Reservations by Period'
+      }
+    }
+  };
 
   // Inject both services
   constructor(
@@ -119,6 +250,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.fetchTauxDisponibilite();
     this.fetchRevenuParPeriode();
     this.fetchVehicles(); // <--- Fetch vehicles on init
+    this.fetchAdditionalStats(); // Fetch additional statistics
   }
 
   ngOnDestroy(): void {
@@ -154,6 +286,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
+  // --- Additional Statistics Fetching ---
+  fetchAdditionalStats(): void {
+    // Fetch total vehicles
+    this.vehicleService.getVehicles()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (vehicles) => this.totalVehicles = vehicles.length,
+        error: (err) => this.handleComponentError(err)
+      });
+
+    // Fetch total reservations (you may need to add this method to your service)
+    // this.dashboardService.getTotalReservations()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe({
+    //     next: (data) => this.totalReservations = data,
+    //     error: (err) => this.handleComponentError(err)
+    //   });
+
+    // Fetch total clients (you may need to add this method to your service)
+    // this.dashboardService.getTotalClients()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe({
+    //     next: (data) => this.totalClients = data,
+    //     error: (err) => this.handleComponentError(err)
+    //   });
+
+    // For now, set mock values
+    this.totalReservations = 150;
+    this.totalClients = 75;
+  }
 
   fetchTauxDisponibilite(): void {
     if (!this.startDate || !this.endDate) {
@@ -200,19 +362,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
                data: data.map(item => ({ x: item.date, y: item.revenue }))
              }]
            };
+           // Also update the template chart data
+           this.revenueChartData = {
+             ...this.revenueChartData,
+             datasets: [{
+               ...this.revenueChartData.datasets[0],
+               data: data.map(item => ({ x: item.date, y: item.revenue }))
+             }]
+           };
            if (this.chart) {
              this.chart.chart?.update();
            }
         },
         error: (err) => {
           this.handleComponentError(err);
-           this.revenuParPeriodeChartData = {
-             ...this.revenuParPeriodeChartData,
-             datasets: [{ ...this.revenuParPeriodeChartData.datasets[0], data: [] }]
-           };
-            if (this.chart) {
-             this.chart.chart?.update();
-           }
+          this.revenuParPeriodeChartData = {
+            ...this.revenuParPeriodeChartData,
+            datasets: [{ ...this.revenuParPeriodeChartData.datasets[0], data: [] }]
+          };
+          this.revenueChartData = {
+            ...this.revenueChartData,
+            datasets: [{ ...this.revenueChartData.datasets[0], data: [] }]
+          };
         },
         complete: () => this.isLoadingRevenuePeriod = false
       });
@@ -290,6 +461,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // --- UI Actions ---
 
+  onDateChange(): void {
+    console.log('Date changed:', this.startDate, this.endDate);
+    this.fetchTauxDisponibilite();
+    this.fetchRevenuParPeriode();
+  }
+
   onDateRangeChange(): void {
     console.log('Date range changed:', this.startDate, this.endDate);
     this.fetchTauxDisponibilite();
@@ -335,7 +512,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // Helper to display vehicle name in the select
     getVehicleDisplayName(voiture: Voiture): string {
-      // Adjust based on your Voiture model properties
-      return `${voiture.marque} ${voiture.modele} (${voiture.matricule || 'N/A'})`;
+      if (voiture.vname) {
+        return voiture.vname;
+      } else if (voiture.marque && voiture.modele) {
+        return `${voiture.marque} ${voiture.modele}`;
+      } else if (voiture.marque) {
+        return voiture.marque;
+      } else {
+        return `Vehicle ${voiture.id}`;
+      }
+    }
+
+    getAlertClass(type: 'info' | 'warning' | 'error' | 'success'): string {
+      switch (type) {
+        case 'info':
+          return 'border-blue-500 bg-blue-50 dark:bg-blue-900/20';
+        case 'warning':
+          return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20';
+        case 'error':
+          return 'border-red-500 bg-red-50 dark:bg-red-900/20';
+        case 'success':
+          return 'border-green-500 bg-green-50 dark:bg-green-900/20';
+        default:
+          return 'border-gray-500 bg-gray-50 dark:bg-gray-800';
+      }
+    }
+
+    getAlertIcon(type: 'info' | 'warning' | 'error' | 'success'): string {
+      switch (type) {
+        case 'info':
+          return 'fas fa-info-circle text-blue-500';
+        case 'warning':
+          return 'fas fa-exclamation-triangle text-yellow-500';
+        case 'error':
+          return 'fas fa-times-circle text-red-500';
+        case 'success':
+          return 'fas fa-check-circle text-green-500';
+        default:
+          return 'fas fa-info-circle text-gray-500';
+      }
     }
 }

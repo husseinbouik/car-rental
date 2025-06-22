@@ -2,7 +2,7 @@
   <div class="p-6 sm:p-8 border-b border-gray-700">
     <h2 class="text-xl sm:text-2xl font-semibold leading-tight">{{ pageTitle }}</h2>
     <p class="mt-1 text-sm text-gray-400">
-      {{ isEditMode ? 'Update the reservation details below.' : 'Fill in the details to create a new reservation.' }}
+      {{ isEditMode ? ('admin.reservations.create.edit_subtitle' | translate) : ('admin.reservations.create.subtitle' | translate) }}
     </p>
   </div>
 
@@ -15,7 +15,7 @@
           (currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400')">
           <span>1</span>
         </div>
-        <span class="mt-2 text-sm">Select Dates</span>
+        <span class="mt-2 text-sm">{{ 'admin.reservations.create.steps.step1' | translate }}</span>
       </div>
 
       <!-- Connector -->
@@ -27,7 +27,7 @@
           (currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400')">
           <span>2</span>
         </div>
-        <span class="mt-2 text-sm">Choose Vehicle</span>
+        <span class="mt-2 text-sm">{{ 'admin.reservations.create.steps.step2' | translate }}</span>
       </div>
 
       <!-- Connector -->
@@ -39,7 +39,7 @@
           (currentStep >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400')">
           <span>3</span>
         </div>
-        <span class="mt-2 text-sm">Complete Details</span>
+        <span class="mt-2 text-sm">{{ 'admin.reservations.create.steps.step3' | translate }}</span>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
     </svg>
-    <p class="text-sm">Loading form data...</p>
+    <p class="text-sm">{{ 'admin.common.loading' | translate }}</p>
   </div>
 
   <form (ngSubmit)="onSubmit()" #reservationForm="ngForm" class="p-6 sm:p-8" *ngIf="!isLoading || (isEditMode && reservation.id)">
@@ -82,7 +82,7 @@
       <div class="flex justify-end pt-4">
         <button type="button" (click)="validateDates()"
                 class="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] disabled:opacity-50 shadow-sm">
-          Check Availability <i class="fa-solid fa-arrow-right ml-2"></i>
+          {{ 'admin.reservations.create.buttons.next' | translate }} <i class="fa-solid fa-arrow-right ml-2"></i>
         </button>
       </div>
     </div>
@@ -92,8 +92,8 @@
       <!-- Vehicle Selection -->
       <div>
         <div class="flex justify-between items-center mb-2">
-          <label class="block text-sm font-medium text-gray-300">Available Vehicles</label>
-          <span class="text-xs text-gray-400">Selected: {{ reservation.dateDebut | date:'short' }} to {{ reservation.dateFin | date:'short' }}</span>
+          <label class="block text-sm font-medium text-gray-300">{{ 'admin.reservations.create.form.vehicle' | translate }}</label>
+          <span class="text-xs text-gray-400">{{ 'admin.reservations.create.form.selected_vehicle' | translate }}: {{ reservation.dateDebut | date:'short' }} to {{ reservation.dateFin | date:'short' }}</span>
         </div>
 
         <!-- Loading/Availability State -->
@@ -102,7 +102,7 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p class="mt-2 text-sm text-gray-300">Checking vehicle availability...</p>
+          <p class="mt-2 text-sm text-gray-300">{{ 'admin.reservations.create.messages.checking_availability' | translate }}</p>
         </div>
 
         <div *ngIf="availableVehicleError" class="p-4 rounded-md bg-red-900/30 text-red-200 text-sm">
@@ -121,23 +121,23 @@
               </div>
               <div class="ml-4">
                 <h3 class="font-medium text-gray-100">{{ car.display_name }}</h3>
-                <p class="text-sm text-gray-400 mt-1">License: {{ car.matricule || 'N/A' }}</p>
-                <p class="text-sm text-gray-400">Type: {{ car.type || 'Not specified' }}</p>
+                <p class="text-sm text-gray-400 mt-1">{{ 'admin.vehicles.list.table.license_plate' | translate }}: {{ car.matricule || 'N/A' }}</p>
+                <p class="text-sm text-gray-400">{{ 'admin.vehicles.list.table.type' | translate }}: {{ car.type || 'Not specified' }}</p>
               </div>
             </div>
             <div class="mt-3 flex justify-between items-center">
-              <span class="text-sm font-medium text-blue-400">{{ car.daily_rate | currency:'EUR':'symbol':'1.2-2' }}/day</span>
+              <span class="text-sm font-medium text-blue-400">{{ car.daily_rate | currency:'EUR':'symbol':'1.2-2' }}/{{ 'vehicle.day' | translate }}</span>
               <span *ngIf="reservation.voiture_id === car.id" class="text-xs bg-blue-600 text-white px-2 py-1 rounded-full">
-                Selected
+                {{ 'admin.reservations.create.buttons.change' | translate }}
               </span>
             </div>
           </div>
 
           <div *ngIf="cars.length === 0" class="col-span-2 p-4 text-center text-gray-400">
             <i class="fa-solid fa-car-burst text-2xl mb-2"></i>
-            <p>No vehicles available for the selected dates.</p>
+            <p>{{ 'admin.reservations.create.messages.no_vehicles_available' | translate }}</p>
             <button type="button" (click)="currentStep = 1" class="mt-2 text-sm text-blue-400 hover:text-blue-300">
-              Try different dates
+              {{ 'admin.reservations.create.messages.try_different_dates' | translate }}
             </button>
           </div>
         </div>
@@ -146,12 +146,12 @@
       <div class="flex justify-between pt-6 border-t border-gray-700">
         <button type="button" (click)="currentStep = 1"
                 class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] shadow-sm">
-          <i class="fa-solid fa-arrow-left mr-2"></i> Back
+          <i class="fa-solid fa-arrow-left mr-2"></i> {{ 'admin.reservations.create.buttons.previous' | translate }}
         </button>
         <button type="button" (click)="currentStep = 3" [disabled]="!reservation.voiture_id"
                 [class]="'px-4 py-2 rounded-md text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--seconday-background-color)] shadow-sm ' +
                 (reservation.voiture_id ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' : 'bg-gray-600 cursor-not-allowed')">
-          Continue <i class="fa-solid fa-arrow-right ml-2"></i>
+          {{ 'admin.reservations.create.buttons.next' | translate }} <i class="fa-solid fa-arrow-right ml-2"></i>
         </button>
       </div>
     </div>
@@ -161,10 +161,10 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
         <!-- Client Selection -->
         <div class="md:col-span-1">
-          <label for="client_id" class="block text-sm font-medium text-gray-300 mb-1">Client <span class="text-red-500">*</span></label>
+          <label for="client_id" class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.client' | translate }} <span class="text-red-500">*</span></label>
           <select id="client_id" [(ngModel)]="reservation.client_id" name="client_id" required
                   class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <option [ngValue]="undefined" disabled>-- Select a Client --</option>
+            <option [ngValue]="undefined" disabled>-- {{ 'admin.reservations.create.form.select_client' | translate }} --</option>
             <option *ngFor="let client of clients" [ngValue]="client.id">
               {{ client.display_name }}
             </option>
@@ -173,7 +173,7 @@
 
         <!-- Selected Vehicle Summary -->
         <div class="md:col-span-1">
-          <label class="block text-sm font-medium text-gray-300 mb-1">Selected Vehicle</label>
+          <label class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.selected_vehicle' | translate }}</label>
           <div class="p-3 border border-gray-700 rounded-md bg-gray-800/30">
             <div *ngIf="selectedVehicle" class="flex justify-between items-center">
               <div>
@@ -181,102 +181,80 @@
                 <p class="text-xs text-gray-400">{{ selectedVehicle.matricule || 'N/A' }}</p>
               </div>
               <button type="button" (click)="currentStep = 2" class="text-sm text-blue-400 hover:text-blue-300">
-                Change
+                {{ 'admin.reservations.create.buttons.change' | translate }}
               </button>
             </div>
             <div *ngIf="!selectedVehicle" class="text-sm text-gray-400 italic">
-              No vehicle selected
+              {{ 'admin.reservations.create.form.vehicle' | translate }}
             </div>
           </div>
         </div>
 
         <!-- Reservation Dates Summary -->
         <div class="md:col-span-2">
-          <label class="block text-sm font-medium text-gray-300 mb-1">Reservation Period</label>
+          <label class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.pickup_date' | translate }} & {{ 'admin.reservations.create.form.return_date' | translate }}</label>
           <div class="p-3 border border-gray-700 rounded-md bg-gray-800/30 grid grid-cols-2 gap-4">
             <div>
-              <p class="text-xs text-gray-400">Start</p>
+              <p class="text-xs text-gray-400">{{ 'admin.reservations.create.form.pickup_date' | translate }}</p>
               <p class="font-medium">{{ reservation.dateDebut | date:'medium' }}</p>
             </div>
             <div>
-              <p class="text-xs text-gray-400">End</p>
+              <p class="text-xs text-gray-400">{{ 'admin.reservations.create.form.return_date' | translate }}</p>
               <p class="font-medium">{{ reservation.dateFin | date:'medium' }}</p>
-            </div>
-            <div class="col-span-2">
-              <button type="button" (click)="currentStep = 1" class="text-sm text-blue-400 hover:text-blue-300">
-                <i class="fa-solid fa-pencil mr-1"></i> Adjust dates
-              </button>
             </div>
           </div>
         </div>
 
-        <!-- Total Amount -->
-        <div class="md:col-span-1">
-          <label for="montantTotal" class="block text-sm font-medium text-gray-300 mb-1">Total Amount (€)</label>
-          <input type="number" id="montantTotal" [(ngModel)]="reservation.montantTotal" name="montantTotal" step="0.01" min="0" placeholder="e.g., 250.00"
-                 class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-        </div>
-
-        <!-- Deposit Paid -->
-        <div class="md:col-span-1">
-          <label for="acompte" class="block text-sm font-medium text-gray-300 mb-1">Deposit Paid (€)</label>
-          <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte" step="0.01" min="0" placeholder="e.g., 50.00"
-                 class="form-input block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-        </div>
-
-        <!-- Status -->
-        <div class="md:col-span-1">
-          <label for="statut" class="block text-sm font-medium text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
-          <select id="statut" [(ngModel)]="reservation.statut" name="statut" required
-                  class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
-            <option value="Pending">Pending</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-        </div>
-
-        <!-- Secondary Driver -->
-        <div class="md:col-span-1">
-          <label for="conducteur_secondaire_id" class="block text-sm font-medium text-gray-300 mb-1">Secondary Driver</label>
-          <select id="conducteur_secondaire_id"
-                  [(ngModel)]="reservation.conducteur_secondaire_id"
-                  name="conducteur_secondaire_id"
-                  class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600 disabled:opacity-60 placeholder-gray-500">
+        <!-- Secondary Driver Selection -->
+        <div class="md:col-span-2">
+          <label for="conducteur_secondaire_id" class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.secondary_driver' | translate }}</label>
+          <select id="conducteur_secondaire_id" [(ngModel)]="reservation.conducteur_secondaire_id" name="conducteur_secondaire_id"
+                  class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
             <option *ngFor="let driver of secondaryDriverOptions" [ngValue]="driver.id">
               {{ driver.display_name }}
             </option>
           </select>
         </div>
+
+        <!-- Total Amount -->
+        <div class="md:col-span-1">
+          <label for="montantTotal" class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.total_amount' | translate }} <span class="text-red-500">*</span></label>
+          <input type="number" id="montantTotal" [(ngModel)]="reservation.montantTotal" name="montantTotal" required step="0.01" min="0"
+                 class="form-input"
+                 placeholder="0.00">
+        </div>
+
+        <!-- Deposit Amount -->
+        <div class="md:col-span-1">
+          <label for="acompte" class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.deposit' | translate }}</label>
+          <input type="number" id="acompte" [(ngModel)]="reservation.acompte" name="acompte" step="0.01" min="0"
+                 class="form-input"
+                 placeholder="0.00">
+        </div>
+
+        <!-- Status -->
+        <div class="md:col-span-2">
+          <label for="statut" class="block text-sm font-medium text-gray-300 mb-1">{{ 'admin.reservations.create.form.status' | translate }}</label>
+          <select id="statut" [(ngModel)]="reservation.statut" name="statut"
+                  class="form-select block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400 bg-[var(--primary-background-color)] text-[var(--text-color)] border-gray-600">
+            <option value="Pending">{{ 'admin.reservations.list.status.pending' | translate }}</option>
+            <option value="Confirmed">{{ 'admin.reservations.list.status.confirmed' | translate }}</option>
+            <option value="Completed">{{ 'admin.reservations.list.status.completed' | translate }}</option>
+            <option value="Cancelled">{{ 'admin.reservations.list.status.cancelled' | translate }}</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="flex justify-between items-center space-x-3 pt-8 mt-6 border-t border-gray-700">
+      <div class="flex justify-between pt-6 border-t border-gray-700">
         <button type="button" (click)="currentStep = 2"
                 class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] shadow-sm">
-          <i class="fa-solid fa-arrow-left mr-1"></i> Back
+          <i class="fa-solid fa-arrow-left mr-2"></i> {{ 'admin.reservations.create.buttons.previous' | translate }}
         </button>
-        <div class="flex space-x-3">
-          <button type="button" (click)="cancel()"
-                  class="px-4 py-2 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[var(--seconday-background-color)] shadow-sm">
-            Cancel
-          </button>
-          <button type="submit"
-                  [disabled]="reservationForm.invalid || isLoading"
-                  [class]="'inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] ' +
-                  (reservationForm.invalid || isLoading ? 'bg-blue-600/60 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700')">
-            <span *ngIf="!isLoading">
-              <i class="fa-solid {{ isEditMode ? 'fa-save' : 'fa-plus' }} mr-2"></i> {{ submitButtonText }}
-            </span>
-            <span *ngIf="isLoading" class="flex items-center">
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Processing...
-            </span>
-          </button>
-        </div>
+        <button type="submit" [disabled]="isSubmitting"
+                class="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-[var(--seconday-background-color)] shadow-sm disabled:opacity-50">
+          <i class="fas fa-spinner fa-spin mr-2" *ngIf="isSubmitting"></i>
+          {{ isSubmitting ? ('admin.reservations.create.buttons.updating' | translate) : (isEditMode ? ('admin.reservations.create.buttons.update' | translate) : ('admin.reservations.create.buttons.create' | translate)) }}
+        </button>
       </div>
     </div>
   </form>

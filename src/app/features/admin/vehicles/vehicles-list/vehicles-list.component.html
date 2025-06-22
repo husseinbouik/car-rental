@@ -1,20 +1,20 @@
 <div class="p-4 sm:p-6 bg-[var(--primary-background-color)] text-[var(--text-color)] shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Vehicle Management</h2>
+  <h2 class="text-2xl font-bold mb-4">{{ 'admin.vehicles.title' | translate }}</h2>
 
   <!-- Header Controls: Search, Export & Create -->
   <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-4">
     <input type="search" #searchInput [(ngModel)]="searchTerm" (input)="onSearchInput()"
-           placeholder="Search by make, model, plate..."
+           [placeholder]="'admin.vehicles.list.search_placeholder' | translate"
            class="w-full sm:w-2/5 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-[var(--secondary-background-color)] text-[var(--text-color)] border-gray-600 placeholder-gray-500 text-sm">
 
     <div class="flex space-x-2 sm:space-x-3">
-      <button (click)="exportToExcel()" title="Export current view to Excel"
+      <button (click)="exportToExcel()" [title]="'admin.vehicles.list.export' | translate"
               class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
-        <i class="fa-solid fa-file-excel text-base sm:text-sm mr-1 sm:mr-2"></i> Export
+        <i class="fa-solid fa-file-excel text-base sm:text-sm mr-1 sm:mr-2"></i> {{ 'admin.vehicles.list.export' | translate }}
       </button>
-      <button (click)="createVoiture()" title="Create New Vehicle"
+      <button (click)="createVoiture()" [title]="'admin.vehicles.list.create' | translate"
               class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center text-xs sm:text-sm shadow transition-colors duration-150 ease-in-out">
-        <i class="fa-solid fa-plus text-base sm:text-sm mr-1 sm:mr-2"></i> Create
+        <i class="fa-solid fa-plus text-base sm:text-sm mr-1 sm:mr-2"></i> {{ 'admin.vehicles.list.create' | translate }}
       </button>
     </div>
   </div>
@@ -26,78 +26,78 @@
         <tr class="text-left text-xs uppercase tracking-wider">
           <!-- Headers -->
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('id')">
-            ID <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i>
+            {{ 'admin.vehicles.list.table.id' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('id')"></i>
           </th>
-           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('vname')"> <!-- Consider sorting by vname if available -->
-            Name <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('vname')"></i>
+           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('vname')">
+            {{ 'admin.vehicles.list.table.name' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('vname')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('marque')">
-            Make <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('marque')"></i>
+            {{ 'admin.vehicles.list.table.make' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('marque')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('modele')">
-            Model <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('modele')"></i>
+            {{ 'admin.vehicles.list.table.model' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('modele')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('matricule')">
-            License Plate <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('matricule')"></i>
+            {{ 'admin.vehicles.list.table.license_plate' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('matricule')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600" (click)="sortTable('type')">
-            Type <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('type')"></i>
+            {{ 'admin.vehicles.list.table.type' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('type')"></i>
           </th>
            <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('carburant')">
-            Fuel <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('carburant')"></i>
+            {{ 'admin.vehicles.list.table.fuel' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('carburant')"></i>
           </th>
            <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('estAutomate')">
-            Trans. <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('estAutomate')"></i>
+            {{ 'admin.vehicles.list.table.transmission' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('estAutomate')"></i>
           </th>
           <th class="py-3 px-4 border-b border-gray-600 cursor-pointer hover:bg-gray-600 whitespace-nowrap" (click)="sortTable('prixDeBase')">
-            Base Price <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('prixDeBase')"></i>
+            {{ 'admin.vehicles.list.table.base_price' | translate }} <i class="fa-solid ml-1 opacity-70" [ngClass]="getSortIcon('prixDeBase')"></i>
           </th>
-          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Photo</th>
-          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">Actions</th>
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">{{ 'admin.vehicles.list.table.photo' | translate }}</th>
+          <th class="py-3 px-4 border-b border-gray-600 text-center whitespace-nowrap">{{ 'admin.vehicles.list.table.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-700">
         <!-- Loading Indicator Row -->
-        <tr *ngIf="isLoading"> <!-- Assume isLoading property exists -->
-            <td colspan="11" class="text-center py-4 px-4 text-gray-400 animate-pulse">Loading vehicles...</td> <!-- Increased colspan -->
+        <tr *ngIf="isLoading">
+            <td colspan="11" class="text-center py-4 px-4 text-gray-400 animate-pulse">{{ 'admin.vehicles.list.messages.loading' | translate }}</td>
         </tr>
         <!-- No Results Row -->
          <tr *ngIf="!isLoading && paginatedVoitures.length === 0">
-             <td colspan="11" class="text-center py-4 px-4 text-gray-400"> <!-- Increased colspan -->
-                {{ searchTerm ? 'No vehicles found matching "' + searchTerm + '".' : 'No vehicles available.' }}
+             <td colspan="11" class="text-center py-4 px-4 text-gray-400">
+                {{ searchTerm ? ('admin.vehicles.list.messages.no_matching' | translate: {searchTerm: searchTerm}) : ('admin.vehicles.list.messages.no_vehicles' | translate) }}
              </td>
          </tr>
         <!-- Vehicle Data Rows -->
         <tr *ngFor="let voiture of paginatedVoitures" class="transition hover:bg-[var(--hover-background-color)]">
           <!-- Data Cells -->
           <td class="py-2 px-4 font-medium">{{ voiture.id }}</td>
-           <td class="py-2 px-4">{{ voiture.vname ?? 'N/A' }}</td> <!-- Display vname -->
+           <td class="py-2 px-4">{{ voiture.vname ?? 'N/A' }}</td>
           <td class="py-2 px-4">{{ voiture.marque ?? 'N/A' }}</td>
           <td class="py-2 px-4">{{ voiture.modele ?? 'N/A' }}</td>
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.matricule ?? 'N/A' }}</td>
           <td class="py-2 px-4">{{ voiture.type ?? 'N/A' }}</td>
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.carburant ?? 'N/A' }}</td>
-          <td class="py-2 px-4 whitespace-nowrap">{{ voiture.estAutomate ? 'Auto' : 'Manual' }}</td>
+          <td class="py-2 px-4 whitespace-nowrap">{{ voiture.estAutomate ? ('modal.transmission_auto' | translate) : ('modal.transmission_manual' | translate) }}</td>
           <td class="py-2 px-4 text-right whitespace-nowrap">{{ voiture.prixDeBase | number:'1.2-2' }} €</td>
-          <!-- In your table, update the photo column -->
-<td class="py-2 px-4 text-center">
-  <img *ngIf="getVehiclePhotoUrl(voiture.id)"
-       [src]="getVehiclePhotoUrl(voiture.id)"
-       alt="Vehicle Photo"
-       class="h-10 w-auto mx-auto rounded">
-  <span *ngIf="!getVehiclePhotoUrl(voiture.id)" class="text-gray-400">No Photo</span>
-</td>
+          <!-- Photo column -->
+          <td class="py-2 px-4 text-center">
+            <img *ngIf="getVehiclePhotoUrl(voiture.id)"
+                 [src]="getVehiclePhotoUrl(voiture.id)"
+                 [alt]="'vehicle.generic_alt' | translate"
+                 class="h-10 w-auto mx-auto rounded">
+            <span *ngIf="!getVehiclePhotoUrl(voiture.id)" class="text-gray-400">{{ 'admin.vehicles.list.table.photo' | translate }}</span>
+          </td>
 
           <td class="py-2 px-4 text-center whitespace-nowrap">
             <div class="flex justify-center items-center space-x-1 sm:space-x-2">
               <!-- Action Buttons -->
-              <button (click)="viewDetails(voiture)" title="View Details" class="text-green-400 hover:text-green-600 p-1 text-base">
+              <button (click)="viewDetails(voiture)" [title]="'admin.vehicles.list.actions.view' | translate" class="text-green-400 hover:text-green-600 p-1 text-base">
                 <i class="fa-solid fa-eye fa-fw"></i>
               </button>
-              <button (click)="editVoiture(voiture)" title="Edit Vehicle" class="text-blue-400 hover:text-blue-600 p-1 text-base">
+              <button (click)="editVoiture(voiture)" [title]="'admin.vehicles.list.actions.edit' | translate" class="text-blue-400 hover:text-blue-600 p-1 text-base">
                 <i class="fa-solid fa-edit fa-fw"></i>
               </button>
-              <button (click)="deleteVoiture(voiture)" title="Delete Vehicle" class="text-red-400 hover:text-red-600 p-1 text-base">
+              <button (click)="deleteVoiture(voiture)" [title]="'admin.vehicles.list.actions.delete' | translate" class="text-red-400 hover:text-red-600 p-1 text-base">
                 <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </div>
@@ -107,14 +107,14 @@
     </table>
   </div>
 
-  <!-- Pagination (Using the style you provided) -->
+  <!-- Pagination -->
   <div class="flex flex-col sm:flex-row justify-between items-center mt-6 text-xs sm:text-sm text-[var(--text-color)] gap-3">
       <!-- Info Text -->
       <div>
-          Showing {{ paginatedVoitures.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
-          to {{ Math.min(currentPage * itemsPerPage, voitures.length) }}
-          of {{ voitures.length }} entries
-          <span *ngIf="allVoitures.length !== voitures.length" class="text-gray-400 ml-1">(filtered from {{ allVoitures.length }} total)</span>
+          {{ 'admin.vehicles.list.pagination.showing' | translate }} {{ paginatedVoitures.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0 }}
+          {{ 'admin.vehicles.list.pagination.to' | translate }} {{ Math.min(currentPage * itemsPerPage, voitures.length) }}
+          {{ 'admin.vehicles.list.pagination.of' | translate }} {{ voitures.length }} {{ 'admin.vehicles.list.pagination.entries' | translate }}
+          <span *ngIf="allVoitures.length !== voitures.length" class="text-gray-400 ml-1">({{ 'admin.vehicles.list.pagination.filtered_from' | translate }} {{ allVoitures.length }} {{ 'admin.vehicles.list.pagination.total' | translate }})</span>
       </div>
       <!-- Pagination Controls -->
       <div class="flex items-center">
@@ -122,8 +122,8 @@
         <button (click)="prevPage()" [disabled]="currentPage === 1"
                 [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1, 'hover:bg-[var(--hover-background-color)]': currentPage !== 1}"
                 class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
-                aria-label="Go to previous page" title="Previous Page">
-          <i class="fa-solid fa-chevron-left mr-1 text-xs"></i> Previous
+                [attr.aria-label]="'admin.vehicles.list.pagination.previous' | translate" [title]="'admin.vehicles.list.pagination.previous' | translate">
+          <i class="fa-solid fa-chevron-left mr-1 text-xs"></i> {{ 'admin.vehicles.list.pagination.previous' | translate }}
         </button>
 
         <!-- Page number buttons -->
@@ -144,10 +144,10 @@
         <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0"
                 [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0, 'hover:bg-[var(--hover-background-color)]': currentPage !== totalPages && totalPages !== 0}"
                 class="px-3 py-1 border rounded-lg border-gray-600 mx-1 transition-colors duration-150 ease-in-out flex items-center"
-                 aria-label="Go to next page" title="Next Page">
-          Next <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                 [attr.aria-label]="'admin.vehicles.list.pagination.next' | translate" [title]="'admin.vehicles.list.pagination.next' | translate">
+          {{ 'admin.vehicles.list.pagination.next' | translate }} <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
         </button>
       </div>
-  </div> <!-- End Pagination -->
+  </div>
 
 </div>

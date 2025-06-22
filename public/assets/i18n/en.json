@@ -42,6 +42,7 @@
     "pickup_date": "Pickup Date",
     "return_date": "Return Date",
     "button": "Search",
+    "searching": "Searching...",
     "reset_button": "Reset"
   },
   "location": {
@@ -65,7 +66,10 @@
   },
   "vehicle": {
     "day": "day",
+    "per_day": "per day",
     "rent": "Rent Now",
+    "reserve": "Reserve",
+    "view_details": "View Details",
     "seats": "seats",
     "available": "Available",
     "unavailable": "Unavailable",
@@ -74,7 +78,19 @@
     "photo_error": "Failed to load image"
   },
   "vehicle_browser": {
-    "title": "Vehicle Browser"
+    "title": "Vehicle Browser",
+    "subtitle": "Discover our extensive fleet of vehicles. Find the perfect car for your journey with our advanced search and filtering options.",
+    "available_vehicles": "Available Vehicles",
+    "vehicle": "vehicle",
+    "vehicles": "vehicles",
+    "sort_by": "Sort by",
+    "sort_name": "Name",
+    "sort_price_low": "Price: Low to High",
+    "sort_price_high": "Price: High to Low",
+    "sort_seats": "Seats",
+    "view": "View",
+    "loading_message": "Please wait while we load our vehicle fleet...",
+    "try_again": "Try Again"
   },
   "features": {
     "title": "Why Choose Us?",
@@ -165,6 +181,9 @@
     "checking": "Checking...",
     "selected_dates": "Selected Dates",
     "change_dates": "Change Dates",
+    "save_dates": "Save Dates",
+    "cancel": "Cancel",
+    "processing": "Processing...",
     "submitting": "Submitting...",
     "rental_success": "Rental request submitted successfully! Reservation ID: {{reservationId}}",
     "error_creating_reservation": "Failed to create reservation. Please try again.",
@@ -177,7 +196,15 @@
       "return_date_after": "Return date must be after pickup date.",
       "pickup_date_past": "Pickup date cannot be in the past."
     },
-    "rental_submitted": "Rental request submitted successfully! We'll contact you shortly."
+    "rental_submitted": "Rental request submitted successfully! We'll contact you shortly.",
+    "reservation_success": "Reservation Successful!",
+    "reservation_created": "Reservation Ready",
+    "reservation_created_message": "Your reservation details are ready. Please proceed to payment to complete your booking.",
+    "vehicle": "Vehicle",
+    "total_price": "Total Price",
+    "continue_browsing": "Continue Browsing",
+    "proceed_to_payment": "Proceed to Payment",
+    "view_reservations": "View My Reservations"
   },
   "defaultCarburant": "N/A",
   "defaultType": "Vehicle",
@@ -216,10 +243,10 @@
       "actions": "Actions"
     },
     "status": {
-      "Pending": "Pending",
-      "Confirmed": "Confirmed",
-      "Cancelled": "Cancelled",
-      "Completed": "Completed"
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
     },
     "cancel_button": "Cancel",
     "cancel_modal": {
@@ -233,28 +260,53 @@
   },
   "login": {
     "title": "Sign In",
+    "welcome": "Welcome back! Please sign in to your account.",
     "username": "Username",
+    "username_placeholder": "Enter your username",
     "password": "Password",
+    "password_placeholder": "Enter your password",
     "signin": "Sign In",
-    "signing_in": "Signing in...",
+    "signing_in": "Signing In...",
     "forgot_password": "Forgot password?",
     "no_account": "Don't have an account?",
-    "signup_link": "Sign up"
+    "signup_link": "Sign up now",
+    "remember_me": "Remember me",
+    "or_continue_with": "Or continue with",
+    "demo_credentials": "Demo Credentials",
+    "validation": {
+      "username_required": "Username is required",
+      "password_required": "Password is required"
+    }
   },
   "signup": {
     "title": "Sign Up",
+    "subtitle": "Create your account to start renting cars",
     "username": "Username",
-    "email": "Email",
+    "username_placeholder": "Choose a username",
+    "email": "Email Address",
+    "email_placeholder": "Enter your email address",
     "password": "Password",
+    "password_placeholder": "Create a strong password",
     "confirm_password": "Confirm Password",
-    "signup": "Sign Up",
-    "processing": "Processing...",
-    "username_required": "Username must be at least 3 characters",
-    "email_required": "Please enter a valid email",
-    "password_required": "Password must be at least 6 characters",
-    "password_mismatch": "Passwords do not match",
+    "confirm_password_placeholder": "Confirm your password",
+    "signup": "Create Account",
+    "processing": "Creating Account...",
     "has_account": "You already have an account?",
-    "login_link": "Sign in"
+    "login_link": "Sign in",
+    "terms_agreement": "I agree to the",
+    "terms_of_service": "Terms of Service",
+    "and": "and",
+    "privacy_policy": "Privacy Policy",
+    "validation": {
+      "username_required": "Username must be at least 3 characters",
+      "email_required": "Please enter a valid email address",
+      "password_required": "Password must be at least 6 characters",
+      "password_mismatch": "Passwords do not match",
+      "username_good": "Username looks good!",
+      "email_good": "Email looks good!",
+      "password_good": "Password meets requirements!",
+      "passwords_match": "Passwords match!"
+    }
   },
   "sidebar": {
     "browse_vehicles": "Browse Vehicles",
@@ -300,11 +352,108 @@
     "processing": "Processing Payment...",
     "security_note": "Your payment information is secure and encrypted"
   },
+  "profile": {
+    "title": "Profile Information",
+    "subtitle": "Manage your account information",
+    "loading": "Loading your profile...",
+    "personal_info": "Personal Information",
+    "contact_info": "Contact Information",
+    "identification_documents": "Identification Documents",
+    "driving_license_info": "Driving License Information",
+    "photos": "Photos",
+    "security": "Security",
+    "form": {
+      "first_name": "Full Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "address": "Address",
+      "nationality": "Nationality",
+      "foreign_address": "Foreign Address (If applicable)",
+      "city": "City",
+      "country": "Country",
+      "cin": "CIN / ID Card Number",
+      "cin_issue_date": "CIN / ID Card Issue Date",
+      "passport_number": "Passport Number",
+      "passport_issuer": "Passport Issuer",
+      "license_number": "License Number",
+      "license_issue_date": "License Issue Date",
+      "license_issue_location": "License Issue Location",
+      "cin_photo": "CIN Photo",
+      "license_photo": "License Photo",
+      "new_cin_preview": "New CIN Preview",
+      "current_cin": "Current CIN",
+      "no_cin_photo": "No CIN photo uploaded yet",
+      "new_license_preview": "New License Preview",
+      "current_license": "Current License",
+      "no_license_photo": "No license photo uploaded yet",
+      "required_fields": "are required",
+      "current_password": "Current Password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password"
+    },
+    "buttons": {
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "refresh": "Refresh",
+      "cancel": "Cancel",
+      "change_password": "Change Password"
+    },
+    "validation": {
+      "first_name_required": "Full name is required",
+      "email_invalid": "Please enter a valid email address",
+      "phone_required": "Phone number is required",
+      "address_required": "Address is required",
+      "nationality_required": "Nationality is required",
+      "cin_required": "CIN/ID Card number is required"
+    }
+  },
+  "reset_password": {
+    "title": "Reset Password",
+    "subtitle": "Enter your new password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "reset": "Reset Password",
+    "resetting": "Resetting...",
+    "success": "Password reset successfully!",
+    "validation": {
+      "password_required": "Password is required",
+      "password_mismatch": "Passwords do not match"
+    }
+  },
+  "reset_password_request": {
+    "title": "Reset Password Request",
+    "subtitle": "Enter your email to receive a password reset link",
+    "email": "Email Address",
+    "email_placeholder": "Enter your email address",
+    "request": "Send Reset Link",
+    "requesting": "Sending...",
+    "success": "Password reset link sent to your email!",
+    "back_to_login": "Back to Login"
+  },
+  "verify_email": {
+    "title": "Verify Your Email",
+    "subtitle": "Please check your email and click the verification link",
+    "resend": "Resend Verification Email",
+    "resending": "Sending...",
+    "success": "Verification email sent!",
+    "back_to_login": "Back to Login"
+  },
   "admin": {
     "dashboard": {
       "title": "Admin Dashboard",
       "welcome": "Welcome to the Admin Dashboard",
       "overview": "System Overview",
+      "add_vehicle": "Add Vehicle",
+      "create_reservation": "Create Reservation",
+      "add_client": "Add Client",
+      "recent_reservations": "Recent Reservations",
+      "no_recent_reservations": "No recent reservations to display.",
+      "system_alerts": "System Alerts",
+      "no_alerts": "No system alerts at this time.",
+      "revenue_chart": "Revenue Chart",
+      "vehicle_usage": "Vehicle Usage",
+      "chart_placeholder": "Chart will be displayed here",
       "stats": {
         "total_vehicles": "Total Vehicles",
         "total_reservations": "Total Reservations",
@@ -312,9 +461,8 @@
         "total_revenue": "Total Revenue",
         "availability_rate": "Availability Rate",
         "cancellation_rate": "Cancellation Rate",
-        "average_duration": "Average Duration",
-        "revenue_per_vehicle": "Revenue per Vehicle",
-        "reservations_per_vehicle": "Reservations per Vehicle"
+        "avg_rental_duration": "Avg. Rental Duration",
+        "monthly_growth": "Monthly Growth"
       },
       "filters": {
         "date_range": "Date Range",
@@ -330,6 +478,14 @@
         "reservations_period": "Reservations by Period",
         "vehicle_usage": "Vehicle Usage",
         "monthly_stats": "Monthly Statistics"
+      },
+      "quick_actions": {
+        "manage_vehicles": "Manage Vehicles",
+        "manage_vehicles_desc": "Add, edit, or remove vehicles from your fleet",
+        "view_reservations": "View Reservations",
+        "view_reservations_desc": "Monitor all current and past reservations",
+        "manage_clients": "Manage Clients",
+        "manage_clients_desc": "View and manage client information"
       }
     },
     "vehicles": {
@@ -415,7 +571,20 @@
           "delete_success": "Vehicle deleted successfully!",
           "delete_error": "Failed to delete vehicle. Please try again.",
           "export_success": "Vehicle data exported successfully!",
-          "export_error": "Failed to export vehicle data. Please try again."
+          "export_error": "Failed to export vehicle data. Please try again.",
+          "loading": "Loading vehicles...",
+          "no_vehicles": "No vehicles available.",
+          "no_matching": "No vehicles found matching \"{{searchTerm}}\"."
+        },
+        "pagination": {
+          "showing": "Showing",
+          "to": "to",
+          "of": "of",
+          "entries": "entries",
+          "filtered_from": "filtered from",
+          "total": "total",
+          "previous": "Previous",
+          "next": "Next"
         }
       },
       "details": {
@@ -454,39 +623,41 @@
         "edit_title": "Edit Reservation",
         "edit_subtitle": "Update reservation details",
         "steps": {
-          "dates": "Select Dates",
-          "vehicle": "Choose Vehicle",
-          "details": "Complete Details"
+          "step1": "Select Dates",
+          "step2": "Choose Vehicle",
+          "step3": "Complete Reservation"
         },
         "form": {
-          "start_date": "Start Date",
-          "end_date": "End Date",
           "client": "Client",
           "select_client": "Select a Client",
           "vehicle": "Vehicle",
-          "select_vehicle": "Select a Vehicle",
+          "selected_vehicle": "Selected Vehicle",
+          "pickup_date": "Pickup Date",
+          "return_date": "Return Date",
           "total_amount": "Total Amount",
+          "deposit": "Deposit",
           "status": "Status",
-          "notes": "Notes",
-          "notes_placeholder": "Enter any additional notes"
+          "secondary_driver": "Secondary Driver",
+          "none": "None / Not Applicable"
         },
         "buttons": {
           "create": "Create Reservation",
           "update": "Update Reservation",
-          "check_availability": "Check Availability",
+          "cancel": "Cancel",
           "next": "Next",
           "previous": "Previous",
-          "cancel": "Cancel"
+          "change": "Change"
         },
         "messages": {
           "create_success": "Reservation created successfully!",
           "update_success": "Reservation updated successfully!",
           "create_error": "Failed to create reservation. Please try again.",
           "update_error": "Failed to update reservation. Please try again.",
-          "availability_error": "Failed to check availability. Please try again.",
-          "no_vehicles": "No vehicles available for the selected dates.",
-          "select_dates": "Please select both start and end dates.",
-          "invalid_dates": "End date must be after start date."
+          "load_error": "Failed to load reservation data. Please try again.",
+          "vehicle_unavailable": "Warning: The originally selected vehicle is no longer available for these dates.",
+          "checking_availability": "Checking vehicle availability...",
+          "no_vehicles_available": "No vehicles available for the selected dates.",
+          "try_different_dates": "Try different dates"
         }
       },
       "list": {
@@ -494,14 +665,16 @@
         "search_placeholder": "Search by ID, name, car, status...",
         "export": "Export to Excel",
         "create": "Create New Reservation",
+        "to": "to",
         "table": {
           "id": "ID",
           "client": "Client",
-          "vehicle": "Vehicle",
-          "start_date": "Start Date",
-          "end_date": "End Date",
-          "total_amount": "Total Amount",
+          "car": "Car",
+          "dates": "Dates",
+          "total": "Total",
+          "deposit": "Deposit",
           "status": "Status",
+          "sec_driver": "Sec. Driver",
           "actions": "Actions"
         },
         "status": {
@@ -514,6 +687,21 @@
           "view": "View Details",
           "edit": "Edit",
           "delete": "Delete"
+        },
+        "messages": {
+          "loading": "Loading reservations...",
+          "no_reservations": "No reservations available.",
+          "no_matching": "No reservations found matching \"{{searchTerm}}\"."
+        },
+        "pagination": {
+          "showing": "Showing",
+          "to": "to",
+          "of": "of",
+          "entries": "entries",
+          "filtered_from": "filtered from",
+          "total": "total",
+          "previous": "Previous",
+          "next": "Next"
         }
       },
       "details": {
@@ -533,45 +721,13 @@
       "create": {
         "title": "Create New Client",
         "subtitle": "Add a new client to the system",
-        "edit_title": "Edit Client",
-        "edit_subtitle": "Update client information",
-        "basic_info": "Basic Information",
-        "contact_info": "Contact Information",
-        "documents": "Documents",
         "form": {
-          "full_name": "Full Name",
-          "full_name_placeholder": "Enter client's full name",
+          "name": "Full Name",
           "phone": "Phone Number",
-          "phone_placeholder": "Enter phone number",
-          "email": "Email",
-          "email_placeholder": "Enter email address",
+          "email": "Email Address",
           "address": "Address",
-          "address_placeholder": "Enter address",
-          "nationality": "Nationality",
-          "nationality_placeholder": "Enter nationality",
-          "foreign_address": "Foreign Address",
-          "foreign_address_placeholder": "Enter foreign address if applicable",
-          "cin": "CIN Number",
-          "cin_placeholder": "Enter CIN number",
-          "license": "Driver's License",
-          "license_placeholder": "Enter driver's license number",
-          "cin_photo": "CIN Photo",
-          "license_photo": "License Photo"
-        },
-        "buttons": {
-          "create": "Create Client",
-          "update": "Update Client",
-          "cancel": "Cancel",
-          "saving": "Saving...",
-          "creating": "Creating...",
-          "updating": "Updating..."
-        },
-        "messages": {
-          "create_success": "Client created successfully!",
-          "update_success": "Client updated successfully!",
-          "create_error": "Failed to create client. Please try again.",
-          "update_error": "Failed to update client. Please try again.",
-          "load_error": "Failed to load client data. Please try again."
+          "cin": "CIN",
+          "license": "Driver's License"
         }
       },
       "list": {
@@ -750,5 +906,11 @@
       "BUTTON_CANCEL": "Cancel",
       "BUTTON_SAVING": "Saving..."
     }
+  },
+  "access_denied": {
+    "title": "Access Denied",
+    "message": "You don't have permission to access this page.",
+    "back_home": "Back to Home",
+    "contact_admin": "Contact Administrator"
   }
 }

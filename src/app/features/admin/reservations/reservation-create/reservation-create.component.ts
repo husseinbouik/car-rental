@@ -57,6 +57,7 @@ private dateChangeSubject = new Subject<void>();
   // Loading states
   isLoading = true;
   isLoadingAvailableVehicles = false;
+  isSubmitting = false;
 
   // Error states
   errorMessage: string | null = null;

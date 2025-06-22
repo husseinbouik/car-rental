@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { PaymentsExpensesRoutingModule } from './payments-expenses-routing.module';
 import { PaymentExpensesListComponent } from './payments-expenses-list/payments-expenses-list.component';
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     PaymentsExpensesRoutingModule,
-    FormsModule
+    FormsModule,
+    TranslateModule.forChild()
   ]
 })
 export class PaymentsExpensesModule { }

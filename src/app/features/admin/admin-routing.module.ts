@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role-guard.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccessDeniedComponent } from '../access-denied/access-denied.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -63,7 +64,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes), SharedModule],
   exports: [RouterModule]
 })
 export class AdminRoutingModule { }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ClientsRoutingModule } from './clients-routing.module';
 import { ClientListComponent } from './clients-list/clients-list.component';
@@ -17,7 +18,8 @@ import { ClientDetailsComponent } from './client-details/client-details.componen
   imports: [
     CommonModule,
     ClientsRoutingModule,
-    FormsModule
+    FormsModule,
+    TranslateModule.forChild()
   ]
 })
 export class ClientsModule { }

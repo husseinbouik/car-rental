@@ -13,6 +13,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BaseChartDirective } from 'ng2-charts';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { BaseChartDirective } from 'ng2-charts';
     SidebarComponent,
     NavbarComponent,
     FontAwesomeModule,
-    BaseChartDirective
+    BaseChartDirective,
+    TranslateModule.forChild()
   ]
 })
 export class AdminModule { }
