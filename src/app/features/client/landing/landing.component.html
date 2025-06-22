@@ -1,23 +1,23 @@
 <!-- Remove bg-gray-100 dark:bg-gray-900 here. Body CSS handles the background -->
 <!-- MAIN PAGE CONTENT WRAPPER -->
 <div class="min-h-screen transition-colors duration-300">
-  <!-- Header -->
-  <header class="theme-card-bg shadow-md sticky top-0 z-50 transition-colors duration-300">
+  <!-- Enhanced Header -->
+  <header class="theme-card-bg shadow-lg sticky top-0 z-50 transition-colors duration-300">
     <div class="container mx-auto px-4 py-4 flex items-center justify-between">
       <!-- Logo -->
-      <a href="#" class="text-2xl font-bold theme-primary-text flex items-center">
-        <i class="fas fa-car mr-2"></i>
+      <a href="#" class="text-2xl font-bold theme-primary-text flex items-center hover:scale-105 transition-transform">
+        <i class="fas fa-car mr-3 text-2xl"></i>
         <span>{{ 'brand' | translate }}</span>
       </a>
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:block">
-        <ul class="flex space-x-6">
+        <ul class="flex space-x-8">
           <li *ngFor="let item of navItems">
             <a [href]="item.link"
                (click)="scrollToSection(item.link, $event)"
-               class="hover:theme-primary-text transition duration-300"
-               [class.theme-primary-text]="activeSection === item.link.substring(1)">
+               class="nav-link"
+               [class.active]="activeSection === item.link.substring(1)">
               {{ item.title | translate }}
             </a>
           </li>
@@ -28,7 +28,7 @@
       <div class="flex items-center space-x-4">
         <!-- Language Selector -->
         <select [(ngModel)]="currentLang" (change)="switchLanguage($event)"
-                class="theme-card-bg theme-text-main px-3 py-1 rounded-md border theme-border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                class="form-input py-1 px-3 text-sm">
           <option value="en">English</option>
           <option value="fr">Français</option>
           <option value="es">Español</option>
@@ -37,24 +37,24 @@
 
         <!-- Dark Mode Toggle -->
         <button (click)="toggleDarkMode()"
-                class="p-2 rounded-full theme-hover-bg transition-colors">
+                class="btn btn-secondary btn-sm p-2">
           <i class="fas fa-moon dark:hidden"></i>
           <i class="fas fa-sun hidden dark:block"></i>
         </button>
 
         <!-- Mobile Menu Button -->
-        <button (click)="toggleMobileMenu()" class="md:hidden p-2 rounded-full theme-hover-bg">
+        <button (click)="toggleMobileMenu()" class="md:hidden btn btn-secondary btn-sm p-2">
           <i class="fas fa-bars"></i>
         </button>
       </div>
     </div>
 
     <!-- Mobile Menu -->
-    <div *ngIf="mobileMenuOpen" class="md:hidden theme-card-bg py-4 px-6 shadow-lg">
+    <div *ngIf="mobileMenuOpen" class="md:hidden theme-card-bg py-4 px-6 shadow-lg border-t theme-border">
       <ul class="space-y-4">
         <li *ngFor="let item of navItems">
           <a [href]="item.link"
-             class="block hover:theme-primary-text transition duration-300"
+             class="nav-link block"
              (click)="scrollToSection(item.link, $event); toggleMobileMenu()">
             {{ item.title | translate }}
           </a>
@@ -63,126 +63,182 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-700 dark:to-purple-800 py-20 md:py-32">
-    <div class="container mx-auto px-4 text-center">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">{{ 'hero.title' | translate }}</h1>
-      <p class="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
+  <!-- Enhanced Hero Section -->
+  <section id="home" class="hero bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 dark:from-blue-800 dark:via-purple-800 dark:to-blue-900 py-20 md:py-32 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+
+    <div class="container mx-auto px-4 text-center relative z-10">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+        {{ 'hero.title' | translate }}
+      </h1>
+      <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed">
         {{ 'hero.subtitle' | translate }}
       </p>
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="btn btn-primary btn-lg">
           <i class="fas fa-car mr-2"></i> {{ 'hero.cta1' | translate }}
         </a>
-        <a href="#services" (click)="scrollToSection('#services', $event)" class="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white">
+        <a href="#services" (click)="scrollToSection('#services', $event)" class="btn btn-secondary btn-lg">
           <i class="fas fa-info-circle mr-2"></i> {{ 'hero.cta2' | translate }}
         </a>
       </div>
 
-      <!-- Stats -->
-      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        <div *ngFor="let stat of stats" class="bg-white/10 backdrop-blur-sm p-4 rounded-lg text-white">
-          <div class="text-3xl font-bold">{{ stat.value }}</div>
-          <div class="text-sm">{{ stat.label | translate }}</div>
+      <!-- Enhanced Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div *ngFor="let stat of stats" class="bg-white/10 backdrop-blur-sm p-6 rounded-xl text-white border border-white/20 hover:bg-white/20 transition-all duration-300">
+          <div class="text-4xl font-bold mb-2">{{ stat.value }}</div>
+          <div class="text-sm opacity-90">{{ stat.label | translate }}</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Search Section -->
+  <!-- Enhanced Search Section -->
   <section class="relative -mt-10 z-10">
     <div class="container mx-auto px-4">
-      <div class="theme-card-bg rounded-xl shadow-xl p-6 max-w-6xl mx-auto">
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'search.title' | translate }}</h3>
-        <!-- Added (submit) handler to the form -->
-        <form (submit)="performSearch($event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <!-- Updated label text and translation key -->
-            <label for="vehicle-name" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.vehicle_name' | translate }}</label>
-            <!-- Replaced select with input type="text" and added ngModel -->
-            <input type="text" id="vehicle-name" [(ngModel)]="searchVehicleName" name="searchVehicleName"
-                   [placeholder]="'search.vehicle_name_placeholder' | translate"
-                   class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div>
-            <label for="pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.pickup_date' | translate }}</label>
-            <input type="date" id="pickup-date" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div>
-            <label for="return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.return_date' | translate }}</label>
-            <input type="date" id="return-date" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div class="flex items-end">
-            <!-- Changed button type to submit -->
-            <button type="submit" class="w-full theme-primary-button font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-              {{ 'search.button' | translate }}
-            </button>
+      <div class="search-container">
+        <div class="flex items-center mb-6">
+          <i class="fas fa-search text-2xl text-blue-500 mr-3"></i>
+          <h3 class="text-2xl font-semibold theme-text-main">{{ 'search.title' | translate }}</h3>
+        </div>
+
+        <form (submit)="performSearch($event)" class="search-form">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="search-input-group">
+              <label for="vehicle-name" class="form-label">
+                <i class="fas fa-car mr-2 text-blue-500"></i>
+                {{ 'search.vehicle_name' | translate }}
+              </label>
+              <input type="text" id="vehicle-name" [(ngModel)]="searchVehicleName" name="searchVehicleName"
+                     [placeholder]="'search.vehicle_name_placeholder' | translate"
+                     class="form-input">
+            </div>
+
+            <div class="search-input-group">
+              <label for="pickup-date" class="form-label">
+                <i class="fas fa-calendar-plus mr-2 text-blue-500"></i>
+                {{ 'search.pickup_date' | translate }}
+              </label>
+              <input type="date" id="pickup-date" class="form-input">
+            </div>
+
+            <div class="search-input-group">
+              <label for="return-date" class="form-label">
+                <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+                {{ 'search.return_date' | translate }}
+              </label>
+              <input type="date" id="return-date" class="form-input">
+            </div>
+
+            <div class="search-actions">
+              <button type="submit" class="btn btn-primary btn-full">
+                <i class="fas fa-search mr-2"></i>
+                {{ 'search.button' | translate }}
+              </button>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </section>
 
-  <!-- Vehicles Section -->
-  <section id="vehicles" class="py-16">
+  <!-- Enhanced Vehicles Section -->
+  <section id="vehicles" class="py-20">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'vehicles.title' | translate }}</h2>
-        <p class="theme-text-muted max-w-2xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold theme-text-main mb-6">{{ 'vehicles.title' | translate }}</h2>
+        <p class="theme-text-muted text-lg max-w-3xl mx-auto leading-relaxed">
           {{ 'vehicles.subtitle' | translate }}
         </p>
       </div>
 
       <!-- Loading or Error Messages -->
-      <div *ngIf="loadingVehicles" class="text-center theme-primary-text text-xl">
-          <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'vehicles.loading' | translate }}
-      </div>
-      <div *ngIf="vehicleError" class="text-center text-red-600 dark:text-red-400 text-xl">
-          <i class="fas fa-exclamation-circle mr-2"></i> {{ vehicleError }}
-      </div>
-      <!-- Updated ngIf to check filteredVehicles.length -->
-      <div *ngIf="!loadingVehicles && !vehicleError && filteredVehicles.length === 0" class="text-center theme-text-muted text-xl">
-          {{ 'vehicles.no_vehicles_found' | translate }}
+      <div *ngIf="loadingVehicles" class="text-center py-12">
+        <div class="loading-spinner mx-auto mb-4"></div>
+        <p class="theme-primary-text text-xl">{{ 'vehicles.loading' | translate }}</p>
+        <p class="theme-text-muted mt-2">Please wait while we load our vehicle fleet...</p>
       </div>
 
-      <!-- Vehicle Grid -->
-      <!-- Updated ngIf and *ngFor to use filteredVehicles -->
+      <div *ngIf="vehicleError" class="text-center py-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-4">
+          <i class="fas fa-exclamation-triangle text-2xl text-red-600 dark:text-red-400"></i>
+        </div>
+        <p class="text-red-600 dark:text-red-400 text-xl mb-2">{{ vehicleError }}</p>
+        <button (click)="fetchVehicles()" class="btn btn-primary mt-4">
+          <i class="fas fa-redo mr-2"></i>
+          Try Again
+        </button>
+      </div>
+
+      <div *ngIf="!loadingVehicles && !vehicleError && filteredVehicles.length === 0" class="text-center py-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+          <i class="fas fa-car text-2xl text-gray-400"></i>
+        </div>
+        <p class="theme-text-muted text-xl">{{ 'vehicles.no_vehicles_found' | translate }}</p>
+      </div>
+
+      <!-- Enhanced Vehicle Grid -->
       <div *ngIf="!loadingVehicles && !vehicleError && filteredVehicles.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div *ngFor="let vehicle of filteredVehicles" class="theme-card-bg rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-xl hover:-translate-y-1">
-          <div class="relative overflow-hidden h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+        <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card">
+          <!-- Vehicle Image -->
+          <div class="vehicle-image">
             <div *ngIf="vehicle.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
-              <i class="fas fa-spinner fa-spin text-3xl theme-primary-text"></i>
+              <div class="loading-spinner"></div>
             </div>
+
             <img *ngIf="vehicle.photoDisplayUrl && !vehicle.isLoadingPhoto && !vehicle.photoError"
                  [src]="vehicle.photoDisplayUrl"
                  [alt]="vehicle.vname || (vehicle.marque && vehicle.modele ? vehicle.marque + ' ' + vehicle.modele : ('vehicle.generic_alt' | translate))"
                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+
             <div *ngIf="(!vehicle.photoDisplayUrl || vehicle.photoError) && !vehicle.isLoadingPhoto"
                  class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">
-              <i class="fas fa-image text-3xl" [class.text-red-500]="vehicle.photoError"></i>
+              <i class="fas fa-image text-4xl" [class.text-red-500]="vehicle.photoError"></i>
               <span *ngIf="vehicle.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
             </div>
           </div>
-          <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-              <h3 class="text-xl font-semibold theme-text-main">{{ vehicle.vname }}</h3>
-            </div>
-            <p class="theme-text-muted mb-4">
-                {{ vehicle.modele }}
-            </p>
-             <div class="grid grid-cols-2 gap-y-2 theme-text-muted text-sm mb-4">
-                 <div class="flex items-center"><i class="fas fa-users mr-2 text-blue-500"></i> {{ vehicle.capacite }} {{ 'vehicle.seats' | translate }}</div>
-                 <div class="flex items-center"><i class="fas fa-gas-pump mr-2 text-blue-500"></i> {{ (vehicle.carburant || 'defaultCarburant') | translate }}</div>
-                 <div class="flex items-center"><i class="fas fa-cogs mr-2 text-blue-500"></i> {{ getTransmissionText(vehicle.estAutomate) }}</div>
-                 <div class="flex items-center"><i class="fas fa-car mr-2 text-blue-500"></i> {{ (vehicle.type || 'defaultType') | translate }}</div>
-             </div>
 
-            <div class="flex justify-between items-center mt-4">
-              <div>
-                <span class="text-2xl font-bold theme-primary-text">${{ vehicle.prixDeBase }}</span>
-                <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+          <!-- Vehicle Content -->
+          <div class="vehicle-content">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="vehicle-title">{{ vehicle.vname }}</h3>
+            </div>
+
+            <p class="theme-text-muted mb-4" *ngIf="vehicle.modele">
+              {{ vehicle.modele }}
+            </p>
+
+            <!-- Vehicle Specifications -->
+            <div class="vehicle-specs">
+              <div class="vehicle-spec">
+                <i class="fas fa-users"></i>
+                <span>{{ vehicle.capacite }} {{ 'vehicle.seats' | translate }}</span>
               </div>
-              <button (click)="openRentalModal(vehicle)" class="theme-primary-button font-medium py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div class="vehicle-spec">
+                <i class="fas fa-gas-pump"></i>
+                <span>{{ (vehicle.carburant || 'defaultCarburant') | translate }}</span>
+              </div>
+              <div class="vehicle-spec">
+                <i class="fas fa-cogs"></i>
+                <span>{{ getTransmissionText(vehicle.estAutomate) }}</span>
+              </div>
+              <div class="vehicle-spec">
+                <i class="fas fa-car"></i>
+                <span>{{ (vehicle.type || 'defaultType') | translate }}</span>
+              </div>
+            </div>
+
+            <!-- Vehicle Price and Action -->
+            <div class="vehicle-price">
+              <div>
+                <span class="price-amount">${{ vehicle.prixDeBase }}</span>
+                <span class="price-period">/{{ 'vehicle.day' | translate }}</span>
+              </div>
+              <button (click)="openRentalModal(vehicle)" class="btn btn-primary btn-sm">
+                <i class="fas fa-key mr-1"></i>
                 {{ 'vehicle.rent' | translate }}
               </button>
             </div>
@@ -191,113 +247,120 @@
       </div>
 
       <div class="mt-12 text-center">
-        <a href="#" class="inline-flex items-center theme-primary-text hover:text-blue-800 dark:hover:text-blue-300 font-semibold transition duration-300">
-          {{ 'vehicles.view_all' | translate }} <i class="fas fa-arrow-right ml-2"></i>
+        <a href="#" class="btn btn-secondary btn-lg">
+          {{ 'vehicles.view_all' | translate }}
+          <i class="fas fa-arrow-right ml-2"></i>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section id="services" class="py-16 theme-alternate-section-bg">
+  <!-- Enhanced Features Section -->
+  <section id="services" class="py-20 theme-alternate-section-bg">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'features.title' | translate }}</h2>
-        <p class="theme-text-muted max-w-2xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold theme-text-main mb-6">{{ 'features.title' | translate }}</h2>
+        <p class="theme-text-muted text-lg max-w-3xl mx-auto leading-relaxed">
           {{ 'features.subtitle' | translate }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div *ngFor="let feature of features" class="theme-card-bg p-6 rounded-lg shadow-md flex flex-col items-center text-center transition-transform hover:-translate-y-2">
-          <div [class]="'bg-' + feature.color + '-100 dark:bg-' + feature.color + '-900/30 p-4 rounded-full mb-4'">
-            <i [class]="'fas ' + feature.icon + ' text-' + feature.color + '-600 dark:text-' + feature.color + '-400 text-2xl'"></i>
+        <div *ngFor="let feature of features" class="card text-center hover:scale-105 transition-transform duration-300">
+          <div class="card-body p-8">
+            <div [class]="'inline-flex items-center justify-center w-16 h-16 bg-' + feature.color + '-100 dark:bg-' + feature.color + '-900/30 rounded-full mb-6'">
+              <i [class]="'fas ' + feature.icon + ' text-' + feature.color + '-600 dark:text-' + feature.color + '-400 text-2xl'"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ feature.title | translate }}</h3>
+            <p class="theme-text-muted leading-relaxed">
+              {{ feature.description | translate }}
+            </p>
           </div>
-          <h3 class="text-xl font-semibold mb-2 theme-text-main">{{ feature.title | translate }}</h3>
-          <p class="theme-text-muted">
-            {{ feature.description | translate }}
-          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- How It Works Section -->
-  <section class="py-16">
+  <!-- Enhanced How It Works Section -->
+  <section class="py-20">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'how.title' | translate }}</h2>
-        <p class="theme-text-muted max-w-2xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold theme-text-main mb-6">{{ 'how.title' | translate }}</h2>
+        <p class="theme-text-muted text-lg max-w-3xl mx-auto leading-relaxed">
           {{ 'how.subtitle' | translate }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div *ngFor="let step of steps" class="flex flex-col items-center text-center">
-          <div class="bg-blue-100 dark:bg-blue-900/30 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-            <span class="theme-primary-text font-bold text-xl">{{ step.number }}</span>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+        <div *ngFor="let step of steps" class="text-center relative">
+          <div class="bg-blue-100 dark:bg-blue-900/30 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <span class="theme-primary-text font-bold text-2xl">{{ step.number }}</span>
           </div>
-          <h3 class="text-xl font-semibold mb-2 theme-text-main">{{ step.title | translate }}</h3>
-          <p class="theme-text-muted">
+          <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ step.title | translate }}</h3>
+          <p class="theme-text-muted leading-relaxed">
             {{ step.description | translate }}
           </p>
+
+          <!-- Connector line for desktop -->
+          <div *ngIf="step.number < 3" class="hidden md:block absolute top-10 left-full w-full h-0.5 bg-blue-200 dark:bg-blue-800 transform translate-x-4"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonials Section -->
-  <section id="testimonials" class="py-16 theme-alternate-section-bg">
+  <!-- Enhanced Testimonials Section -->
+  <section id="testimonials" class="py-20 theme-alternate-section-bg">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'testimonials.title' | translate }}</h2>
-        <p class="theme-text-muted max-w-2xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold theme-text-main mb-6">{{ 'testimonials.title' | translate }}</h2>
+        <p class="theme-text-muted text-lg max-w-3xl mx-auto leading-relaxed">
           {{ 'testimonials.subtitle' | translate }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div *ngFor="let testimonial of testimonials" class="theme-card-bg p-6 rounded-lg shadow-md transition-all hover:shadow-xl hover:-translate-y-1">
-          <div class="flex items-center mb-4">
-            <img [src]="testimonial.avatar" [alt]="testimonial.name" class="w-12 h-12 rounded-full mr-4 object-cover">
-            <div>
-              <h4 class="font-semibold theme-text-main">{{ testimonial.name | translate }}</h4>
-              <div class="flex text-yellow-400">
-                <i *ngFor="let star of [1,2,3,4,5]" class="fas"
-                   [class.fa-star]="star <= testimonial.rating"
-                   [class.fa-star-half-alt]="star > testimonial.rating && star - 0.5 <= testimonial.rating"
-                   [class.fa-star-o]="star > testimonial.rating && star - 0.5 > testimonial.rating"
-                   ></i>
+        <div *ngFor="let testimonial of testimonials" class="card hover:scale-105 transition-transform duration-300">
+          <div class="card-body p-8">
+            <div class="flex items-center mb-6">
+              <img [src]="testimonial.avatar" [alt]="testimonial.name" class="w-14 h-14 rounded-full mr-4 object-cover">
+              <div>
+                <h4 class="font-semibold theme-text-main">{{ testimonial.name | translate }}</h4>
+                <div class="flex theme-star-color">
+                  <i *ngFor="let star of [1,2,3,4,5]" class="fas"
+                     [class.fa-star]="star <= testimonial.rating"
+                     [class.fa-star-half-alt]="star > testimonial.rating && star - 0.5 <= testimonial.rating"
+                     [class.fa-star-o]="star > testimonial.rating && star - 0.5 > testimonial.rating"></i>
+                </div>
               </div>
             </div>
+            <p class="theme-text-muted italic leading-relaxed">
+              "{{ testimonial.text | translate }}"
+            </p>
           </div>
-          <p class="theme-text-muted italic">
-            "{{ testimonial.text | translate }}"
-          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
-  <section id="faq" class="py-16">
+  <!-- Enhanced FAQ Section -->
+  <section id="faq" class="py-20">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold theme-text-main mb-4">{{ 'faq.title' | translate }}</h2>
-        <p class="theme-text-muted max-w-2xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold theme-text-main mb-6">{{ 'faq.title' | translate }}</h2>
+        <p class="theme-text-muted text-lg max-w-3xl mx-auto leading-relaxed">
           {{ 'faq.subtitle' | translate }}
         </p>
       </div>
 
-      <div class="max-w-3xl mx-auto space-y-4">
-        <div *ngFor="let faq of faqs" class="border theme-border rounded-lg overflow-hidden">
-          <button (click)="toggleFaq(faq.id)" class="w-full flex justify-between items-center p-4 text-left theme-card-bg theme-hover-bg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <span class="font-medium theme-text-main">{{ faq.question | translate }}</span>
-            <i class="fas fa-chevron-down transition-transform" [class.rotate-180]="faq.open"></i>
+      <div class="max-w-4xl mx-auto space-y-4">
+        <div *ngFor="let faq of faqs" class="card overflow-hidden">
+          <button (click)="toggleFaq(faq.id)" class="w-full flex justify-between items-center p-6 text-left theme-card-bg theme-hover-bg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span class="font-medium theme-text-main text-lg">{{ faq.question | translate }}</span>
+            <i class="fas fa-chevron-down transition-transform text-blue-500" [class.rotate-180]="faq.open"></i>
           </button>
           <div class="faq-content" [class.hidden]="!faq.open">
-            <div class="p-4">
-              <p>{{ faq.answer | translate }}</p>
+            <div class="p-6">
+              <p class="theme-text-muted leading-relaxed">{{ faq.answer | translate }}</p>
             </div>
           </div>
         </div>
@@ -305,39 +368,41 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="py-16 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-800 dark:to-purple-900">
+  <!-- Enhanced CTA Section -->
+  <section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 dark:from-blue-800 dark:via-purple-800 dark:to-blue-900">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-white mb-6">{{ 'cta.title' | translate }}</h2>
-      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+      <h2 class="text-4xl font-bold text-white mb-6">{{ 'cta.title' | translate }}</h2>
+      <p class="text-white/90 text-lg mb-10 max-w-3xl mx-auto leading-relaxed">
         {{ 'cta.subtitle' | translate }}
       </p>
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition duration-300 focus:outline-none focus:ring-2 focus:ring-white">
+        <a href="#vehicles" (click)="scrollToSection('#vehicles', $event)" class="btn btn-primary btn-lg">
+          <i class="fas fa-car mr-2"></i>
           {{ 'cta.button1' | translate }}
         </a>
-        <a routerLink="/signup" class="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition duration-300 focus:outline-none focus:ring-2 focus:ring-white">
+        <a routerLink="/signup" class="btn btn-secondary btn-lg">
+          <i class="fas fa-user-plus mr-2"></i>
           {{ 'cta.button2' | translate }}
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="theme-card-bg  py-12">
+  <!-- Enhanced Footer -->
+  <footer class="theme-card-bg py-16">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- Column 1 -->
         <div>
-          <h3 class="text-xl font-semibold mb-4 flex items-center">
-            <i class="fas fa-car mr-2"></i>
+          <h3 class="text-xl font-semibold mb-6 flex items-center">
+            <i class="fas fa-car mr-3 text-blue-500"></i>
             <span>{{ 'brand' | translate }}</span>
           </h3>
-          <p class="text-gray-400 mb-4">
+          <p class="text-gray-400 mb-6 leading-relaxed">
             {{ 'footer.about' | translate }}
           </p>
           <div class="flex space-x-4">
-            <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors text-lg">
+            <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-500 transition-colors text-xl">
               <i [class]="'fab ' + social.icon"></i>
             </a>
           </div>
@@ -345,11 +410,12 @@
 
         <!-- Column 2 -->
         <div>
-          <h3 class="text-lg font-semibold mb-4 theme-text-main">
-            {{ 'footer.links_title' | translate }}</h3>
-          <ul class="space-y-2">
+          <h3 class="text-lg font-semibold mb-6 theme-text-main">
+            {{ 'footer.links_title' | translate }}
+          </h3>
+          <ul class="space-y-3">
             <li *ngFor="let link of footerLinks">
-              <a [href]="link.link" (click)="scrollToSection(link.link, $event)" class="text-gray-400 hover:text-white transition-colors">
+              <a [href]="link.link" (click)="scrollToSection(link.link, $event)" class="text-gray-400 hover:text-blue-500 transition-colors">
                 {{ link.title | translate }}
               </a>
             </li>
@@ -358,19 +424,20 @@
 
         <!-- Column 3 -->
         <div>
-          <h3 class="text-lg font-semibold mb-4 theme-text-main">
-            {{ 'footer.contact_title' | translate }}</h3>
-          <ul class="space-y-2 text-gray-400">
+          <h3 class="text-lg font-semibold mb-6 theme-text-main">
+            {{ 'footer.contact_title' | translate }}
+          </h3>
+          <ul class="space-y-3 text-gray-400">
             <li class="flex items-start">
-              <i class="fas fa-map-marker-alt mr-2 mt-1"></i>
+              <i class="fas fa-map-marker-alt mr-3 mt-1 text-blue-500"></i>
               <span>{{ 'footer.address' | translate }}</span>
             </li>
             <li class="flex items-center">
-              <i class="fas fa-phone-alt mr-2"></i>
+              <i class="fas fa-phone-alt mr-3 text-blue-500"></i>
               <span>+1 (555) 123-4567</span>
             </li>
             <li class="flex items-center">
-              <i class="fas fa-envelope mr-2"></i>
+              <i class="fas fa-envelope mr-3 text-blue-500"></i>
               <span>info&#64;driveeasy.com</span>
             </li>
           </ul>
@@ -378,29 +445,30 @@
 
         <!-- Column 4 -->
         <div>
-          <h3 class="text-lg font-semibold mb-4 theme-text-main">
-            {{ 'footer.newsletter_title' | translate }}</h3>
-          <p class="text-gray-400 mb-4">
+          <h3 class="text-lg font-semibold mb-6 theme-text-main">
+            {{ 'footer.newsletter_title' | translate }}
+          </h3>
+          <p class="text-gray-400 mb-6 leading-relaxed">
             {{ 'footer.newsletter_desc' | translate }}
           </p>
           <form class="flex" (submit)="subscribeNewsletter($event)">
             <input type="email" [placeholder]="'footer.email_placeholder' | translate"
-                   class="px-4 py-2 rounded-l-md w-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   class="form-input rounded-r-none"
                    [(ngModel)]="newsletterEmail" name="newsletterEmail" required>
-            <button type="submit" class="theme-primary-button px-4 py-2 rounded-r-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="btn btn-primary rounded-l-none">
               <i class="fas fa-paper-plane"></i>
             </button>
           </form>
-           <div *ngIf="newsletterMessage" class="mt-3 text-sm" [class.text-green-500]="!newsletterError" [class.text-red-500]="newsletterError">
-              {{ newsletterMessage }}
-           </div>
+          <div *ngIf="newsletterMessage" class="mt-3 text-sm" [class.text-green-500]="!newsletterError" [class.text-red-500]="newsletterError">
+            {{ newsletterMessage }}
+          </div>
         </div>
       </div>
 
-      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+      <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
         <p>© {{ currentYear }} {{ 'brand' | translate }}. {{ 'footer.copyright' | translate }}</p>
-        <div class="mt-2 flex justify-center space-x-4">
-          <a *ngFor="let legal of legalLinks" [routerLink]="legal.link" class="text-gray-400 hover:text-white transition-colors">
+        <div class="mt-4 flex justify-center space-x-6">
+          <a *ngFor="let legal of legalLinks" [routerLink]="legal.link" class="text-gray-400 hover:text-blue-500 transition-colors">
             {{ legal.title | translate }}
           </a>
         </div>
@@ -410,135 +478,153 @@
 </div>
 <!-- END OF MAIN PAGE CONTENT WRAPPER -->
 
+<!-- Enhanced Authentication Required Modal -->
+<div *ngIf="showAuthModal" class="modal-overlay">
+  <div class="modal-content max-w-md">
+    <div class="modal-header">
+      <h3 class="text-2xl font-bold theme-text-main">
+        <i class="fas fa-user-lock mr-2 text-blue-500"></i>
+        {{ 'auth_modal.title' | translate }}
+      </h3>
+      <button (click)="closeAuthModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
 
-<!-- Authentication Required Modal -->
-<!-- MOVED OUTSIDE THE MAIN CONTENT WRAPPER -->
-<div *ngIf="showAuthModal" class="fixed inset-0 bg-gray-500/75 bg-opacity-60 flex items-center justify-center z-[60] p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
-    <div class="p-6 text-center">
-      <div class="flex justify-end items-start mb-4">
-         <!-- Close Button -->
-        <button (click)="closeAuthModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
+    <div class="modal-body">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+          <i class="fas fa-user-lock text-2xl text-blue-500"></i>
+        </div>
+        <p class="theme-text-muted mb-4">
+          {{ 'auth_modal.message' | translate }}
+        </p>
+        <p *ngIf="pendingRentalVehicle" class="theme-text-muted italic">
+          {{ 'auth_modal.renting_vehicle' | translate }}: <strong>{{ pendingRentalVehicle.marque }} {{ pendingRentalVehicle.modele }}</strong>
+        </p>
       </div>
 
-      <div class="mb-6">
-         <i class="fas fa-user-lock text-blue-500 text-4xl mb-4"></i>
-         <h3 class="text-2xl font-bold theme-text-main mb-2">{{ 'auth_modal.title' | translate }}</h3>
-         <p class="theme-text-muted">
-           {{ 'auth_modal.message' | translate }}
-         </p>
-         <p *ngIf="pendingRentalVehicle" class="theme-text-muted italic mt-2">
-             {{ 'auth_modal.renting_vehicle' | translate }}: <strong>{{ pendingRentalVehicle.marque }} {{ pendingRentalVehicle.modele }}</strong>
-         </p>
-      </div>
-
-
-      <div class="flex flex-col space-y-4">
-        <button (click)="navigateToLogin()"
-                class="theme-primary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+      <div class="space-y-4">
+        <button (click)="navigateToLogin()" class="btn btn-primary btn-full">
+          <i class="fas fa-sign-in-alt mr-2"></i>
           {{ 'auth_modal.signin' | translate }}
         </button>
-        <button (click)="navigateToSignup()"
-                class="theme-secondary-button font-medium py-3 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full">
-           {{ 'auth_modal.signup' | translate }}
+        <button (click)="navigateToSignup()" class="btn btn-secondary btn-full">
+          <i class="fas fa-user-plus mr-2"></i>
+          {{ 'auth_modal.signup' | translate }}
         </button>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- Rental Modal -->
-<!-- MOVED OUTSIDE THE MAIN CONTENT WRAPPER -->
-<div *ngIf="showRentalModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle sm:max-w-lg">
-    <div class="p-6">
-      <div class="flex justify-between items-start mb-4">
-        <h3 class="text-2xl font-bold theme-text-main">{{ selectedVehicle?.vname }}</h3>
-        <button (click)="closeRentalModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
+<!-- Enhanced Rental Modal -->
+<div *ngIf="showRentalModal" class="modal-overlay">
+  <div class="modal-content max-w-lg">
+    <div class="modal-header">
+      <h3 class="text-2xl font-bold theme-text-main">
+        <i class="fas fa-key mr-2 text-blue-500"></i>
+        {{ selectedVehicle?.vname }}
+      </h3>
+      <button (click)="closeRentalModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Vehicle Image -->
+      <div class="relative w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-6 flex items-center justify-center text-gray-400">
+        <div *ngIf="selectedVehicle?.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
+          <div class="loading-spinner"></div>
+        </div>
+        <img *ngIf="selectedVehicle?.photoDisplayUrl && !selectedVehicle?.isLoadingPhoto && !selectedVehicle?.photoError"
+            [alt]="selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle!.marque + ' ' + selectedVehicle!.modele : ('vehicle.generic_alt' | translate))"
+            [src]="selectedVehicle?.photoDisplayUrl"
+            class="w-full h-full object-cover rounded-lg">
+        <div *ngIf="(!selectedVehicle?.photoDisplayUrl || selectedVehicle?.photoError) && !selectedVehicle?.isLoadingPhoto"
+            class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl">
+          <i class="fas fa-image text-4xl" [class.text-red-500]="selectedVehicle?.photoError"></i>
+          <span *ngIf="selectedVehicle?.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
+        </div>
       </div>
 
-      <div class="relative w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 flex items-center justify-center text-gray-400">
-          <div *ngIf="selectedVehicle?.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
-              <i class="fas fa-spinner fa-spin text-3xl theme-primary-text"></i>
-          </div>
-          <img *ngIf="selectedVehicle?.photoDisplayUrl && !selectedVehicle?.isLoadingPhoto && !selectedVehicle?.photoError"
-              [alt]="selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle!.marque + ' ' + selectedVehicle!.modele : ('vehicle.generic_alt' | translate))"
-              [src]="selectedVehicle?.photoDisplayUrl"
-              class="w-full h-full object-cover rounded-md">
-          <div *ngIf="(!selectedVehicle?.photoDisplayUrl || selectedVehicle?.photoError) && !selectedVehicle?.isLoadingPhoto"
-              class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl">
-              <i class="fas fa-image text-4xl" [class.text-red-500]="selectedVehicle?.photoError"></i>
-              <span *ngIf="selectedVehicle?.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
-          </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4 mb-6 theme-text-muted">
-        <div class="flex items-center">
-          <i class="fas fa-users text-blue-500 mr-2"></i>
+      <!-- Vehicle Specifications -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="vehicle-spec">
+          <i class="fas fa-users text-blue-500"></i>
           <span>{{ selectedVehicle?.capacite }} {{ 'modal.seats' | translate }}</span>
         </div>
-        <div class="flex items-center">
-          <i class="fas fa-gas-pump text-blue-500 mr-2"></i>
+        <div class="vehicle-spec">
+          <i class="fas fa-gas-pump text-blue-500"></i>
           <span>{{ (selectedVehicle?.carburant || 'defaultCarburant') | translate }}</span>
         </div>
-        <div class="flex items-center">
-          <i class="fas fa-cogs text-blue-500 mr-2"></i>
+        <div class="vehicle-spec">
+          <i class="fas fa-cogs text-blue-500"></i>
           <span>{{ getTransmissionText(selectedVehicle?.estAutomate) }}</span>
         </div>
-        <div class="flex items-center">
-          <i class="fas fa-car text-blue-500 mr-2"></i>
+        <div class="vehicle-spec">
+          <i class="fas fa-car text-blue-500"></i>
           <span>{{ selectedVehicle?.type || 'defaultType' | translate }}</span>
         </div>
-         <div class="flex items-center" *ngIf="selectedVehicle?.modele">
-             <i class="fas fa-tag mr-2 text-blue-500"></i>
-             <span>{{ selectedVehicle?.modele }}</span>
-         </div>
-          <div class="flex items-center" *ngIf="selectedVehicle?.couleur">
-             <i class="fas fa-fill-drip mr-2 text-blue-500"></i>
-             <span>{{ (selectedVehicle?.couleur ?? 'defaultColor') | translate }}</span>
-         </div>
+        <div class="vehicle-spec" *ngIf="selectedVehicle?.modele">
+          <i class="fas fa-tag text-blue-500"></i>
+          <span>{{ selectedVehicle?.modele }}</span>
+        </div>
+        <div class="vehicle-spec" *ngIf="selectedVehicle?.couleur">
+          <i class="fas fa-fill-drip text-blue-500"></i>
+          <span>{{ (selectedVehicle?.couleur ?? 'defaultColor') | translate }}</span>
+        </div>
       </div>
 
+      <!-- Rental Form -->
       <form (submit)="submitRentalRequest()">
-        <div class="mb-4">
-          <label for="modal-pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.pickup_date' | translate }}</label>
-          <input type="date" id="modal-pickup-date" [(ngModel)]="rentalData.pickupDate" name="pickupDate" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div class="form-group">
+          <label for="modal-pickup-date" class="form-label">
+            <i class="fas fa-calendar-plus mr-2 text-blue-500"></i>
+            {{ 'modal.pickup_date' | translate }}
+          </label>
+          <input type="date" id="modal-pickup-date" [(ngModel)]="rentalData.pickupDate" name="pickupDate" class="form-input" required>
         </div>
 
-        <div class="mb-4">
-          <label for="modal-return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.return_date' | translate }}</label>
-          <input type="date" id="modal-return-date" [(ngModel)]="rentalData.returnDate" name="returnDate" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div class="form-group">
+          <label for="modal-return-date" class="form-label">
+            <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+            {{ 'modal.return_date' | translate }}
+          </label>
+          <input type="date" id="modal-return-date" [(ngModel)]="rentalData.returnDate" name="returnDate" class="form-input" required>
         </div>
 
-        <div class="mb-6">
-          <label for="modal-insurance" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.insurance' | translate }}</label>
-          <select id="modal-insurance" [(ngModel)]="rentalData.insurance" name="insurance" class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="form-group">
+          <label for="modal-insurance" class="form-label">
+            <i class="fas fa-shield-alt mr-2 text-blue-500"></i>
+            {{ 'modal.insurance' | translate }}
+          </label>
+          <select id="modal-insurance" [(ngModel)]="rentalData.insurance" name="insurance" class="form-input">
             <option value="basic">{{ 'modal.insurance_basic' | translate }}</option>
             <option value="premium">{{ 'modal.insurance_premium' | translate }}</option>
             <option value="full">{{ 'modal.insurance_full' | translate }}</option>
           </select>
         </div>
 
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="text-2xl font-bold theme-primary-text">${{ selectedVehicle?.prixDeBase }}</span>
-            <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+        <!-- Price Summary -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-2xl font-bold theme-primary-text">${{ selectedVehicle?.prixDeBase }}</span>
+              <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check mr-2"></i>
+              {{ 'modal.confirm' | translate }}
+            </button>
           </div>
-          <button type="submit" class="theme-primary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {{ 'modal.confirm' | translate }}
-          </button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Chatbot Popup -->
+<!-- Enhanced Chatbot Popup -->
 <div class="fixed bottom-4 right-4 z-50">
   <!-- Chatbot Toggle Button -->
   <button *ngIf="!showChatbot"

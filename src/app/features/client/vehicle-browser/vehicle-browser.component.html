@@ -2,231 +2,428 @@
 <div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8 min-h-screen">
 
   <!-- Page Title -->
-  <h2 class="text-3xl font-bold mb-8 text-center theme-text-main">
-    {{ 'vehicle_browser.title' | translate }}
-  </h2>
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold theme-text-main mb-4">
+      <i class="fas fa-car mr-3 text-blue-500"></i>
+      {{ 'vehicle_browser.title' | translate }}
+    </h1>
+    <p class="theme-text-muted text-lg max-w-2xl mx-auto">
+      Discover our extensive fleet of vehicles. Find the perfect car for your journey with our advanced search and filtering options.
+    </p>
+  </div>
 
-  <!-- Search Section -->
-  <div class="theme-card-bg rounded-xl shadow-md p-6 mb-8 max-w-4xl mx-auto">
-    <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'search.title' | translate }}</h3>
-    <form (submit)="performMainSearch($event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-      <!-- Vehicle Name Search -->
-      <div class="lg:col-span-1">
-        <label for="search-vehicle-name" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.vehicle_name' | translate }}</label>
-        <input type="text" id="search-vehicle-name" [(ngModel)]="searchCriteria.name" name="searchVehicleName"
-               [placeholder]="'search.vehicle_name_placeholder' | translate"
-               class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <!-- Pickup Date Search -->
-      <div>
-        <label for="search-pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.pickup_date' | translate }}</label>
-        <input type="date" id="search-pickup-date" [(ngModel)]="searchCriteria.pickupDate" name="searchPickupDate"
-               [min]="minDateForSearch"
-               class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <!-- Return Date Search -->
-      <div>
-        <label for="search-return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'search.return_date' | translate }}</label>
-        <input type="date" id="search-return-date" [(ngModel)]="searchCriteria.returnDate" name="searchReturnDate"
-               [min]="searchCriteria.pickupDate || minDateForSearch"
-               class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <!-- Search and Reset Buttons -->
-      <div class="grid grid-cols-2 gap-2 lg:col-span-1">
-        <button type="submit" [disabled]="isMainSearchLoading"
-                class="w-full theme-primary-button font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50">
-          <span *ngIf="!isMainSearchLoading">{{ 'search.button' | translate }}</span>
-          <span *ngIf="isMainSearchLoading"><i class="fas fa-spinner fa-spin"></i></span>
-        </button>
-        <button type="button" (click)="resetMainSearchFilters()"
-                class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-          {{ 'search.reset_button' | translate }}
-        </button>
+  <!-- Enhanced Search Section -->
+  <div class="search-container mb-12">
+    <div class="flex items-center mb-6">
+      <i class="fas fa-search text-2xl text-blue-500 mr-3"></i>
+      <h2 class="text-2xl font-semibold theme-text-main">{{ 'search.title' | translate }}</h2>
+    </div>
+
+    <form (submit)="performMainSearch($event)" class="search-form">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Vehicle Name Search -->
+        <div class="search-input-group">
+          <label for="search-vehicle-name" class="form-label">
+            <i class="fas fa-car mr-2 text-blue-500"></i>
+            {{ 'search.vehicle_name' | translate }}
+          </label>
+          <input
+            type="text"
+            id="search-vehicle-name"
+            [(ngModel)]="searchCriteria.name"
+            name="searchVehicleName"
+            [placeholder]="'search.vehicle_name_placeholder' | translate"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Pickup Date Search -->
+        <div class="search-input-group">
+          <label for="search-pickup-date" class="form-label">
+            <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+            {{ 'search.pickup_date' | translate }}
+          </label>
+          <input
+            type="date"
+            id="search-pickup-date"
+            [(ngModel)]="searchCriteria.pickupDate"
+            name="searchPickupDate"
+            [min]="minDateForSearch"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Return Date Search -->
+        <div class="search-input-group">
+          <label for="search-return-date" class="form-label">
+            <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+            {{ 'search.return_date' | translate }}
+          </label>
+          <input
+            type="date"
+            id="search-return-date"
+            [(ngModel)]="searchCriteria.returnDate"
+            name="searchReturnDate"
+            [min]="searchCriteria.pickupDate || minDateForSearch"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Search Actions -->
+        <div class="search-actions">
+          <button
+            type="submit"
+            [disabled]="isMainSearchLoading"
+            class="btn btn-primary btn-full"
+          >
+            <span *ngIf="!isMainSearchLoading">
+              <i class="fas fa-search mr-2"></i>
+              {{ 'search.button' | translate }}
+            </span>
+            <span *ngIf="isMainSearchLoading" class="btn-loading">
+              <i class="fas fa-spinner fa-spin mr-2"></i>
+              Searching...
+            </span>
+          </button>
+
+          <button
+            type="button"
+            (click)="resetMainSearchFilters()"
+            class="btn btn-secondary btn-full mt-2"
+          >
+            <i class="fas fa-undo mr-2"></i>
+            {{ 'search.reset_button' | translate }}
+          </button>
+        </div>
       </div>
     </form>
+
     <!-- Main Search Error Display -->
-    <div *ngIf="mainSearchError" class="mt-4 text-center text-red-600 dark:text-red-400 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-md">
-      <i class="fas fa-exclamation-circle mr-2"></i> {{ mainSearchError }}
+    <div *ngIf="mainSearchError" class="alert alert-error mt-6">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>{{ mainSearchError }}</span>
     </div>
   </div>
 
-  <!-- Vehicle Grid Display -->
-  <div class="mb-12">
-    <div *ngIf="loadingInitialVehicles" class="text-center theme-primary-text text-xl py-8">
-      <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'vehicles.loading' | translate }}
-    </div>
-    <div *ngIf="listDisplayError && !loadingInitialVehicles && !isMainSearchLoading" class="text-center text-red-600 dark:text-red-400 text-xl py-8">
-      <i class="fas fa-exclamation-circle mr-2"></i> {{ listDisplayError }}
-    </div>
-    <div *ngIf="!loadingInitialVehicles && !listDisplayError && allVehicles.length === 0 && filteredVehicles.length === 0" class="text-center theme-text-muted text-xl py-8">
-      {{ 'vehicles.no_vehicles_found_system' | translate }}
-    </div>
+  <!-- Results Summary -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-list mr-2 text-blue-500"></i>
+          Available Vehicles
+        </h3>
+        <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+          {{ filteredVehicles.length }} {{ filteredVehicles.length === 1 ? 'vehicle' : 'vehicles' }}
+        </span>
+      </div>
 
-    <div *ngIf="!loadingInitialVehicles && filteredVehicles.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div *ngFor="let vehicle of filteredVehicles" class="theme-card-bg rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-xl hover:-translate-y-1">
-        <div class="relative overflow-hidden h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400">
-          <div *ngIf="vehicle.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
-            <i class="fas fa-spinner fa-spin text-3xl theme-primary-text"></i>
-          </div>
-          <img *ngIf="vehicle.photoDisplayUrl && !vehicle.isLoadingPhoto && !vehicle.photoError"
-               [src]="vehicle.photoDisplayUrl"
-               [alt]="vehicle.vname || (vehicle.marque && vehicle.modele ? vehicle.marque + ' ' + vehicle.modele : ('vehicle.generic_alt' | translate))"
-               class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-          <div *ngIf="(!vehicle.photoDisplayUrl || vehicle.photoError) && !vehicle.isLoadingPhoto"
-               class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">
-            <i class="fas fa-image text-3xl" [class.text-red-500]="vehicle.photoError"></i>
-            <span *ngIf="vehicle.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
-          </div>
+      <!-- Sort Options -->
+      <div class="flex items-center space-x-2">
+        <label for="sort-select" class="text-sm theme-text-muted">Sort by:</label>
+        <select
+          id="sort-select"
+          class="form-input py-1 px-2 text-sm"
+          (change)="onSortChange($event)"
+        >
+          <option value="name">Name</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="seats">Seats</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading and Error States -->
+  <div *ngIf="loadingInitialVehicles" class="text-center py-12">
+    <div class="loading-spinner mx-auto mb-4"></div>
+    <p class="theme-primary-text text-xl">{{ 'vehicles.loading' | translate }}</p>
+    <p class="theme-text-muted mt-2">Please wait while we load our vehicle fleet...</p>
+  </div>
+
+  <div *ngIf="listDisplayError && !loadingInitialVehicles && !isMainSearchLoading" class="text-center py-12">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-4">
+      <i class="fas fa-exclamation-triangle text-2xl text-red-600 dark:text-red-400"></i>
+    </div>
+    <p class="text-red-600 dark:text-red-400 text-xl mb-2">{{ listDisplayError }}</p>
+    <button (click)="retryLoading()" class="btn btn-primary mt-4">
+      <i class="fas fa-redo mr-2"></i>
+      Try Again
+    </button>
+  </div>
+
+  <div *ngIf="!loadingInitialVehicles && !listDisplayError && allVehicles.length === 0 && filteredVehicles.length === 0" class="text-center py-12">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+      <i class="fas fa-car text-2xl text-gray-400"></i>
+    </div>
+    <p class="theme-text-muted text-xl">{{ 'vehicles.no_vehicles_found_system' | translate }}</p>
+  </div>
+
+  <!-- Enhanced Vehicle Grid -->
+  <div *ngIf="!loadingInitialVehicles && filteredVehicles.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card">
+      <!-- Vehicle Image -->
+      <div class="vehicle-image">
+        <div *ngIf="vehicle.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
+          <div class="loading-spinner"></div>
         </div>
-        <div class="p-6">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-semibold theme-text-main">{{ vehicle.vname || (vehicle.marque && vehicle.modele ? vehicle.marque + ' ' + vehicle.modele : ('vehicle.untitled' | translate)) }}</h3>
-          </div>
-          <p class="theme-text-muted mb-4">
-            {{ vehicle.modele || '' }}
-          </p>
-          <div class="grid grid-cols-2 gap-y-2 theme-text-muted text-sm mb-4">
-            <div class="flex items-center"><i class="fas fa-users mr-2 text-blue-500"></i> {{ vehicle.capacite }} {{ 'vehicle.seats' | translate }}</div>
-            <div class="flex items-center"><i class="fas fa-gas-pump mr-2 text-blue-500"></i> {{ (vehicle.carburant || 'defaultCarburant') | translate }}</div>
-            <div class="flex items-center"><i class="fas fa-cogs mr-2 text-blue-500"></i> {{ getTransmissionText(vehicle.estAutomate) }}</div>
-            <div class="flex items-center"><i class="fas fa-car mr-2 text-blue-500"></i> {{ (vehicle.type || 'defaultType') | translate }}</div>
-          </div>
-          <div *ngIf="availableVehicles.length > 0" class="mb-3">
-            <span *ngIf="isVehicleInAvailableList(vehicle)"
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-              <i class="fas fa-check-circle mr-1"></i> {{ 'vehicle.available' | translate }}
-            </span>
-            <span *ngIf="!isVehicleInAvailableList(vehicle)"
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-              <i class="fas fa-times-circle mr-1"></i> {{ 'vehicle.unavailable' | translate }}
-            </span>
-          </div>
-          <div class="flex justify-between items-center mt-4">
-            <div>
-              <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(vehicle.prixDeBase) }}</span>
-              <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
-            </div>
-            <button (click)="openRentalModal(vehicle)"
-                    class="theme-primary-button font-medium py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    [title]="'vehicle.rent' | translate">
-              {{ 'vehicle.rent' | translate }}
-            </button>
-          </div>
+
+        <img *ngIf="vehicle.photoDisplayUrl && !vehicle.isLoadingPhoto && !vehicle.photoError"
+             [src]="vehicle.photoDisplayUrl"
+             [alt]="vehicle.vname || (vehicle.marque && vehicle.modele ? vehicle.marque + ' ' + vehicle.modele : ('vehicle.generic_alt' | translate))"
+             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+
+        <div *ngIf="(!vehicle.photoDisplayUrl || vehicle.photoError) && !vehicle.isLoadingPhoto"
+             class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">
+          <i class="fas fa-image text-4xl" [class.text-red-500]="vehicle.photoError"></i>
+          <span *ngIf="vehicle.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
+        </div>
+
+        <!-- Availability Badge -->
+        <div *ngIf="availableVehicles.length > 0" class="vehicle-badge"
+             [class.available]="isVehicleInAvailableList(vehicle)"
+             [class.unavailable]="!isVehicleInAvailableList(vehicle)">
+          <i class="fas" [class.fa-check-circle]="isVehicleInAvailableList(vehicle)" [class.fa-times-circle]="!isVehicleInAvailableList(vehicle)"></i>
+          {{ isVehicleInAvailableList(vehicle) ? ('vehicle.available' | translate) : ('vehicle.unavailable' | translate) }}
         </div>
       </div>
+
+      <!-- Vehicle Content -->
+      <div class="vehicle-content">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="vehicle-title">{{ vehicle.vname || (vehicle.marque && vehicle.modele ? vehicle.marque + ' ' + vehicle.modele : ('vehicle.untitled' | translate)) }}</h3>
+        </div>
+
+        <p class="theme-text-muted mb-4" *ngIf="vehicle.modele">
+          {{ vehicle.modele }}
+        </p>
+
+        <!-- Vehicle Specifications -->
+        <div class="vehicle-specs">
+          <div class="vehicle-spec">
+            <i class="fas fa-users"></i>
+            <span>{{ vehicle.capacite }} {{ 'vehicle.seats' | translate }}</span>
+          </div>
+          <div class="vehicle-spec">
+            <i class="fas fa-gas-pump"></i>
+            <span>{{ (vehicle.carburant || 'defaultCarburant') | translate }}</span>
+          </div>
+          <div class="vehicle-spec">
+            <i class="fas fa-cogs"></i>
+            <span>{{ getTransmissionText(vehicle.estAutomate) }}</span>
+          </div>
+          <div class="vehicle-spec">
+            <i class="fas fa-car"></i>
+            <span>{{ (vehicle.type || 'defaultType') | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Vehicle Price and Action -->
+        <div class="vehicle-price">
+          <div>
+            <span class="price-amount">{{ formatCurrency(vehicle.prixDeBase) }}</span>
+            <span class="price-period">/{{ 'vehicle.day' | translate }}</span>
+          </div>
+          <button (click)="openRentalModal(vehicle)"
+                  class="btn btn-primary btn-sm"
+                  [title]="'vehicle.rent' | translate">
+            <i class="fas fa-key mr-1"></i>
+            {{ 'vehicle.rent' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load More Button (if needed) -->
+  <div *ngIf="!loadingInitialVehicles && filteredVehicles.length > 0" class="text-center mt-12">
+    <button class="btn btn-secondary btn-lg">
+      <i class="fas fa-plus mr-2"></i>
+      Load More Vehicles
+    </button>
+  </div>
+</div>
+
+<!-- Enhanced Date Selection Modal -->
+<div *ngIf="showDateModal" class="modal-overlay">
+  <div class="modal-content max-w-md">
+    <div class="modal-header">
+      <h3 class="text-2xl font-bold theme-text-main">
+        <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+        {{ 'modal.select_dates' | translate }}
+      </h3>
+      <button (click)="closeDateModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="modal-pickup-date" class="form-label">
+          <i class="fas fa-calendar-plus mr-2 text-blue-500"></i>
+          {{ 'modal.pickup_date' | translate }}
+        </label>
+        <input
+          type="date"
+          id="modal-pickup-date"
+          [(ngModel)]="dateSelectionForModal.pickupDate"
+          name="modalPickupDate"
+          [min]="minDateForSearch"
+          class="form-input"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="modal-return-date" class="form-label">
+          <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+          {{ 'modal.return_date' | translate }}
+        </label>
+        <input
+          type="date"
+          id="modal-return-date"
+          [(ngModel)]="dateSelectionForModal.returnDate"
+          name="modalReturnDate"
+          [min]="dateSelectionForModal.pickupDate || minDateForSearch"
+          class="form-input"
+          required
+        >
+      </div>
+
+      <div *ngIf="dateModalError" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ dateModalError }}</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="closeDateModal()" class="btn btn-secondary">
+        Cancel
+      </button>
+      <button (click)="updateRentalDates()"
+              [disabled]="checkingAvailabilityModal || !dateSelectionForModal.pickupDate || !dateSelectionForModal.returnDate"
+              class="btn btn-primary">
+        <span *ngIf="!checkingAvailabilityModal">
+          <i class="fas fa-check mr-2"></i>
+          {{ 'modal.update_dates' | translate }}
+        </span>
+        <span *ngIf="checkingAvailabilityModal" class="btn-loading">
+          <i class="fas fa-spinner fa-spin mr-2"></i>
+          {{ 'modal.checking' | translate }}
+        </span>
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Date Selection Modal -->
-<div *ngIf="showDateModal" class="fixed inset-0 bg-[rgba(0,0,0,0.6)] flex items-center justify-center z-[70] p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
-    <div class="p-6">
-      <div class="flex justify-between items-start mb-4">
-        <h3 class="text-2xl font-bold theme-text-main">{{ 'modal.select_dates' | translate }}</h3>
-        <button (click)="closeDateModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-      <div class="mb-4">
-        <label for="modal-pickup-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.pickup_date' | translate }}</label>
-        <input type="date" id="modal-pickup-date" [(ngModel)]="dateSelectionForModal.pickupDate" name="modalPickupDate"
-               [min]="minDateForSearch"
-               class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      </div>
-      <div class="mb-6">
-        <label for="modal-return-date" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.return_date' | translate }}</label>
-        <input type="date" id="modal-return-date" [(ngModel)]="dateSelectionForModal.returnDate" name="modalReturnDate"
-               [min]="dateSelectionForModal.pickupDate || minDateForSearch"
-               class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      </div>
-      <div *ngIf="dateModalError" class="text-center text-red-600 dark:text-red-400 mb-4 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-md">
-        <i class="fas fa-exclamation-circle mr-2"></i> {{ dateModalError }}
-      </div>
-      <div class="flex justify-end">
-        <button (click)="updateRentalDates()"
-                [disabled]="checkingAvailabilityModal || !dateSelectionForModal.pickupDate || !dateSelectionForModal.returnDate"
-                class="theme-primary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-          <span *ngIf="!checkingAvailabilityModal">{{ 'modal.update_dates' | translate }}</span>
-          <span *ngIf="checkingAvailabilityModal"><i class="fas fa-spinner fa-spin mr-2"></i> {{ 'modal.checking' | translate }}</span>
-        </button>
-      </div>
+<!-- Enhanced Rental Modal -->
+<div *ngIf="showRentalModal" class="modal-overlay">
+  <div class="modal-content max-w-lg">
+    <div class="modal-header">
+      <h3 class="text-2xl font-bold theme-text-main">
+        <i class="fas fa-key mr-2 text-blue-500"></i>
+        {{ selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle?.marque + ' ' + selectedVehicle?.modele : '') }}
+      </h3>
+      <button (click)="closeRentalModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
     </div>
-  </div>
-</div>
 
-<!-- Rental Modal -->
-<div *ngIf="showRentalModal" class="fixed inset-0 bg-[rgba(0,0,0,0.6)] flex items-center justify-center z-[60] p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle sm:max-w-lg">
-    <div class="p-6">
-      <div class="flex justify-between items-start mb-4">
-        <h3 class="text-2xl font-bold theme-text-main">{{ selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle?.marque + ' ' + selectedVehicle?.modele : '') }}</h3>
-        <button (click)="closeRentalModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
+    <div class="modal-body">
+      <!-- Vehicle Image in Modal -->
+      <div class="relative w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-6 flex items-center justify-center text-gray-400">
+        <div *ngIf="selectedVehicle?.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
+          <div class="loading-spinner"></div>
+        </div>
+        <img *ngIf="selectedVehicle?.photoDisplayUrl && !selectedVehicle?.isLoadingPhoto && !selectedVehicle?.photoError"
+            [alt]="selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle!.marque + ' ' + selectedVehicle!.modele : ('vehicle.generic_alt' | translate))"
+            [src]="selectedVehicle?.photoDisplayUrl"
+            class="w-full h-full object-cover rounded-lg">
+        <div *ngIf="(!selectedVehicle?.photoDisplayUrl || selectedVehicle?.photoError) && !selectedVehicle?.isLoadingPhoto"
+            class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl">
+          <i class="fas fa-image text-4xl" [class.text-red-500]="selectedVehicle?.photoError"></i>
+          <span *ngIf="selectedVehicle?.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
+        </div>
       </div>
 
-      <div class="relative w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 flex items-center justify-center text-gray-400">
-          <div *ngIf="selectedVehicle?.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
-              <i class="fas fa-spinner fa-spin text-3xl theme-primary-text"></i>
-          </div>
-          <img *ngIf="selectedVehicle?.photoDisplayUrl && !selectedVehicle?.isLoadingPhoto && !selectedVehicle?.photoError"
-              [alt]="selectedVehicle?.vname || (selectedVehicle?.marque && selectedVehicle?.modele ? selectedVehicle!.marque + ' ' + selectedVehicle!.modele : ('vehicle.generic_alt' | translate))"
-              [src]="selectedVehicle?.photoDisplayUrl"
-              class="w-full h-full object-cover rounded-md">
-          <div *ngIf="(!selectedVehicle?.photoDisplayUrl || selectedVehicle?.photoError) && !selectedVehicle?.isLoadingPhoto"
-              class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl">
-              <i class="fas fa-image text-4xl" [class.text-red-500]="selectedVehicle?.photoError"></i>
-              <span *ngIf="selectedVehicle?.photoError" class="ml-2 text-xs">{{ 'vehicle.photo_error' | translate }}</span>
-          </div>
+      <!-- Vehicle Specifications -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="vehicle-spec">
+          <i class="fas fa-users text-blue-500"></i>
+          <span>{{ selectedVehicle?.capacite }} {{ 'modal.seats' | translate }}</span>
+        </div>
+        <div class="vehicle-spec">
+          <i class="fas fa-gas-pump text-blue-500"></i>
+          <span>{{ (selectedVehicle?.carburant || 'defaultCarburant') | translate }}</span>
+        </div>
+        <div class="vehicle-spec">
+          <i class="fas fa-cogs text-blue-500"></i>
+          <span>{{ getTransmissionText(selectedVehicle?.estAutomate) }}</span>
+        </div>
+        <div class="vehicle-spec">
+          <i class="fas fa-car text-blue-500"></i>
+          <span>{{ selectedVehicle?.type || 'defaultType' | translate }}</span>
+        </div>
+        <div class="vehicle-spec" *ngIf="selectedVehicle?.modele">
+          <i class="fas fa-tag text-blue-500"></i>
+          <span>{{ selectedVehicle?.modele }}</span>
+        </div>
+        <div class="vehicle-spec" *ngIf="selectedVehicle?.couleur">
+          <i class="fas fa-fill-drip text-blue-500"></i>
+          <span>{{ (selectedVehicle?.couleur || 'defaultColor') | translate }}</span>
+        </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 mb-6 theme-text-muted">
-        <div class="flex items-center"><i class="fas fa-users text-blue-500 mr-2"></i> <span>{{ selectedVehicle?.capacite }} {{ 'modal.seats' | translate }}</span></div>
-        <div class="flex items-center"><i class="fas fa-gas-pump mr-2 text-blue-500"></i> <span>{{ (selectedVehicle?.carburant || 'defaultCarburant') | translate }}</span></div>
-        <div class="flex items-center"><i class="fas fa-cogs mr-2 text-blue-500"></i> <span>{{ getTransmissionText(selectedVehicle?.estAutomate) }}</span></div>
-        <div class="flex items-center"><i class="fas fa-car mr-2 text-blue-500"></i> <span>{{ selectedVehicle?.type || 'defaultType' | translate }}</span></div>
-        <div class="flex items-center" *ngIf="selectedVehicle?.modele"><i class="fas fa-tag mr-2 text-blue-500"></i> <span>{{ selectedVehicle?.modele }}</span></div>
-        <div class="flex items-center" *ngIf="selectedVehicle?.couleur"><i class="fas fa-fill-drip mr-2 text-blue-500"></i> <span>{{ (selectedVehicle?.couleur || 'defaultColor') | translate }}</span></div>
-      </div>
-
+      <!-- Rental Form -->
       <form (ngSubmit)="submitRentalRequest()">
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.selected_dates' | translate }}</label>
-          <div class="p-3 border theme-border rounded-md bg-gray-100 dark:bg-gray-800 grid grid-cols-2 gap-4">
-            <div><p class="text-xs theme-text-muted">{{ 'modal.pickup_date' | translate }}</p><p class="font-medium">{{ rentalData.pickupDate | date:'mediumDate' }}</p></div>
-            <div><p class="text-xs theme-text-muted">{{ 'modal.return_date' | translate }}</p><p class="font-medium">{{ rentalData.returnDate | date:'mediumDate' }}</p></div>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-calendar mr-2 text-blue-500"></i>
+            {{ 'modal.selected_dates' | translate }}
+          </label>
+          <div class="p-4 border theme-border rounded-lg bg-gray-50 dark:bg-gray-800 grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-xs theme-text-muted">{{ 'modal.pickup_date' | translate }}</p>
+              <p class="font-medium">{{ rentalData.pickupDate | date:'mediumDate' }}</p>
+            </div>
+            <div>
+              <p class="text-xs theme-text-muted">{{ 'modal.return_date' | translate }}</p>
+              <p class="font-medium">{{ rentalData.returnDate | date:'mediumDate' }}</p>
+            </div>
             <div class="col-span-2">
-              <button type="button" (click)="showDateModal = true" class="text-sm text-blue-500 hover:text-blue-400">
-                <i class="fas fa-pencil-alt mr-1"></i> {{ 'modal.change_dates' | translate }}
+              <button type="button" (click)="showDateModal = true" class="text-sm theme-primary-text hover:underline">
+                <i class="fas fa-edit mr-1"></i>
+                {{ 'modal.change_dates' | translate }}
               </button>
             </div>
           </div>
         </div>
-        <!-- <div class="mb-6">
-          <label for="modal-insurance" class="block text-sm font-medium mb-1 theme-text-muted">{{ 'modal.insurance' | translate }}</label>
-          <select id="modal-insurance" [(ngModel)]="rentalData.insurance" name="insurance"
-                  class="w-full p-2 border theme-border rounded-md theme-input focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+        <div class="form-group">
+          <label for="modal-insurance" class="form-label">
+            <i class="fas fa-shield-alt mr-2 text-blue-500"></i>
+            {{ 'modal.insurance' | translate }}
+          </label>
+          <select id="modal-insurance" [(ngModel)]="rentalData.insurance" name="insurance" class="form-input">
             <option value="basic">{{ 'modal.insurance_basic' | translate }}</option>
             <option value="premium">{{ 'modal.insurance_premium' | translate }}</option>
             <option value="full">{{ 'modal.insurance_full' | translate }}</option>
           </select>
-        </div> -->
-        <div *ngIf="isSubmittingRental" class="text-center text-blue-500 mb-4">
-          <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'modal.submitting' | translate }}
         </div>
-        <div *ngIf="rentalSubmissionError" class="text-center text-red-600 dark:text-red-400 mb-4 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-md">
-          <i class="fas fa-exclamation-circle mr-2"></i> {{ rentalSubmissionError }}
-        </div>
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(selectedVehicle?.prixDeBase) }}</span>
-            <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+
+        <!-- Price Summary -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-2xl font-bold theme-primary-text">{{ formatCurrency(selectedVehicle?.prixDeBase) }}</span>
+              <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check mr-2"></i>
+              {{ 'modal.confirm' | translate }}
+            </button>
           </div>
-          <button type="submit" [disabled]="isSubmittingRental"
-                  class="theme-primary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-            {{ 'modal.confirm' | translate }}
-          </button>
         </div>
       </form>
     </div>

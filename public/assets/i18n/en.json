@@ -54,6 +54,7 @@
     "subtitle": "Choose from a wide range of vehicles for any occasion.",
     "loading": "Loading vehicles...",
     "error_fetching": "Failed to load vehicles. Please try again later.",
+    "auth_required": "Authentication required. Please log in to view vehicles.",
     "no_vehicles_found": "No vehicles found at the moment.",
     "no_vehicles_found_system": "No vehicles found in the system.",
     "no_vehicles_for_dates_criteria": "No vehicles available for the selected dates and criteria.",
@@ -160,14 +161,19 @@
     "transmission_unknown": "Unknown",
     "select_dates": "Select Rental Dates",
     "check_availability": "Check Availability",
+    "update_dates": "Update Dates",
     "checking": "Checking...",
     "selected_dates": "Selected Dates",
     "change_dates": "Change Dates",
     "submitting": "Submitting...",
     "rental_success": "Rental request submitted successfully! Reservation ID: {{reservationId}}",
+    "error_creating_reservation": "Failed to create reservation. Please try again.",
+    "auth_required": "Authentication required. Please log in to continue.",
+    "not_available_for_dates": "Vehicle is not available for the selected dates.",
     "error_general": "An error occurred. Please try again.",
     "validation": {
       "date_required": "Please select both pickup and return dates.",
+      "dates_required": "Please select both pickup and return dates.",
       "return_date_after": "Return date must be after pickup date.",
       "pickup_date_past": "Pickup date cannot be in the past."
     },
@@ -258,13 +264,12 @@
     "dashboard": "Dashboard"
   },
   "payment": {
-    "title": "Payment Details",
+    "title": "Payment",
     "subtitle": "Complete your reservation by providing payment information",
     "details": "Payment Details",
     "method": {
-      "title": "Select Payment Method",
-      "card": "Credit Card",
-      "paypal": "PayPal"
+      "title": "Payment Method",
+      "card": "Credit Card"
     },
     "card": {
       "number": "Card Number",
@@ -279,27 +284,471 @@
     },
     "paypal": {
       "title": "Pay with PayPal",
-      "description": "You will be redirected to PayPal to complete your payment securely.",
-      "button": "Pay with PayPal"
+      "description": "You will be redirected to PayPal to complete your payment",
+      "button": "Continue with PayPal"
     },
     "summary": {
       "title": "Order Summary",
       "base_price": "Base Price",
       "insurance": "Insurance",
-      "taxes": "Taxes & Fees",
-      "total": "Total Amount"
+      "taxes": "Taxes",
+      "total": "Total"
     },
     "button": {
       "pay": "Pay Now"
     },
-    "security_note": "All payments are secure and encrypted",
-    "processing": "Processing payment...",
-    "success": "Payment successful!",
-    "success_message": "Thank you for your payment. Your reservation has been confirmed and you will receive a confirmation email shortly.",
-    "view_reservations": "View My Reservations",
-    "browse_more": "Browse More Vehicles",
-    "error": "Payment failed. Please try again.",
-    "no_reservation_data": "No reservation data found. Please start over.",
-    "invalid_reservation_data": "Invalid reservation data. Please try again."
+    "processing": "Processing Payment...",
+    "security_note": "Your payment information is secure and encrypted"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "welcome": "Welcome to the Admin Dashboard",
+      "overview": "System Overview",
+      "stats": {
+        "total_vehicles": "Total Vehicles",
+        "total_reservations": "Total Reservations",
+        "total_clients": "Total Clients",
+        "total_revenue": "Total Revenue",
+        "availability_rate": "Availability Rate",
+        "cancellation_rate": "Cancellation Rate",
+        "average_duration": "Average Duration",
+        "revenue_per_vehicle": "Revenue per Vehicle",
+        "reservations_per_vehicle": "Reservations per Vehicle"
+      },
+      "filters": {
+        "date_range": "Date Range",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "vehicle_filter": "Filter by Vehicle",
+        "select_vehicle": "Select a Vehicle",
+        "apply_filters": "Apply Filters",
+        "clear_filters": "Clear Filters"
+      },
+      "charts": {
+        "revenue_period": "Revenue by Period",
+        "reservations_period": "Reservations by Period",
+        "vehicle_usage": "Vehicle Usage",
+        "monthly_stats": "Monthly Statistics"
+      }
+    },
+    "vehicles": {
+      "title": "Vehicle Management",
+      "subtitle": "Manage your vehicle fleet",
+      "create": {
+        "title": "Create New Vehicle",
+        "subtitle": "Add a new vehicle to your fleet",
+        "edit_title": "Edit Vehicle",
+        "edit_subtitle": "Update vehicle information",
+        "basic_info": "Basic Information",
+        "technical_specs": "Technical Specifications",
+        "pricing": "Pricing Information",
+        "photos": "Vehicle Photos",
+        "form": {
+          "name": "Vehicle Name",
+          "name_placeholder": "Enter vehicle name",
+          "make": "Make",
+          "make_placeholder": "Enter vehicle make",
+          "model": "Model",
+          "model_placeholder": "Enter vehicle model",
+          "license_plate": "License Plate",
+          "license_placeholder": "Enter license plate",
+          "type": "Vehicle Type",
+          "type_placeholder": "Select vehicle type",
+          "fuel_type": "Fuel Type",
+          "fuel_placeholder": "Select fuel type",
+          "transmission": "Transmission",
+          "transmission_auto": "Automatic",
+          "transmission_manual": "Manual",
+          "capacity": "Passenger Capacity",
+          "capacity_placeholder": "Number of seats",
+          "color": "Color",
+          "color_placeholder": "Enter vehicle color",
+          "base_price": "Base Price per Day",
+          "price_placeholder": "Enter daily rate",
+          "description": "Description",
+          "description_placeholder": "Enter vehicle description",
+          "photo": "Vehicle Photo",
+          "photo_placeholder": "Upload vehicle photo"
+        },
+        "buttons": {
+          "create": "Create Vehicle",
+          "update": "Update Vehicle",
+          "cancel": "Cancel",
+          "saving": "Saving...",
+          "creating": "Creating...",
+          "updating": "Updating..."
+        },
+        "messages": {
+          "create_success": "Vehicle created successfully!",
+          "update_success": "Vehicle updated successfully!",
+          "create_error": "Failed to create vehicle. Please try again.",
+          "update_error": "Failed to update vehicle. Please try again.",
+          "load_error": "Failed to load vehicle data. Please try again."
+        }
+      },
+      "list": {
+        "title": "Vehicle List",
+        "search_placeholder": "Search by make, model, plate...",
+        "export": "Export to Excel",
+        "create": "Create New Vehicle",
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "make": "Make",
+          "model": "Model",
+          "license_plate": "License Plate",
+          "type": "Type",
+          "fuel": "Fuel",
+          "transmission": "Transmission",
+          "base_price": "Base Price",
+          "photo": "Photo",
+          "actions": "Actions"
+        },
+        "actions": {
+          "view": "View Details",
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "messages": {
+          "delete_confirm": "Are you sure you want to delete this vehicle?",
+          "delete_success": "Vehicle deleted successfully!",
+          "delete_error": "Failed to delete vehicle. Please try again.",
+          "export_success": "Vehicle data exported successfully!",
+          "export_error": "Failed to export vehicle data. Please try again."
+        }
+      },
+      "details": {
+        "title": "Vehicle Details",
+        "edit": "Edit Vehicle",
+        "back": "Back to List",
+        "sections": {
+          "basic_info": "Basic Information",
+          "technical_specs": "Technical Specifications",
+          "pricing": "Pricing",
+          "photos": "Photos"
+        },
+        "fields": {
+          "id": "Vehicle ID",
+          "name": "Vehicle Name",
+          "make": "Make",
+          "model": "Model",
+          "license_plate": "License Plate",
+          "type": "Vehicle Type",
+          "fuel_type": "Fuel Type",
+          "transmission": "Transmission",
+          "capacity": "Passenger Capacity",
+          "color": "Color",
+          "base_price": "Base Price per Day",
+          "description": "Description",
+          "photo": "Vehicle Photo"
+        }
+      }
+    },
+    "reservations": {
+      "title": "Reservation Management",
+      "subtitle": "Manage all reservations",
+      "create": {
+        "title": "Create New Reservation",
+        "subtitle": "Create a new reservation for a client",
+        "edit_title": "Edit Reservation",
+        "edit_subtitle": "Update reservation details",
+        "steps": {
+          "dates": "Select Dates",
+          "vehicle": "Choose Vehicle",
+          "details": "Complete Details"
+        },
+        "form": {
+          "start_date": "Start Date",
+          "end_date": "End Date",
+          "client": "Client",
+          "select_client": "Select a Client",
+          "vehicle": "Vehicle",
+          "select_vehicle": "Select a Vehicle",
+          "total_amount": "Total Amount",
+          "status": "Status",
+          "notes": "Notes",
+          "notes_placeholder": "Enter any additional notes"
+        },
+        "buttons": {
+          "create": "Create Reservation",
+          "update": "Update Reservation",
+          "check_availability": "Check Availability",
+          "next": "Next",
+          "previous": "Previous",
+          "cancel": "Cancel"
+        },
+        "messages": {
+          "create_success": "Reservation created successfully!",
+          "update_success": "Reservation updated successfully!",
+          "create_error": "Failed to create reservation. Please try again.",
+          "update_error": "Failed to update reservation. Please try again.",
+          "availability_error": "Failed to check availability. Please try again.",
+          "no_vehicles": "No vehicles available for the selected dates.",
+          "select_dates": "Please select both start and end dates.",
+          "invalid_dates": "End date must be after start date."
+        }
+      },
+      "list": {
+        "title": "Reservation List",
+        "search_placeholder": "Search by ID, name, car, status...",
+        "export": "Export to Excel",
+        "create": "Create New Reservation",
+        "table": {
+          "id": "ID",
+          "client": "Client",
+          "vehicle": "Vehicle",
+          "start_date": "Start Date",
+          "end_date": "End Date",
+          "total_amount": "Total Amount",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "status": {
+          "pending": "Pending",
+          "confirmed": "Confirmed",
+          "cancelled": "Cancelled",
+          "completed": "Completed"
+        },
+        "actions": {
+          "view": "View Details",
+          "edit": "Edit",
+          "delete": "Delete"
+        }
+      },
+      "details": {
+        "title": "Reservation Details",
+        "edit": "Edit Reservation",
+        "back": "Back to List",
+        "sections": {
+          "reservation_info": "Reservation Information",
+          "client_info": "Client Information",
+          "vehicle_info": "Vehicle Information"
+        }
+      }
+    },
+    "clients": {
+      "title": "Client Management",
+      "subtitle": "Manage client information",
+      "create": {
+        "title": "Create New Client",
+        "subtitle": "Add a new client to the system",
+        "edit_title": "Edit Client",
+        "edit_subtitle": "Update client information",
+        "basic_info": "Basic Information",
+        "contact_info": "Contact Information",
+        "documents": "Documents",
+        "form": {
+          "full_name": "Full Name",
+          "full_name_placeholder": "Enter client's full name",
+          "phone": "Phone Number",
+          "phone_placeholder": "Enter phone number",
+          "email": "Email",
+          "email_placeholder": "Enter email address",
+          "address": "Address",
+          "address_placeholder": "Enter address",
+          "nationality": "Nationality",
+          "nationality_placeholder": "Enter nationality",
+          "foreign_address": "Foreign Address",
+          "foreign_address_placeholder": "Enter foreign address if applicable",
+          "cin": "CIN Number",
+          "cin_placeholder": "Enter CIN number",
+          "license": "Driver's License",
+          "license_placeholder": "Enter driver's license number",
+          "cin_photo": "CIN Photo",
+          "license_photo": "License Photo"
+        },
+        "buttons": {
+          "create": "Create Client",
+          "update": "Update Client",
+          "cancel": "Cancel",
+          "saving": "Saving...",
+          "creating": "Creating...",
+          "updating": "Updating..."
+        },
+        "messages": {
+          "create_success": "Client created successfully!",
+          "update_success": "Client updated successfully!",
+          "create_error": "Failed to create client. Please try again.",
+          "update_error": "Failed to update client. Please try again.",
+          "load_error": "Failed to load client data. Please try again."
+        }
+      },
+      "list": {
+        "title": "Client List",
+        "search_placeholder": "Search by name, phone, CIN...",
+        "export": "Export to Excel",
+        "create": "Create New Client",
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "phone": "Phone",
+          "email": "Email",
+          "address": "Address",
+          "cin": "CIN",
+          "license": "License",
+          "actions": "Actions"
+        },
+        "actions": {
+          "view": "View Details",
+          "edit": "Edit",
+          "delete": "Delete"
+        }
+      },
+      "details": {
+        "title": "Client Details",
+        "edit": "Edit Client",
+        "back": "Back to List",
+        "sections": {
+          "basic_info": "Basic Information",
+          "contact_info": "Contact Information",
+          "documents": "Documents"
+        }
+      }
+    },
+    "payments": {
+      "title": "Payments & Expenses",
+      "subtitle": "Manage payments and track expenses",
+      "create": {
+        "title": "Create Payment/Expense",
+        "subtitle": "Add a new payment or expense record",
+        "form": {
+          "type": "Type",
+          "type_payment": "Payment",
+          "type_expense": "Expense",
+          "amount": "Amount",
+          "amount_placeholder": "Enter amount",
+          "description": "Description",
+          "description_placeholder": "Enter description",
+          "date": "Date",
+          "category": "Category",
+          "category_placeholder": "Select category"
+        }
+      },
+      "list": {
+        "title": "Payments & Expenses List",
+        "table": {
+          "id": "ID",
+          "type": "Type",
+          "amount": "Amount",
+          "description": "Description",
+          "date": "Date",
+          "category": "Category",
+          "actions": "Actions"
+        }
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage system users and permissions",
+      "create": {
+        "title": "Create New User",
+        "subtitle": "Add a new user to the system",
+        "form": {
+          "username": "Username",
+          "email": "Email",
+          "password": "Password",
+          "role": "Role",
+          "role_admin": "Administrator",
+          "role_user": "User"
+        }
+      },
+      "list": {
+        "title": "User List",
+        "table": {
+          "id": "ID",
+          "username": "Username",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "actions": "Actions"
+        }
+      }
+    },
+    "common": {
+      "loading": "Loading...",
+      "no_data": "No data available",
+      "error": "An error occurred",
+      "success": "Operation completed successfully",
+      "confirm": "Are you sure?",
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "search": "Search",
+      "filter": "Filter",
+      "export": "Export",
+      "import": "Import",
+      "refresh": "Refresh",
+      "actions": "Actions",
+      "status": "Status",
+      "date": "Date",
+      "amount": "Amount",
+      "description": "Description",
+      "notes": "Notes",
+      "required_field": "This field is required",
+      "invalid_format": "Invalid format",
+      "save_changes": "Save Changes",
+      "discard_changes": "Discard Changes",
+      "delete_confirm": "Are you sure you want to delete this item?",
+      "delete_success": "Item deleted successfully",
+      "delete_error": "Failed to delete item",
+      "create_success": "Item created successfully",
+      "create_error": "Failed to create item",
+      "update_success": "Item updated successfully",
+      "update_error": "Failed to update item"
+    },
+    "generic": {
+      "create_success": "{{item}} created successfully!",
+      "create_error": "Failed to create {{item}}",
+      "update_success": "{{item}} updated successfully!",
+      "update_error": "Failed to update {{item}}"
+    }
+  },
+  "ADMIN_CREATE_PAGES": {
+    "VEHICLE": {
+      "UPDATE_SUBTITLE": "Update the vehicle details below.",
+      "CREATE_SUBTITLE": "Enter the details for the new vehicle.",
+      "LOADING_DATA": "Loading vehicle data...",
+      "FIELDSET_IDENTIFICATION": "Vehicle Identification",
+      "LABEL_MAKE": "Make (Marque)",
+      "ERROR_MAKE_REQUIRED": "Make is required.",
+      "LABEL_MODEL": "Model",
+      "ERROR_MODEL_REQUIRED": "Model is required.",
+      "LABEL_LICENSE_PLATE": "License Plate (Matricule)",
+      "ERROR_LICENSE_PLATE_REQUIRED": "License Plate is required.",
+      "ERROR_LICENSE_PLATE_MAXLENGTH": "License Plate cannot exceed 10 characters.",
+      "LABEL_DISPLAY_NAME": "Display Name (Optional)",
+      "PLACEHOLDER_DISPLAY_NAME": "e.g., Golf 7 Black GTI",
+      "HELP_DISPLAY_NAME": "A friendly name for easier identification (e.g., in dropdowns).",
+      "FIELDSET_SPECS": "Specifications",
+      "LABEL_TYPE": "Vehicle Type",
+      "PLACEHOLDER_TYPE": "e.g., Berline, SUV",
+      "ERROR_TYPE_REQUIRED": "Vehicle type is required.",
+      "LABEL_COLOR": "Color",
+      "ERROR_COLOR_REQUIRED": "Color is required.",
+      "LABEL_FUEL": "Fuel Type",
+      "PLACEHOLDER_FUEL": "e.g., Essence, Diesel",
+      "ERROR_FUEL_REQUIRED": "Fuel type is required.",
+      "LABEL_CAPACITY": "Capacity (Seats)",
+      "ERROR_CAPACITY_REQUIRED": "Capacity is required.",
+      "ERROR_CAPACITY_MIN": "Capacity must be at least 1.",
+      "LABEL_PRICE": "Base Price (€)",
+      "PLACEHOLDER_PRICE": "e.g., 150.00",
+      "ERROR_PRICE_REQUIRED": "Base price is required.",
+      "ERROR_PRICE_MIN": "Price cannot be negative.",
+      "LABEL_AUTOMATIC": "Automatic Transmission",
+      "FIELDSET_PHOTO": "Vehicle Photo",
+      "LABEL_UPLOAD_PHOTO": "Upload Photo",
+      "PREVIEW_NEW_PHOTO": "New Photo Preview",
+      "LABEL_CURRENT_PHOTO": "Current Photo",
+      "NO_PHOTO": "No photo available",
+      "BUTTON_CANCEL": "Cancel",
+      "BUTTON_SAVING": "Saving..."
+    }
   }
 }

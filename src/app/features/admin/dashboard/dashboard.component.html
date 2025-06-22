@@ -1,183 +1,317 @@
-<!-- Base container with padding and centering -->
+<!-- Enhanced Dashboard Container -->
 <div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
 
-  <!-- Title -->
-  <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Dashboard Overview</h2>
+  <!-- Enhanced Page Title -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold theme-text-main mb-4">
+      <i class="fas fa-chart-line mr-3 text-blue-500"></i>
+      Dashboard Overview
+    </h1>
+    <p class="theme-text-muted text-lg max-w-3xl mx-auto">
+      Monitor your car rental business performance with real-time metrics and insights
+    </p>
+  </div>
 
-  <!-- Filters Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-
+  <!-- Enhanced Filters Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
     <!-- Date Range Filter Card -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700">Filter by Date Range</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-        <div>
-          <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
-          <input type="date" id="startDate"
-                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                 [(ngModel)]="startDate" (change)="onDateRangeChange()">
-        </div>
-        <div>
-          <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">End Date</label>
-          <input type="date" id="endDate"
-                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                 [(ngModel)]="endDate" (change)="onDateRangeChange()">
-        </div>
-        <div>
-           <!-- The change events on the inputs already trigger the fetch, this button is supplementary -->
-           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                   (click)="onDateRangeChange()">
-             Apply Date Filter
-           </button>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+          Filter by Date Range
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div class="form-group">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input type="date" id="startDate"
+                   class="form-input"
+                   [(ngModel)]="startDate" (change)="onDateRangeChange()">
+          </div>
+          <div class="form-group">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" id="endDate"
+                   class="form-input"
+                   [(ngModel)]="endDate" (change)="onDateRangeChange()">
+          </div>
+          <div>
+            <button class="btn btn-primary btn-full"
+                    (click)="onDateRangeChange()">
+              <i class="fas fa-filter mr-2"></i>
+              Apply Filter
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Vehicle Filter Card (Select Input) -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700">Filter by Vehicle</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-         <div>
-           <label for="vehicleSelect" class="block text-gray-700 text-sm font-bold mb-2">Select Vehicle</label>
-           <div class="relative">
+    <!-- Vehicle Filter Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold theme-text-main">
+          <i class="fas fa-car mr-2 text-blue-500"></i>
+          Filter by Vehicle
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div class="form-group">
+            <label for="vehicleSelect" class="form-label">Select Vehicle</label>
+            <div class="relative">
               <!-- Loading spinner for vehicle select -->
               <div *ngIf="isLoadingVehicles" class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                 <svg class="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                 </svg>
+                <div class="loading-spinner"></div>
               </div>
               <select id="vehicleSelect"
-                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      class="form-input pr-10"
                       [(ngModel)]="voitureId"
                       (change)="onVoitureIdChange()"
                       [disabled]="isLoadingVehicles">
-                 <option [ngValue]="null">-- Select a Vehicle --</option>
-                 <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
-                    {{ getVehicleDisplayName(vehicle) }}
-                 </option>
+                <option [ngValue]="null">-- Select a Vehicle --</option>
+                <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+                  {{ getVehicleDisplayName(vehicle) }}
+                </option>
               </select>
-           </div>
-           <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm text-gray-500 mt-1 italic">No vehicles found.</p>
-         </div>
+            </div>
+            <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm theme-text-muted mt-1 italic">No vehicles found.</p>
+          </div>
           <div>
-            <!-- This button is less critical now as the select change triggers the fetch -->
-            <!-- Kept for consistency or if you add more specific vehicle filters -->
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            <button class="btn btn-primary btn-full"
                    (click)="onVoitureIdChange()">
-              Apply Vehicle Filter
+              <i class="fas fa-search mr-2"></i>
+              Apply Filter
             </button>
           </div>
-       </div>
-     </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-
-  <!-- Overall Metrics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+  <!-- Enhanced Overall Metrics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
     <!-- Availability Rate Card -->
-    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
-      <h3 class="text-xl font-semibold mb-2 text-gray-700">Availability Rate (Selected Period)</h3>
-      <div class="flex justify-center items-center h-24">
-        <div *ngIf="isLoadingAvailability" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-        <p *ngIf="!isLoadingAvailability" class="text-5xl font-extrabold text-blue-600">
-          {{ formatPercentage(tauxDisponibilite) }}
-        </p>
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-6">
+          <i class="fas fa-percentage text-2xl text-blue-600 dark:text-blue-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Availability Rate</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingAvailability" class="loading-spinner"></div>
+          <p *ngIf="!isLoadingAvailability" class="text-5xl font-extrabold text-blue-600">
+            {{ formatPercentage(tauxDisponibilite) }}
+          </p>
+        </div>
+        <p class="theme-text-muted text-sm">Selected Period</p>
       </div>
     </div>
 
     <!-- Cancellation Rate Card -->
-    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
-      <h3 class="text-xl font-semibold mb-2 text-gray-700">Cancellation Rate</h3>
-      <div class="flex justify-center items-center h-24">
-         <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-        <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-blue-600">
-           {{ formatPercentage(tauxAnnulation) }}
-        </p>
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-6">
+          <i class="fas fa-times-circle text-2xl text-red-600 dark:text-red-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Cancellation Rate</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-red-600">
+            {{ formatPercentage(tauxAnnulation) }}
+          </p>
+        </div>
+        <p class="theme-text-muted text-sm">Overall Performance</p>
       </div>
     </div>
 
-     <!-- Total Revenue Card -->
-    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
-      <h3 class="text-xl font-semibold mb-2 text-gray-700">Total Revenue</h3>
-       <div class="flex justify-center items-center h-24">
-         <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-        <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-green-600">
-          {{ formatCurrency(totalRevenu) }}
-        </p>
+    <!-- Total Revenue Card -->
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-6">
+          <i class="fas fa-dollar-sign text-2xl text-green-600 dark:text-green-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Total Revenue</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-green-600">
+            {{ formatCurrency(totalRevenu) }}
+          </p>
+        </div>
+        <p class="theme-text-muted text-sm">Period Total</p>
       </div>
     </div>
   </div>
 
-  <!-- Vehicle Specific Metrics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <!-- Enhanced Vehicle Specific Metrics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
     <!-- Average Revenue per Vehicle Card -->
-    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
-      <h3 class="text-xl font-semibold mb-2 text-gray-700">Average Revenue per Vehicle (ID: {{ voitureId || 'N/A' }})</h3>
-       <div class="flex justify-center items-center h-24">
-         <div *ngIf="isLoadingAverageRevenueCar" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-        <ng-container *ngIf="!isLoadingAverageRevenueCar">
-           <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-purple-600">{{ formatCurrency(revenuMoyenParVoiture) }}</p>
-           <p *ngIf="voitureId === null" class="text-gray-500 italic text-lg">Select a vehicle above.</p>
-        </ng-container>
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full mb-6">
+          <i class="fas fa-chart-bar text-2xl text-purple-600 dark:text-purple-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Average Revenue per Vehicle</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingAverageRevenueCar" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingAverageRevenueCar">
+            <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-purple-600">{{ formatCurrency(revenuMoyenParVoiture) }}</p>
+            <p *ngIf="voitureId === null" class="theme-text-muted italic text-lg">Select a vehicle above</p>
+          </ng-container>
+        </div>
+        <p class="theme-text-muted text-sm">Vehicle ID: {{ voitureId || 'N/A' }}</p>
       </div>
     </div>
 
     <!-- Reservations per Vehicle Card -->
-    <div class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center">
-      <h3 class="text-xl font-semibold mb-2 text-gray-700">Reservations per Vehicle (ID: {{ voitureId || 'N/A' }})</h3>
-       <div class="flex justify-center items-center h-24">
-         <div *ngIf="isLoadingReservationsCar" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-         <ng-container *ngIf="!isLoadingReservationsCar">
-           <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-orange-600">
-             {{ nombreReservationsParVoiture !== null ? nombreReservationsParVoiture : 'N/A' }}
-            </p>
-            <p *ngIf="voitureId === null" class="text-gray-500 italic text-lg">Select a vehicle above.</p>
-         </ng-container>
-       </div>
-     </div>
-  </div>
-
-  <!-- Average Duration Card -->
-  <div class="grid grid-cols-1 mb-8">
-     <div class="bg-white shadow-md rounded-lg p-6 text-center">
-       <h3 class="text-xl font-semibold mb-2 text-gray-700">Average Reservation Duration</h3>
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 dark:bg-orange-900 rounded-full mb-6">
+          <i class="fas fa-calendar-check text-2xl text-orange-600 dark:text-orange-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Reservations per Vehicle</h3>
         <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-         <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-teal-600">
-           {{ formatDuration(dureeMoyenneReservations) }}
-         </p>
-       </div>
-     </div>
+          <div *ngIf="isLoadingReservationsCar" class="loading-spinner"></div>
+          <ng-container *ngIf="!isLoadingReservationsCar">
+            <p *ngIf="voitureId !== null" class="text-5xl font-extrabold text-orange-600">
+              {{ nombreReservationsParVoiture !== null ? nombreReservationsParVoiture : 'N/A' }}
+            </p>
+            <p *ngIf="voitureId === null" class="theme-text-muted italic text-lg">Select a vehicle above</p>
+          </ng-container>
+        </div>
+        <p class="theme-text-muted text-sm">Vehicle ID: {{ voitureId || 'N/A' }}</p>
+      </div>
+    </div>
   </div>
 
+  <!-- Enhanced Average Duration Card -->
+  <div class="grid grid-cols-1 mb-12">
+    <div class="card text-center">
+      <div class="card-body p-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900 rounded-full mb-6">
+          <i class="fas fa-clock text-2xl text-teal-600 dark:text-teal-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 theme-text-main">Average Reservation Duration</h3>
+        <div class="flex justify-center items-center h-24">
+          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
+          <p *ngIf="!isLoadingOverallMetrics" class="text-5xl font-extrabold text-teal-600">
+            {{ formatDuration(dureeMoyenneReservations) }}
+          </p>
+        </div>
+        <p class="theme-text-muted text-sm">Overall Average</p>
+      </div>
+    </div>
+  </div>
 
-  <!-- Revenue by Period Chart Card -->
-  <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-    <h3 class="text-xl font-semibold mb-4 text-gray-700">Revenue by Period ({{ startDate || 'N/A' }} to {{ endDate || 'N/A' }})</h3>
-     <div *ngIf="isLoadingRevenuePeriod" class="text-center py-8">
-       <div class="animate-spin inline-block h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" role="status">
-         <span class="sr-only">Loading...</span>
-       </div>
-     </div>
-     <div *ngIf="!isLoadingRevenuePeriod">
-       <div class="relative h-96"> <!-- Use Tailwind height utility or style attribute -->
-           <!-- Canvas element for ng2-charts -->
-           <!-- Make sure ng2-charts is properly imported and the module is available -->
-           <!-- Example usage (uncomment if using ng2-charts): -->
+  <!-- Enhanced Revenue Chart Card -->
+  <div class="card mb-12">
+    <div class="card-header">
+      <h3 class="text-xl font-semibold theme-text-main">
+        <i class="fas fa-chart-line mr-2 text-blue-500"></i>
+        Revenue by Period ({{ startDate || 'N/A' }} to {{ endDate || 'N/A' }})
+      </h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="isLoadingRevenuePeriod" class="text-center py-12">
+        <div class="loading-spinner mx-auto mb-4"></div>
+        <p class="theme-text-muted">Loading revenue data...</p>
+      </div>
+      <div *ngIf="!isLoadingRevenuePeriod">
+        <div class="relative h-96">
+          <!-- Canvas element for ng2-charts -->
           <canvas baseChart
             [data]="revenuParPeriodeChartData"
             [options]="revenuParPeriodeChartOptions"
             [type]="revenuParPeriodeChartType">
           </canvas>
-          <!-- Or replace with your preferred charting library component -->
-       </div>
-        <div *ngIf="!isLoadingRevenuePeriod && (revenuParPeriodeChartData?.datasets?.[0]?.data?.length ?? 0) === 0" class="text-center text-gray-500 italic mt-4">
-          No revenue data available for the selected period.
         </div>
-     </div>
+        <div *ngIf="!isLoadingRevenuePeriod && (revenuParPeriodeChartData?.datasets?.[0]?.data?.length ?? 0) === 0" class="text-center py-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+            <i class="fas fa-chart-line text-2xl text-gray-400"></i>
+          </div>
+          <p class="theme-text-muted">No revenue data available for the selected period.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Add more sections/cards here as needed -->
+  <!-- Quick Actions Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
+      <div class="card-body p-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+          <i class="fas fa-car text-xl text-blue-600 dark:text-blue-400"></i>
+        </div>
+        <h4 class="font-semibold theme-text-main mb-2">Manage Vehicles</h4>
+        <p class="text-sm theme-text-muted">Add, edit, or remove vehicles from your fleet</p>
+      </div>
+    </div>
+
+    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
+      <div class="card-body p-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+          <i class="fas fa-calendar-alt text-xl text-green-600 dark:text-green-400"></i>
+        </div>
+        <h4 class="font-semibold theme-text-main mb-2">View Reservations</h4>
+        <p class="text-sm theme-text-muted">Monitor all current and past reservations</p>
+      </div>
+    </div>
+
+    <div class="card text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
+      <div class="card-body p-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full mb-4">
+          <i class="fas fa-users text-xl text-purple-600 dark:text-purple-400"></i>
+        </div>
+        <h4 class="font-semibold theme-text-main mb-2">Manage Clients</h4>
+        <p class="text-sm theme-text-muted">View and manage client information</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="text-xl font-semibold theme-text-main">
+        <i class="fas fa-history mr-2 text-blue-500"></i>
+        Recent Activity
+      </h3>
+    </div>
+    <div class="card-body">
+      <div class="space-y-4">
+        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-check text-green-600 dark:text-green-400"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-medium theme-text-main">New reservation created</p>
+            <p class="text-sm theme-text-muted">Vehicle #123 was rented for 3 days</p>
+          </div>
+          <span class="text-sm theme-text-muted">2 hours ago</span>
+        </div>
+
+        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-car text-blue-600 dark:text-blue-400"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-medium theme-text-main">New vehicle added</p>
+            <p class="text-sm theme-text-muted">2023 Toyota Camry added to fleet</p>
+          </div>
+          <span class="text-sm theme-text-muted">1 day ago</span>
+        </div>
+
+        <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-medium theme-text-main">Maintenance reminder</p>
+            <p class="text-sm theme-text-muted">Vehicle #456 due for service</p>
+          </div>
+          <span class="text-sm theme-text-muted">3 days ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
