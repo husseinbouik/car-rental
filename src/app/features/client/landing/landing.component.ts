@@ -263,11 +263,9 @@ export class LandingComponent implements OnInit, OnDestroy {
           if (darkMode === 'enabled') {
             this.isDarkMode = true;
             document.body.classList.add('dark-mode');
-            document.documentElement.classList.add('dark');
           } else {
             this.isDarkMode = false;
             document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark');
           }
       }
   }
@@ -278,11 +276,9 @@ export class LandingComponent implements OnInit, OnDestroy {
       if (this.isDarkMode) {
         document.body.classList.add('dark-mode');
         localStorage.setItem('darkMode', 'enabled');
-        document.documentElement.classList.add('dark');
       } else {
         document.body.classList.remove('dark-mode');
         localStorage.setItem('darkMode', 'disabled');
-        document.documentElement.classList.remove('dark');
       }
     }
   }

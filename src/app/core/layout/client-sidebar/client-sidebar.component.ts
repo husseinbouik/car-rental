@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router'; // Import RouterModule for route
 import { TranslateModule, TranslateService } from '@ngx-translate/core'; // Import TranslateModule and Service
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; // Import FontAwesome
 // Import necessary icons
-import { faHome, faCarSide, faBook, faUser, faSignOutAlt, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCarSide, faBook, faUser, faSignOutAlt, faChevronLeft, faCar, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../features/client/auth.service'; // Import Auth Service (Adjust path)
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router'; // Import Router
@@ -32,6 +32,8 @@ export class ClientSidebarComponent {
   faUser = faUser;
   faSignOutAlt = faSignOutAlt;
   faChevronLeft = faChevronLeft;
+  faCar = faCar;
+  faCalendarAlt = faCalendarAlt;
 
 
   constructor(
@@ -49,11 +51,22 @@ export class ClientSidebarComponent {
        this.router.navigate(['/login']); // Navigate after logout
     }
   }
-    // Optional: Method to be called when the Collapse button inside the sidebar is clicked
-    // If toggle happens from Navbar, this isn't needed here, but if sidebar has its own toggle button...
-   toggleOwnCollapse() {
-      // If the collapse is only driven by the Input, this wouldn't be needed.
-      // If the sidebar itself has a button to trigger collapse, it would emit an Output like Navbar
-      console.log("Sidebar internal toggle clicked (if implemented)");
-   }
+
+  // Method to check if a route is active
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+
+  // Method to toggle collapse (alias for toggleOwnCollapse for template compatibility)
+  toggleCollapse(): void {
+    this.toggleOwnCollapse();
+  }
+
+  // Optional: Method to be called when the Collapse button inside the sidebar is clicked
+  // If toggle happens from Navbar, this isn't needed here, but if sidebar has its own toggle button...
+  toggleOwnCollapse() {
+    // If the collapse is only driven by the Input, this wouldn't be needed.
+    // If the sidebar itself has a button to trigger collapse, it would emit an Output like Navbar
+    console.log("Sidebar internal toggle clicked (if implemented)");
+  }
 }

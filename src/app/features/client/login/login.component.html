@@ -1,8 +1,13 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 relative overflow-hidden">
+<div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style="background: linear-gradient(135deg, var(--page-background) 0%, var(--alternate-section-background) 50%, var(--page-background) 100%);">
   <!-- Background Pattern -->
   <div class="absolute inset-0 opacity-5 bg-pattern"></div>
 
   <div class="card w-full max-w-md relative z-10">
+    <!-- Dark/Light Mode Switch -->
+    <button (click)="toggleDarkMode()" class="absolute top-4 right-4 p-2 rounded-md bg-white/70 text-gray-700 shadow hover:bg-gray-100 transition z-20" [attr.aria-label]="isDarkMode ? 'Light mode' : 'Dark mode'" style="background-color: var(--card-background); color: var(--text-color);">
+      <i class="fas" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+    </button>
+
     <div class="card-body p-8">
       <!-- Logo and Brand -->
       <div class="text-center mb-8">
@@ -81,7 +86,8 @@
             <button
               type="button"
               (click)="togglePasswordVisibility()"
-              class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+              style="color: var(--text-color-muted);"
             >
               <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
@@ -125,7 +131,7 @@
 
       <!-- Additional Links -->
       <div class="mt-8 space-y-4 text-center">
-        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+        <div class="border-t pt-6" style="border-color: var(--border-color);">
           <span class="text-sm theme-text-muted">{{ 'login.no_account' | translate }}</span>
           <a
             routerLink="/signup"
@@ -140,10 +146,10 @@
       <div class="mt-8">
         <div class="relative">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+            <div class="w-full border-t" style="border-color: var(--border-color);"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white dark:bg-gray-800 theme-text-muted">{{ 'login.or_continue_with' | translate }}</span>
+            <span class="px-4 theme-text-muted" style="background-color: var(--card-background);">{{ 'login.or_continue_with' | translate }}</span>
           </div>
         </div>
 
@@ -169,12 +175,12 @@
       </div>
 
       <!-- Demo Credentials (Development Only) -->
-      <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-        <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">
+      <div class="mt-6 p-4 rounded-lg border" style="background-color: var(--primary-light-color); border-color: var(--primary-color);">
+        <h4 class="text-sm font-semibold mb-2" style="color: var(--primary-color);">
           <i class="fas fa-info-circle mr-1"></i>
           {{ 'login.demo_credentials' | translate }}
         </h4>
-        <div class="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+        <div class="text-xs space-y-1" style="color: var(--primary-color);">
           <div><strong>Admin:</strong> admin / admin123</div>
           <div><strong>Client:</strong> client / client123</div>
         </div>

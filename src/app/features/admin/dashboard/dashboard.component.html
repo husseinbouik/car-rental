@@ -1,363 +1,427 @@
 <!-- Main Content Wrapper -->
-<div class="container mx-auto px-4 py-8 min-h-screen">
-  <!-- Page Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold theme-text-main mb-2">
-      {{ 'admin.dashboard.title' | translate }}
-    </h1>
-    <p class="theme-text-muted">
-      {{ 'admin.dashboard.welcome' | translate }}
-    </p>
-  </div>
+<div class="min-h-screen" style="background: linear-gradient(135deg, var(--page-background) 0%, var(--alternate-section-background) 100%);">
+  <div class="container mx-auto px-4 py-8">
 
-  <!-- Overview Section -->
-  <div class="mb-8">
-    <h2 class="text-2xl font-semibold theme-text-main mb-6">
-      {{ 'admin.dashboard.overview' | translate }}
-    </h2>
-  </div>
-
-  <!-- Filters Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Date Range Filter Card -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-calendar mr-2 text-blue-500"></i>
-          {{ 'admin.dashboard.filters.date_range' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-          <div class="form-group">
-            <label for="startDate" class="form-label">{{ 'admin.dashboard.filters.start_date' | translate }}</label>
-            <input type="date" id="startDate" [(ngModel)]="startDate" (change)="onDateChange()"
-                   class="form-input">
+    <!-- Page Header with Welcome Message -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold mb-2" style="color: var(--text-color);">
+            <i class="fas fa-tachometer-alt mr-3" style="color: var(--primary-color);"></i>
+            {{ 'admin.dashboard.title' | translate }}
+          </h1>
+          <p class="text-lg" style="color: var(--text-color-muted);">
+            {{ 'admin.dashboard.welcome' | translate }}
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="text-right">
+            <p class="text-sm" style="color: var(--text-color-muted);">Last Updated</p>
+            <p class="font-medium" style="color: var(--text-color);">{{ currentTime | date:'short' }}</p>
           </div>
-          <div class="form-group">
-            <label for="endDate" class="form-label">{{ 'admin.dashboard.filters.end_date' | translate }}</label>
-            <input type="date" id="endDate" [(ngModel)]="endDate" (change)="onDateChange()"
-                   class="form-input">
-          </div>
+          <button class="btn btn-primary" (click)="refreshAllData()">
+            <i class="fas fa-sync-alt mr-2"></i>
+            Refresh
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Vehicle Filter Card -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-car mr-2 text-blue-500"></i>
-          {{ 'admin.dashboard.filters.vehicle_filter' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-          <div class="form-group">
-            <label for="vehicleSelect" class="form-label">{{ 'admin.dashboard.filters.select_vehicle' | translate }}</label>
-            <div class="relative">
-              <!-- Loading spinner for vehicle select -->
-              <div *ngIf="isLoadingVehicles" class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <div class="loading-spinner"></div>
-              </div>
-              <select id="vehicleSelect"
-                      class="form-input pr-10"
-                      [(ngModel)]="voitureId"
-                      (change)="onVoitureIdChange()"
-                      [disabled]="isLoadingVehicles">
-                <option [ngValue]="null">-- {{ 'admin.dashboard.filters.select_vehicle' | translate }} --</option>
-                <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
-                  {{ getVehicleDisplayName(vehicle) }}
-                </option>
-              </select>
+    <!-- Filters Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Date Range Filter -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-lg font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-calendar mr-2" style="color: var(--primary-color);"></i>
+            Date Range
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Start Date</label>
+              <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" class="form-input">
             </div>
-            <p *ngIf="!isLoadingVehicles && vehicles.length === 0" class="text-sm theme-text-muted mt-1 italic">
-              {{ 'admin.common.no_data' | translate }}
-            </p>
-          </div>
-          <div>
-            <button class="btn btn-primary btn-full"
-                   (click)="onVoitureIdChange()">
+            <div>
+              <label class="form-label">End Date</label>
+              <input type="date" [(ngModel)]="endDate" (change)="onDateChange()" class="form-input">
+            </div>
+            <button class="btn btn-primary btn-full" (click)="onDateChange()">
               <i class="fas fa-search mr-2"></i>
-              {{ 'admin.dashboard.filters.apply_filters' | translate }}
+              Apply Filter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Filter -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-lg font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-car mr-2" style="color: var(--primary-color);"></i>
+            Vehicle Analysis
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Select Vehicle</label>
+              <div class="relative">
+                <div *ngIf="isLoadingVehicles" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <div class="loading-spinner"></div>
+                </div>
+                <select [(ngModel)]="voitureId" (change)="onVoitureIdChange()"
+                        class="form-input pr-10" [disabled]="isLoadingVehicles">
+                  <option [ngValue]="null">-- All Vehicles --</option>
+                  <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+                    {{ getVehicleDisplayName(vehicle) }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div *ngIf="voitureId" class="p-3 rounded-lg" style="background-color: var(--hover-background);">
+              <p class="text-sm font-medium" style="color: var(--text-color);">Selected Vehicle</p>
+              <p class="text-xs" style="color: var(--text-color-muted);">
+                {{ getSelectedVehicleName() }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-lg font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-bolt mr-2" style="color: var(--primary-color);"></i>
+            Quick Actions
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="space-y-3">
+            <button class="btn btn-primary btn-full" routerLink="/admin/vehicles/create">
+              <i class="fas fa-plus mr-2"></i>
+              Add Vehicle
+            </button>
+            <button class="btn btn-success btn-full" routerLink="/admin/reservations/create">
+              <i class="fas fa-calendar-plus mr-2"></i>
+              New Reservation
+            </button>
+            <button class="btn btn-info btn-full" routerLink="/admin/clients/create">
+              <i class="fas fa-user-plus mr-2"></i>
+              Add Client
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Actions Card -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-bolt mr-2 text-yellow-500"></i>
-          {{ 'admin.dashboard.quick_actions' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="space-y-3">
-          <button class="btn btn-primary btn-full" routerLink="/admin/vehicles/create">
-            <i class="fas fa-plus mr-2"></i>
-            {{ 'admin.dashboard.add_vehicle' | translate }}
-          </button>
-          <button class="btn btn-success btn-full" routerLink="/admin/reservations/create">
-            <i class="fas fa-calendar-plus mr-2"></i>
-            {{ 'admin.dashboard.create_reservation' | translate }}
-          </button>
-          <button class="btn btn-info btn-full" routerLink="/admin/clients/create">
-            <i class="fas fa-user-plus mr-2"></i>
-            {{ 'admin.dashboard.add_client' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Statistics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-    <!-- Total Vehicles Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-6">
-          <i class="fas fa-car text-2xl text-blue-600 dark:text-blue-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_vehicles' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-blue-600">
-              {{ totalVehicles !== null ? totalVehicles : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Total Reservations Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-6">
-          <i class="fas fa-calendar-check text-2xl text-green-600 dark:text-green-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_reservations' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-green-600">
-              {{ totalReservations !== null ? totalReservations : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Total Clients Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full mb-6">
-          <i class="fas fa-users text-2xl text-purple-600 dark:text-purple-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_clients' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-purple-600">
-              {{ totalClients !== null ? totalClients : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Total Revenue Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full mb-6">
-          <i class="fas fa-euro-sign text-2xl text-yellow-600 dark:text-yellow-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.total_revenue' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-yellow-600">
-              {{ totalRevenu !== null ? (totalRevenu | number:'1.0-0') + '€' : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Additional Statistics Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-    <!-- Availability Rate Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-6">
-          <i class="fas fa-percentage text-2xl text-indigo-600 dark:text-indigo-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.availability_rate' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingAvailability" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingAvailability">
-            <p class="text-5xl font-extrabold text-indigo-600">
-              {{ tauxDisponibilite !== null ? (tauxDisponibilite | number:'1.1-1') + '%' : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cancellation Rate Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-6">
-          <i class="fas fa-times-circle text-2xl text-red-600 dark:text-red-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.cancellation_rate' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-red-600">
-              {{ tauxAnnulation !== null ? (tauxAnnulation | number:'1.1-1') + '%' : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Average Rental Duration Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900 rounded-full mb-6">
-          <i class="fas fa-clock text-2xl text-teal-600 dark:text-teal-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.avg_rental_duration' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-teal-600">
-              {{ avgRentalDuration !== null ? (avgRentalDuration | number:'1.0-1') + ' days' : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-    <!-- Monthly Growth Card -->
-    <div class="card text-center hover:scale-105 transition-transform duration-300">
-      <div class="card-body p-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-100 dark:bg-pink-900 rounded-full mb-6">
-          <i class="fas fa-chart-line text-2xl text-pink-600 dark:text-pink-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-4 theme-text-main">{{ 'admin.dashboard.stats.monthly_growth' | translate }}</h3>
-        <div class="flex justify-center items-center h-24">
-          <div *ngIf="isLoadingOverallMetrics" class="loading-spinner"></div>
-          <ng-container *ngIf="!isLoadingOverallMetrics">
-            <p class="text-5xl font-extrabold text-pink-600">
-              {{ monthlyGrowth !== null ? (monthlyGrowth | number:'1.1-1') + '%' : 'N/A' }}
-            </p>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recent Activity Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-    <!-- Recent Reservations -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-          {{ 'admin.dashboard.recent_reservations' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div *ngIf="isLoadingRecentReservations" class="text-center py-8">
-          <div class="loading-spinner mx-auto mb-4"></div>
-          <p class="theme-text-muted">{{ 'admin.common.loading' | translate }}</p>
-        </div>
-        <div *ngIf="!isLoadingRecentReservations && recentReservations.length === 0" class="text-center py-8">
-          <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
-          <p class="theme-text-muted">{{ 'admin.dashboard.no_recent_reservations' | translate }}</p>
-        </div>
-        <div *ngIf="!isLoadingRecentReservations && recentReservations.length > 0" class="space-y-4">
-          <div *ngFor="let reservation of recentReservations" class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                <i class="fas fa-calendar-check text-blue-600 dark:text-blue-400"></i>
-              </div>
-              <div>
-                <p class="font-medium theme-text-main">{{ reservation.voiture?.vname || 'Unknown Vehicle' }}</p>
-                <p class="text-sm theme-text-muted">{{ reservation.dateDebut | date:'short' }}</p>
-              </div>
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Revenue -->
+      <div class="card group hover:scale-105 transition-all duration-300">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                 style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+              <i class="fas fa-euro-sign text-white text-xl"></i>
             </div>
             <div class="text-right">
-              <p class="font-medium text-green-600">{{ reservation.montantTotal }}€</p>
-              <p class="text-sm theme-text-muted">{{ reservation.statut }}</p>
+              <p class="text-sm" style="color: var(--text-color-muted);">Total Revenue</p>
+              <p class="text-2xl font-bold" style="color: var(--text-color);">
+                {{ totalRevenu !== null ? (totalRevenu | number:'1.0-0') + '€' : 'N/A' }}
+              </p>
             </div>
+          </div>
+          <div class="flex items-center text-sm">
+            <i class="fas fa-arrow-up text-green-500 mr-1"></i>
+            <span class="text-green-500">+12.5%</span>
+            <span class="ml-auto" style="color: var(--text-color-muted);">vs last month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Vehicles -->
+      <div class="card group hover:scale-105 transition-all duration-300">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                 style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <i class="fas fa-car text-white text-xl"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-sm" style="color: var(--text-color-muted);">Total Vehicles</p>
+              <p class="text-2xl font-bold" style="color: var(--text-color);">
+                {{ totalVehicles !== null ? totalVehicles : 'N/A' }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center text-sm">
+            <i class="fas fa-arrow-up text-green-500 mr-1"></i>
+            <span class="text-green-500">+3</span>
+            <span class="ml-auto" style="color: var(--text-color-muted);">this month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Availability Rate -->
+      <div class="card group hover:scale-105 transition-all duration-300">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                 style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-percentage text-white text-xl"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-sm" style="color: var(--text-color-muted);">Availability</p>
+              <p class="text-2xl font-bold" style="color: var(--text-color);">
+                {{ tauxDisponibilite !== null ? (tauxDisponibilite * 100 | number:'1.1-1') + '%' : 'N/A' }}
+              </p>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div class="bg-green-500 h-2 rounded-full"
+                 [style.width.%]="tauxDisponibilite !== null ? tauxDisponibilite * 100 : 0"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancellation Rate -->
+      <div class="card group hover:scale-105 transition-all duration-300">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                 style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+              <i class="fas fa-times-circle text-white text-xl"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-sm" style="color: var(--text-color-muted);">Cancellations</p>
+              <p class="text-2xl font-bold" style="color: var(--text-color);">
+                {{ tauxAnnulation !== null ? (tauxAnnulation * 100 | number:'1.1-1') + '%' : 'N/A' }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center text-sm">
+            <i class="fas fa-arrow-down text-green-500 mr-1"></i>
+            <span class="text-green-500">-2.1%</span>
+            <span class="ml-auto" style="color: var(--text-color-muted);">vs last month</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- System Alerts -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-bell mr-2 text-yellow-500"></i>
-          {{ 'admin.dashboard.system_alerts' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div *ngIf="systemAlerts.length === 0" class="text-center py-8">
-          <i class="fas fa-check-circle text-4xl text-green-400 mb-4"></i>
-          <p class="theme-text-muted">{{ 'admin.dashboard.no_alerts' | translate }}</p>
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Revenue Chart -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-chart-line mr-2" style="color: var(--primary-color);"></i>
+            Revenue Trend
+          </h3>
         </div>
-        <div *ngIf="systemAlerts.length > 0" class="space-y-4">
-          <div *ngFor="let alert of systemAlerts"
-               [class]="'p-4 rounded-lg border-l-4 ' + getAlertClass(alert.type)">
-            <div class="flex items-start space-x-3">
-              <i [class]="getAlertIcon(alert.type)" class="mt-1"></i>
-              <div class="flex-1">
-                <p class="font-medium">{{ alert.title }}</p>
-                <p class="text-sm theme-text-muted">{{ alert.message }}</p>
-                <p class="text-xs theme-text-muted mt-1">{{ alert.timestamp | date:'short' }}</p>
+        <div class="card-body">
+          <div *ngIf="isLoadingRevenuePeriod" class="h-80 flex items-center justify-center">
+            <div class="loading-spinner"></div>
+          </div>
+          <div *ngIf="!isLoadingRevenuePeriod" class="h-80">
+            <canvas baseChart
+                    [data]="revenueChartData"
+                    [type]="revenueChartType"
+                    [options]="revenueChartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reservations Chart -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-chart-bar mr-2" style="color: var(--primary-color);"></i>
+            Reservations Overview
+          </h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="isLoadingRevenuePeriod" class="h-80 flex items-center justify-center">
+            <div class="loading-spinner"></div>
+          </div>
+          <div *ngIf="!isLoadingRevenuePeriod" class="h-80">
+            <canvas baseChart
+                    [data]="reservationsChartData"
+                    [type]="reservationsChartType"
+                    [options]="reservationsChartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle-Specific Analytics -->
+    <div *ngIf="voitureId" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Average Revenue per Vehicle -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-chart-pie mr-2" style="color: var(--primary-color);"></i>
+            Average Revenue per Vehicle
+          </h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="isLoadingAverageRevenueCar" class="h-64 flex items-center justify-center">
+            <div class="loading-spinner"></div>
+          </div>
+          <div *ngIf="!isLoadingAverageRevenueCar" class="text-center">
+            <div class="text-6xl font-bold mb-4" style="color: var(--primary-color);">
+              {{ revenuMoyenParVoiture !== null ? (revenuMoyenParVoiture | number:'1.0-0') + '€' : 'N/A' }}
+            </div>
+            <p class="text-lg" style="color: var(--text-color-muted);">Average Revenue</p>
+            <p class="text-sm" style="color: var(--text-color-muted);">per reservation</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reservations per Vehicle -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-calendar-check mr-2" style="color: var(--primary-color);"></i>
+            Total Reservations
+          </h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="isLoadingReservationsCar" class="h-64 flex items-center justify-center">
+            <div class="loading-spinner"></div>
+          </div>
+          <div *ngIf="!isLoadingReservationsCar" class="text-center">
+            <div class="text-6xl font-bold mb-4" style="color: var(--primary-color);">
+              {{ nombreReservationsParVoiture !== null ? nombreReservationsParVoiture : 'N/A' }}
+            </div>
+            <p class="text-lg" style="color: var(--text-color-muted);">Total Reservations</p>
+            <p class="text-sm" style="color: var(--text-color-muted);">for this vehicle</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Average Rental Duration -->
+      <div class="card">
+        <div class="card-body p-6 text-center">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+               style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <i class="fas fa-clock text-white text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2" style="color: var(--text-color);">Avg. Duration</h3>
+          <p class="text-3xl font-bold" style="color: var(--primary-color);">
+            {{ dureeMoyenneReservations !== null ? (dureeMoyenneReservations | number:'1.1-1') + ' days' : 'N/A' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Total Clients -->
+      <div class="card">
+        <div class="card-body p-6 text-center">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+               style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+            <i class="fas fa-users text-white text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2" style="color: var(--text-color);">Total Clients</h3>
+          <p class="text-3xl font-bold" style="color: var(--primary-color);">
+            {{ totalClients !== null ? totalClients : 'N/A' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Total Reservations -->
+      <div class="card">
+        <div class="card-body p-6 text-center">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+               style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <i class="fas fa-calendar-check text-white text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2" style="color: var(--text-color);">Total Reservations</h3>
+          <p class="text-3xl font-bold" style="color: var(--primary-color);">
+            {{ totalReservations !== null ? totalReservations : 'N/A' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Alerts and Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- System Alerts -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-bell mr-2" style="color: var(--primary-color);"></i>
+            System Alerts
+          </h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="systemAlerts.length === 0" class="text-center py-8">
+            <i class="fas fa-check-circle text-4xl mb-4" style="color: var(--success-color);"></i>
+            <p style="color: var(--text-color-muted);">All systems operational</p>
+          </div>
+          <div *ngIf="systemAlerts.length > 0" class="space-y-4">
+            <div *ngFor="let alert of systemAlerts"
+                 [class]="'p-4 rounded-lg border-l-4 ' + getAlertClass(alert.type)">
+              <div class="flex items-start space-x-3">
+                <i [class]="getAlertIcon(alert.type)" class="mt-1"></i>
+                <div class="flex-1">
+                  <p class="font-medium" style="color: var(--text-color);">{{ alert.title }}</p>
+                  <p class="text-sm" style="color: var(--text-color-muted);">{{ alert.message }}</p>
+                  <p class="text-xs mt-1" style="color: var(--text-color-muted);">
+                    {{ alert.timestamp | date:'short' }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Charts Section (Placeholder) -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-chart-bar mr-2 text-blue-500"></i>
-          {{ 'admin.dashboard.revenue_chart' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p class="theme-text-muted">{{ 'admin.dashboard.chart_placeholder' | translate }}</p>
+      <!-- Performance Summary -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold" style="color: var(--text-color);">
+            <i class="fas fa-chart-area mr-2" style="color: var(--primary-color);"></i>
+            Performance Summary
+          </h3>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <h3 class="text-xl font-semibold theme-text-main">
-          <i class="fas fa-chart-pie mr-2 text-green-500"></i>
-          {{ 'admin.dashboard.vehicle_usage' | translate }}
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p class="theme-text-muted">{{ 'admin.dashboard.chart_placeholder' | translate }}</p>
+        <div class="card-body">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--hover-background);">
+              <div class="flex items-center">
+                <i class="fas fa-trending-up text-green-500 mr-3"></i>
+                <span style="color: var(--text-color);">Revenue Growth</span>
+              </div>
+              <span class="font-semibold text-green-500">+15.3%</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--hover-background);">
+              <div class="flex items-center">
+                <i class="fas fa-car text-blue-500 mr-3"></i>
+                <span style="color: var(--text-color);">Vehicle Utilization</span>
+              </div>
+              <span class="font-semibold text-blue-500">87.2%</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--hover-background);">
+              <div class="flex items-center">
+                <i class="fas fa-users text-purple-500 mr-3"></i>
+                <span style="color: var(--text-color);">Customer Satisfaction</span>
+              </div>
+              <span class="font-semibold text-purple-500">4.8/5.0</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--hover-background);">
+              <div class="flex items-center">
+                <i class="fas fa-clock text-orange-500 mr-3"></i>
+                <span style="color: var(--text-color);">Avg. Response Time</span>
+              </div>
+              <span class="font-semibold text-orange-500">2.3h</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

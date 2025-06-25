@@ -23,6 +23,8 @@
 
   /* Hover States */
   --hover-background: #f1f5f9;
+  --hover-background-light: #f8fafc;
+  --hover-background-dark: #e2e8f0;
 
   /* Status Colors */
   --success-color: #10b981;
@@ -73,6 +75,8 @@ body.dark-mode {
   --text-color-muted: #cbd5e1;
   --border-color: #475569;
   --hover-background: #334155;
+  --hover-background-light: #1e293b;
+  --hover-background-dark: #475569;
   --success-light: #065f46;
   --error-light: #7f1d1d;
   --warning-light: #92400e;
@@ -742,4 +746,175 @@ body.dark-mode header.sticky {
 
 .faq-content div {
   padding: var(--spacing-md);
+}
+
+/* Enhanced Sidebar Styles */
+.sidebar {
+  position: relative;
+  z-index: 40;
+}
+
+.sidebar nav ul li a {
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar nav ul li a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.sidebar nav ul li a:hover::before {
+  left: 100%;
+}
+
+/* Active state enhancement */
+.sidebar nav ul li a.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));
+  color: white;
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.sidebar nav ul li a.active::before {
+  display: none;
+}
+
+.sidebar nav ul li a.active fa-icon {
+  color: white !important;
+}
+
+.sidebar nav ul li a.active span {
+  color: white !important;
+}
+
+/* Hover effects for non-active items */
+.sidebar nav ul li a:not(.active):hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Tooltip animations */
+.sidebar nav ul li a .tooltip {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar nav ul li a:hover .tooltip {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+
+/* Icon animations */
+.sidebar nav ul li a fa-icon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar nav ul li a:hover fa-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Text animations */
+.sidebar nav ul li a span {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar nav ul li a:hover span {
+  transform: translateX(4px);
+}
+
+/* Active indicator animation */
+.sidebar nav ul li a .active-indicator {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%) translateY(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) translateY(-50%);
+    opacity: 1;
+  }
+}
+
+/* Toggle button enhancement */
+.sidebar button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar button:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+.sidebar button:active {
+  transform: scale(0.95);
+}
+
+/* Footer user section */
+.sidebar .footer-user {
+  transition: all 0.3s ease;
+}
+
+.sidebar .footer-user:hover {
+  transform: translateY(-2px);
+}
+
+/* Dark mode specific sidebar enhancements */
+body.dark-mode .sidebar nav ul li a::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+body.dark-mode .sidebar nav ul li a:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive sidebar adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar nav ul li a {
+    padding: 1rem;
+  }
+
+  .sidebar nav ul li a span {
+    font-size: 1rem;
+  }
+}
+
+/* Smooth transitions for all sidebar elements */
+.sidebar * {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced focus states for accessibility */
+.sidebar nav ul li a:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: var(--radius-xl);
+}
+
+.sidebar button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
 }

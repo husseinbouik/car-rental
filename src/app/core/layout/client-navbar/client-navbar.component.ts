@@ -47,9 +47,8 @@ export class ClientNavbarComponent {
       // Initialize Dark Mode
       const darkMode = localStorage.getItem('darkMode');
       this.isDarkMode = darkMode === 'enabled';
-      // Apply dark mode class to body or html based on preference (Tailwind needs dark class on html)
-      document.documentElement.classList.toggle('dark', this.isDarkMode);
-
+      // Apply dark mode class to body based on preference (CSS uses body.dark-mode)
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
 
       // Initialize Language
       const savedLang = localStorage.getItem('language');
@@ -68,10 +67,8 @@ export class ClientNavbarComponent {
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
     if (isPlatformBrowser(this.platformId)) {
-       // Toggle Tailwind 'dark' class on the root html element
-      document.documentElement.classList.toggle('dark', this.isDarkMode);
-       // You might still have global CSS body classes like 'dark-mode' if you're using them
-       // document.body.classList.toggle('dark-mode', this.isDarkMode);
+       // Toggle 'dark-mode' class on the body element
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
 
       localStorage.setItem('darkMode', this.isDarkMode ? 'enabled' : 'disabled'); // Store user preference
     }

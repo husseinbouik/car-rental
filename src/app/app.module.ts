@@ -9,6 +9,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app.routes';
+import { registerables } from 'chart.js';
+import { Chart } from 'chart.js';
+
+// Register Chart.js components globally
+Chart.register(...registerables);
 
 @NgModule({
   declarations: [

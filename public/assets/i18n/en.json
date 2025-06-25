@@ -1,4 +1,16 @@
 {
+  "common": {
+    "error_general": "An error occurred. Please try again.",
+    "loading": "Loading...",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
   "SIDEBAR": {
     "DASHBOARD": "Dashboard",
     "VEHICLES": "Vehicles",
@@ -429,7 +441,9 @@
     "request": "Send Reset Link",
     "requesting": "Sending...",
     "success": "Password reset link sent to your email!",
-    "back_to_login": "Back to Login"
+    "back_to_login": "Back to Login",
+    "help_title": "Need Help?",
+    "help_text": "Enter the email address associated with your account. We'll send you a secure link to reset your password."
   },
   "verify_email": {
     "title": "Verify Your Email",

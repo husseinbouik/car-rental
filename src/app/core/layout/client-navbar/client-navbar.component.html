@@ -1,6 +1,6 @@
 <!-- Updated Tailwind classes and removed original var() colors from inline style -->
 <!-- The var(--primary-color) should be defined in your global CSS / theme -->
-<nav class="flex items-center justify-between bg-[var(--primary-color)] text-white dark:bg-gray-800 dark:text-gray-100 p-4 shadow-md transition-colors duration-300">
+<nav class="flex items-center justify-between p-4 shadow-md transition-colors duration-300" style="background-color: var(--primary-color); color: white;">
   <div class="flex items-center space-x-4">
     <!-- Sidebar Toggle Button (Only relevant on non-mobile screens where sidebar is fixed) -->
     <!-- You might hide this on mobile or make it trigger a different overlay menu -->
@@ -20,7 +20,8 @@
 
     <!-- Language Selector -->
     <select [(ngModel)]="currentLang" (change)="switchLanguage($event)"
-            class="bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-200 px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            class="px-3 py-1 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            style="background-color: var(--card-background); color: var(--text-color); border-color: var(--border-color);">
       <option value="en">English</option>
       <option value="fr">Français</option>
     </select>
@@ -38,7 +39,8 @@
         <fa-icon [icon]="faUserCircle" class="text-xl"></fa-icon>
         <span class="hidden md:inline">{{ getUserDisplayName() }}</span>
         <button (click)="logout()"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition duration-300">
+                class="px-3 py-1 rounded-md transition duration-300"
+                style="background-color: #ef4444; color: white;">
           {{ 'navbar.logout' | translate }} <!-- Add translation key -->
         </button>
      </div>
@@ -46,7 +48,7 @@
      <!-- Optional: Show login/signup links if NOT logged in -->
      <div *ngIf="!isLoggedIn()" class="flex items-center space-x-4 ml-2">
          <a routerLink="/login" class="text-white hover:text-white/80 transition-colors">{{ 'navbar.login' | translate }}</a>
-         <a routerLink="/signup" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold px-3 py-1 rounded-md transition duration-300">{{ 'navbar.signup' | translate }}</a>
+         <a routerLink="/signup" class="font-semibold px-3 py-1 rounded-md transition duration-300" style="background-color: white; color: var(--primary-color);">{{ 'navbar.signup' | translate }}</a>
      </div>
 
   </div>

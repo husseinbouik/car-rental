@@ -1,4 +1,16 @@
 {
+  "common": {
+    "error_general": "Une erreur s'est produite. Veuillez réessayer.",
+    "loading": "Chargement...",
+    "success": "Succès !",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent"
+  },
   "SIDEBAR": {
     "DASHBOARD": "Tableau de bord",
     "VEHICLES": "Véhicules",
@@ -428,7 +440,9 @@
     "request": "Envoyer le lien de réinitialisation",
     "requesting": "Envoi...",
     "success": "Lien de réinitialisation envoyé à votre email !",
-    "back_to_login": "Retour à la connexion"
+    "back_to_login": "Retour à la connexion",
+    "help_title": "Besoin d'aide ?",
+    "help_text": "Entrez l'adresse email associée à votre compte. Nous vous enverrons un lien sécurisé pour réinitialiser votre mot de passe."
   },
   "verify_email": {
     "title": "Vérifiez votre email",

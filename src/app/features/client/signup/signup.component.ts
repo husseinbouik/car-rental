@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { SignupService } from './signup.service';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-signup',
@@ -9,18 +11,20 @@ import { SignupService } from './signup.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  isDarkMode: boolean = false;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private signupService: SignupService
+    private signupService: SignupService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -30,6 +34,22 @@ export class SignupComponent {
     });
 
     this.signupForm.setValidators(this.passwordMatchValidator);
+  }
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const darkMode = localStorage.getItem('darkMode');
+      this.isDarkMode = darkMode === 'enabled';
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+      localStorage.setItem('darkMode', this.isDarkMode ? 'enabled' : 'disabled');
+    }
   }
 
   togglePasswordVisibility() {

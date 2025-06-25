@@ -1,14 +1,18 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChartConfiguration, ChartData, ChartType, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartType, ChartOptions, Chart } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, interval } from 'rxjs';
+import { registerables } from 'chart.js';
 
 // Import Services
 import { DashboardService } from './dashboard.service'; // Adjust the path if needed
 import { VehicleService } from '../vehicles/vehicle.service'; // <--- ADJUST PATH HERE
 import { Voiture } from '../vehicles/vehicle.model'; // <--- ADJUST PATH HERE
+
+// Register Chart.js components
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -53,6 +57,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoadingOverallMetrics = false;
   isLoadingRecentReservations = false;
 
+  // --- Real-time Properties ---
+  currentTime: Date = new Date();
+
   // --- Recent Activity Properties ---
   recentReservations: any[] = [];
   systemAlerts: Array<{
@@ -83,23 +90,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     maintainAspectRatio: false,
     scales: {
       x: {
-        type: 'time',
-        time: {
-          unit: 'day',
-          tooltipFormat: 'MMM dd, yyyy',
-          displayFormats: {
-            day: 'MMM dd'
-          }
-        },
+        type: 'category',
         title: {
           display: true,
-          text: 'Date'
+          text: 'Date',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       },
       y: {
+        type: 'linear',
         title: {
           display: true,
-          text: 'Revenue (€)'
+          text: 'Revenue (€)',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       }
     },
@@ -107,10 +122,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          color: 'var(--text-color)'
+        }
       },
       title: {
         display: true,
-        text: 'Revenue by Period'
+        text: 'Revenue by Period',
+        color: 'var(--text-color)'
       }
     }
   };
@@ -149,23 +168,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     maintainAspectRatio: false,
     scales: {
       x: {
-        type: 'time',
-        time: {
-          unit: 'day',
-          tooltipFormat: 'MMM dd, yyyy',
-          displayFormats: {
-            day: 'MMM dd'
-          }
-        },
+        type: 'category',
         title: {
           display: true,
-          text: 'Date'
+          text: 'Date',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       },
       y: {
+        type: 'linear',
         title: {
           display: true,
-          text: 'Revenue (€)'
+          text: 'Revenue (€)',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       }
     },
@@ -173,10 +200,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          color: 'var(--text-color)'
+        }
       },
       title: {
         display: true,
-        text: 'Revenue by Period'
+        text: 'Revenue by Period',
+        color: 'var(--text-color)'
       }
     }
   };
@@ -200,23 +231,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     maintainAspectRatio: false,
     scales: {
       x: {
-        type: 'time',
-        time: {
-          unit: 'day',
-          tooltipFormat: 'MMM dd, yyyy',
-          displayFormats: {
-            day: 'MMM dd'
-          }
-        },
+        type: 'category',
         title: {
           display: true,
-          text: 'Date'
+          text: 'Date',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       },
       y: {
+        type: 'linear',
         title: {
           display: true,
-          text: 'Reservations'
+          text: 'Reservations',
+          color: 'var(--text-color)'
+        },
+        ticks: {
+          color: 'var(--text-color-muted)'
+        },
+        grid: {
+          color: 'var(--border-color)'
         }
       }
     },
@@ -224,10 +263,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          color: 'var(--text-color)'
+        }
       },
       title: {
         display: true,
-        text: 'Reservations by Period'
+        text: 'Reservations by Period',
+        color: 'var(--text-color)'
       }
     }
   };
@@ -251,11 +294,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.fetchRevenuParPeriode();
     this.fetchVehicles(); // <--- Fetch vehicles on init
     this.fetchAdditionalStats(); // Fetch additional statistics
+
+    // Start real-time clock
+    interval(1000).pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.currentTime = new Date();
+    });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // --- New Methods ---
+
+  refreshAllData(): void {
+    this.fetchOverallMetrics();
+    this.fetchTauxDisponibilite();
+    this.fetchRevenuParPeriode();
+    this.fetchVehicles();
+    this.fetchAdditionalStats();
+    if (this.voitureId) {
+      this.fetchRevenuMoyenParVoiture();
+      this.fetchNombreReservationsParVoiture();
+    }
+  }
+
+  getSelectedVehicleName(): string {
+    if (!this.voitureId) return '';
+    const vehicle = this.vehicles.find(v => v.id === this.voitureId);
+    return vehicle ? this.getVehicleDisplayName(vehicle) : '';
   }
 
   // --- Data Fetching Methods ---
@@ -355,24 +423,51 @@ export class DashboardComponent implements OnInit, OnDestroy {
        .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
+          // Check if data is an array
+          if (!Array.isArray(data)) {
+            console.error('Expected array data for revenue by period, got:', typeof data, data);
+            this.handleComponentError(new Error('Invalid data format received from API'));
+            return;
+          }
+
+          // Create labels for the x-axis (dates)
+          const labels = data.map(item => new Date(item.date).toLocaleDateString());
+
+          // Create data points for revenue
+          const revenueData = data.map(item => item.revenue);
+
+          // Create data points for reservations (mock data for now)
+          const reservationData = data.map(item => Math.floor(Math.random() * 20) + 5);
+
           this.revenuParPeriodeChartData = {
-             ...this.revenuParPeriodeChartData,
-             datasets: [{
-               ...this.revenuParPeriodeChartData.datasets[0],
-               data: data.map(item => ({ x: item.date, y: item.revenue }))
-             }]
-           };
-           // Also update the template chart data
-           this.revenueChartData = {
-             ...this.revenueChartData,
-             datasets: [{
-               ...this.revenueChartData.datasets[0],
-               data: data.map(item => ({ x: item.date, y: item.revenue }))
-             }]
-           };
-           if (this.chart) {
-             this.chart.chart?.update();
-           }
+            labels: labels,
+            datasets: [{
+              ...this.revenuParPeriodeChartData.datasets[0],
+              data: revenueData
+            }]
+          };
+
+          // Also update the template chart data
+          this.revenueChartData = {
+            labels: labels,
+            datasets: [{
+              ...this.revenueChartData.datasets[0],
+              data: revenueData
+            }]
+          };
+
+          // Update reservations chart
+          this.reservationsChartData = {
+            labels: labels,
+            datasets: [{
+              ...this.reservationsChartData.datasets[0],
+              data: reservationData
+            }]
+          };
+
+          if (this.chart) {
+            this.chart.chart?.update();
+          }
         },
         error: (err) => {
           this.handleComponentError(err);

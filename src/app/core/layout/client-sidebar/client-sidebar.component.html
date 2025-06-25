@@ -1,77 +1,225 @@
 <!-- The sidebar container -->
-<!-- Use bg-gray-800 and text-white directly for dark mode contrast -->
-<div class="theme-card-bg text-gray-800 dark:bg-gray-900 dark:text-gray-100 h-full flex flex-col transition-width duration-300 shadow-lg"
-     [class.w-64]="!isCollapsed" [class.w-20]="isCollapsed">
+<div class="h-full flex flex-col transition-all duration-300 ease-in-out shadow-lg"
+     [class.w-64]="!isCollapsed" [class.w-20]="isCollapsed"
+     style="background-color: var(--card-background); border-right: 1px solid var(--border-color);">
 
-  <!-- Sidebar Header (e.g., logo or app name) -->
-  <!-- Link to Dashboard -->
-  <a routerLink="/client-dashboard"
-     class="flex items-center px-4 py-4 border-b theme-border flex-shrink-0"
-     [class.justify-center]="isCollapsed" [class.w-full]="!isCollapsed"
-     title="{{ 'brand' | translate }}"> <!-- Add title for accessibility -->
-    <i class="fas fa-car text-2xl text-blue-500 dark:text-blue-400"></i> <!-- Example brand icon -->
-    <span *ngIf="!isCollapsed"
-          class="ml-3 text-xl font-semibold whitespace-nowrap overflow-hidden">
-       {{ 'brand' | translate }} <!-- Use translation key -->
-    </span>
-     <!-- Optional: Toggle button specific to the sidebar if needed (requires Output EventEmitter) -->
-     <!-- <button *ngIf="!isCollapsed" (click)="toggleOwnCollapse($event)" class="ml-auto p-1 rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-         <fa-icon [icon]="faChevronLeft"></fa-icon>
-     </button> -->
-  </a>
-
-  <!-- Navigation Links Area -->
-  <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-700 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
-    <!-- Each navigation item -->
-    <!-- Unified class for base styling -->
-    <!-- routerLinkActive for active state -->
-    <!-- Combined hover classes for visual feedback -->
-    <!-- Added group class for icon coloring -->
-    <!-- <a routerLink="/client-dashboard" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
-       class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"
-       [class.justify-center]="isCollapsed">
-       <fa-icon [icon]="faHome" class="flex-shrink-0 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-[.router-link-active]:text-white group-hover:text-blue-800 dark:group-hover:text-white"></fa-icon>
-       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.dashboard' | translate }}</span>
-        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.dashboard' | translate }}</span>
-    </a> -->
-
-     <a routerLink="/vehicles" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
-       class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"
-        [class.justify-center]="isCollapsed">
-       <fa-icon [icon]="faCarSide" class="flex-shrink-0 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-[.router-link-active]:text-white group-hover:text-blue-800 dark:group-hover:text-white"></fa-icon>
-       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.browse_vehicles' | translate }}</span>
-        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.browse_vehicles' | translate }}</span>
+  <!-- Sidebar Header -->
+  <div class="flex items-center justify-between p-4 border-b flex-shrink-0" style="border-color: var(--border-color);">
+    <a routerLink="/client-dashboard"
+       class="flex items-center"
+       [class.justify-center]="isCollapsed"
+       title="{{ 'brand' | translate }}">
+      <i class="fas fa-car text-2xl" style="color: var(--primary-color);"></i>
+      <span *ngIf="!isCollapsed" class="ml-3 text-xl font-bold" style="color: var(--text-color);">CarRental</span>
     </a>
+    <button
+      *ngIf="!isCollapsed"
+      class="p-2 rounded-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      (click)="toggleCollapse()"
+      style="color: var(--text-color); background-color: var(--hover-background);">
+      <fa-icon [icon]="faChevronLeft" class="text-lg"></fa-icon>
+    </button>
+  </div>
 
-     <a routerLink="/my-reservations" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
-       class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"
-       [class.justify-center]="isCollapsed">
-       <fa-icon [icon]="faBook" class="flex-shrink-0 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-[.router-link-active]:text-white group-hover:text-blue-800 dark:group-hover:text-white"></fa-icon>
-       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.my_reservations' | translate }}</span>
-        <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.my_reservations' | translate }}</span>
-    </a>
+  <!-- Navigation Menu -->
+  <nav class="flex-1 px-3 py-4 overflow-y-auto">
+    <ul class="space-y-2">
+      <li>
+        <a routerLink="/client-dashboard"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
+           style="color: var(--text-color);"
+           [class.justify-center]="isCollapsed">
 
-    <!-- Add more navigation links here -->
-     <a routerLink="/profile" routerLinkActive="bg-blue-600 text-white dark:bg-blue-800"
-       class="nav-item flex items-center p-2 rounded-md transition-colors duration-200 ease-in-out text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-white group relative"
-        [class.justify-center]="isCollapsed">
-       <fa-icon [icon]="faUser" class="flex-shrink-0 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-[.router-link-active]:text-white group-hover:text-blue-800 dark:group-hover:text-white"></fa-icon>
-       <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.profile' | translate }}</span>
-       <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.profile' | translate }}</span>
-    </a>
+          <!-- Hover Background Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"></div>
 
+          <!-- Icon and Label -->
+          <div class="relative z-10 flex items-center">
+            <fa-icon
+              [icon]="faHome"
+              class="text-lg transition-all duration-200 group-hover:scale-110"
+              [style.color]="isActive('/client-dashboard') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+            </fa-icon>
+            <span
+              *ngIf="!isCollapsed"
+              class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
+              [style.color]="isActive('/client-dashboard') ? 'var(--primary-color)' : 'var(--text-color)'">
+              {{ 'SIDEBAR.DASHBOARD' | translate }}
+            </span>
+          </div>
+
+          <!-- Active Indicator -->
+          <div
+            *ngIf="isActive('/client-dashboard')"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
+            style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
+          </div>
+
+          <!-- Tooltip for Collapsed State -->
+          <div
+            *ngIf="isCollapsed"
+            class="absolute left-full ml-3 px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap"
+            style="background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color);">
+            {{ 'SIDEBAR.DASHBOARD' | translate }}
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                 style="background-color: var(--card-background); border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            </div>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/vehicle-browser"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
+           style="color: var(--text-color);"
+           [class.justify-center]="isCollapsed">
+
+          <!-- Hover Background Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"></div>
+
+          <!-- Icon and Label -->
+          <div class="relative z-10 flex items-center">
+            <fa-icon
+              [icon]="faCar"
+              class="text-lg transition-all duration-200 group-hover:scale-110"
+              [style.color]="isActive('/vehicle-browser') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+            </fa-icon>
+            <span
+              *ngIf="!isCollapsed"
+              class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
+              [style.color]="isActive('/vehicle-browser') ? 'var(--primary-color)' : 'var(--text-color)'">
+              {{ 'SIDEBAR.VEHICLES' | translate }}
+            </span>
+          </div>
+
+          <!-- Active Indicator -->
+          <div
+            *ngIf="isActive('/vehicle-browser')"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
+            style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
+          </div>
+
+          <!-- Tooltip for Collapsed State -->
+          <div
+            *ngIf="isCollapsed"
+            class="absolute left-full ml-3 px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap"
+            style="background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color);">
+            {{ 'SIDEBAR.VEHICLES' | translate }}
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                 style="background-color: var(--card-background); border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            </div>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/my-reservations"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
+           style="color: var(--text-color);"
+           [class.justify-center]="isCollapsed">
+
+          <!-- Hover Background Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"></div>
+
+          <!-- Icon and Label -->
+          <div class="relative z-10 flex items-center">
+            <fa-icon
+              [icon]="faCalendarAlt"
+              class="text-lg transition-all duration-200 group-hover:scale-110"
+              [style.color]="isActive('/my-reservations') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+            </fa-icon>
+            <span
+              *ngIf="!isCollapsed"
+              class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
+              [style.color]="isActive('/my-reservations') ? 'var(--primary-color)' : 'var(--text-color)'">
+              {{ 'SIDEBAR.MY_RESERVATIONS' | translate }}
+            </span>
+          </div>
+
+          <!-- Active Indicator -->
+          <div
+            *ngIf="isActive('/my-reservations')"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
+            style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
+          </div>
+
+          <!-- Tooltip for Collapsed State -->
+          <div
+            *ngIf="isCollapsed"
+            class="absolute left-full ml-3 px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap"
+            style="background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color);">
+            {{ 'SIDEBAR.MY_RESERVATIONS' | translate }}
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                 style="background-color: var(--card-background); border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            </div>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/profil-info"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
+           style="color: var(--text-color);"
+           [class.justify-center]="isCollapsed">
+
+          <!-- Hover Background Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"></div>
+
+          <!-- Icon and Label -->
+          <div class="relative z-10 flex items-center">
+            <fa-icon
+              [icon]="faUser"
+              class="text-lg transition-all duration-200 group-hover:scale-110"
+              [style.color]="isActive('/profil-info') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+            </fa-icon>
+            <span
+              *ngIf="!isCollapsed"
+              class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
+              [style.color]="isActive('/profil-info') ? 'var(--primary-color)' : 'var(--text-color)'">
+              {{ 'SIDEBAR.PROFILE' | translate }}
+            </span>
+          </div>
+
+          <!-- Active Indicator -->
+          <div
+            *ngIf="isActive('/profil-info')"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
+            style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
+          </div>
+
+          <!-- Tooltip for Collapsed State -->
+          <div
+            *ngIf="isCollapsed"
+            class="absolute left-full ml-3 px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap"
+            style="background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color);">
+            {{ 'SIDEBAR.PROFILE' | translate }}
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                 style="background-color: var(--card-background); border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
   </nav>
 
-  <!-- Footer area in sidebar (e.g., Logout) -->
-  <div class="p-2 border-t theme-border flex-shrink-0">
-     <!-- Logout Button -->
-     <!-- Apply hover classes directly, text-red for theme color -->
-     <button (click)="logout()"
-             class="flex items-center p-2 rounded-md text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-white transition-colors duration-200 ease-in-out w-full relative group"
-             [class.justify-center]="isCollapsed">
-        <fa-icon [icon]="faSignOutAlt" class="flex-shrink-0"></fa-icon>
-        <span *ngIf="!isCollapsed" class="ml-3 whitespace-nowrap overflow-hidden">{{ 'sidebar.logout' | translate }}</span>
-         <span *ngIf="isCollapsed" class="sidebar-tooltip theme-card-bg text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm px-3 py-1 rounded-md shadow-md">{{ 'sidebar.logout' | translate }}</span>
-     </button>
+  <!-- Footer -->
+  <div class="p-4 border-t" style="border-color: var(--border-color);">
+    <div class="flex items-center" [class.justify-center]="isCollapsed">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+        <i class="fas fa-user text-white text-sm"></i>
+      </div>
+      <div *ngIf="!isCollapsed" class="ml-3">
+        <p class="text-sm font-medium" style="color: var(--text-color);">Client User</p>
+        <p class="text-xs" style="color: var(--text-color-muted);">Customer</p>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { isPlatformBrowser } from '@angular/common';
 
 // Define an interface for your expected JWT payload to get type safety
 interface MyTokenPayload {
@@ -28,7 +29,15 @@ export class LoginService {
   private readonly USER_ID_KEY = 'user_id';
   private readonly CLIENT_ID_KEY = 'client_id';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
+
+  // Helper method to safely access localStorage
+  private getLocalStorage(): Storage | null {
+    return isPlatformBrowser(this.platformId) ? localStorage : null;
+  }
 
   hasRole(roleName: string): boolean {
     const token = this.getToken();
@@ -62,11 +71,18 @@ export class LoginService {
       .post(`${this.apiUrl}/auth/login`, loginPayload, { headers })
       .pipe(
         tap((response: any) => {
+          // Only proceed if we're in a browser environment
+          const storage = this.getLocalStorage();
+          if (!storage) {
+            console.warn('localStorage not available (server-side rendering)');
+            return;
+          }
+
           // Determine the correct key for the token from the response
           const token = response.token || response.access_token || response.jwt || response.id_token;
 
           if (token && typeof token === 'string') {
-            localStorage.setItem(this.TOKEN_KEY, token);
+            storage.setItem(this.TOKEN_KEY, token);
             console.log('JWT saved to localStorage');
 
             // Decode the token to get user_id
@@ -74,7 +90,7 @@ export class LoginService {
               const decodedPayload = this.jwtHelper.decodeToken<MyTokenPayload>(token); // Specify payload type
 
               if (decodedPayload && decodedPayload.user_id !== undefined) {
-                localStorage.setItem(this.USER_ID_KEY, decodedPayload.user_id.toString());
+                storage.setItem(this.USER_ID_KEY, decodedPayload.user_id.toString());
                 console.log('User ID saved to localStorage:', decodedPayload.user_id);
               } else if (decodedPayload) {
                 console.warn('user_id not found in JWT payload. Payload:', decodedPayload);
@@ -85,7 +101,7 @@ export class LoginService {
 
               // Store client_id if available in the token
               if (decodedPayload && decodedPayload.client_id !== undefined) {
-                localStorage.setItem(this.CLIENT_ID_KEY, decodedPayload.client_id.toString());
+                storage.setItem(this.CLIENT_ID_KEY, decodedPayload.client_id.toString());
                 console.log('Client ID saved to localStorage:', decodedPayload.client_id);
               } else if (decodedPayload) {
                 console.warn('client_id not found in JWT payload. Payload:', decodedPayload);
@@ -93,7 +109,7 @@ export class LoginService {
             } catch (error) {
               console.error('Error decoding JWT to get user_id:', error);
               // Optionally remove the token if it's invalid and cannot be decoded
-              // localStorage.removeItem(this.TOKEN_KEY);
+              // storage.removeItem(this.TOKEN_KEY);
             }
           } else {
             console.warn('No token found or token is not a string in the login response:', response);
@@ -103,18 +119,25 @@ export class LoginService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_ID_KEY); // Remove user_id on logout
-    localStorage.removeItem(this.CLIENT_ID_KEY); // Remove client_id on logout
-    console.log('Logged out, token, user_id and client_id removed from localStorage');
+    const storage = this.getLocalStorage();
+    if (storage) {
+      storage.removeItem(this.TOKEN_KEY);
+      storage.removeItem(this.USER_ID_KEY); // Remove user_id on logout
+      storage.removeItem(this.CLIENT_ID_KEY); // Remove client_id on logout
+      console.log('Logged out, token, user_id and client_id removed from localStorage');
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const storage = this.getLocalStorage();
+    return storage ? storage.getItem(this.TOKEN_KEY) : null;
   }
 
   getUserId(): number | null { // Return type can be number if you parse it
-    const userIdStr = localStorage.getItem(this.USER_ID_KEY);
+    const storage = this.getLocalStorage();
+    if (!storage) return null;
+
+    const userIdStr = storage.getItem(this.USER_ID_KEY);
     if (userIdStr) {
       const userIdNum = parseInt(userIdStr, 10);
       return isNaN(userIdNum) ? null : userIdNum;
@@ -123,7 +146,10 @@ export class LoginService {
   }
 
   getClientId(): number | null {
-    const clientIdStr = localStorage.getItem(this.CLIENT_ID_KEY);
+    const storage = this.getLocalStorage();
+    if (!storage) return null;
+
+    const clientIdStr = storage.getItem(this.CLIENT_ID_KEY);
     if (clientIdStr) {
       const clientIdNum = parseInt(clientIdStr, 10);
       return isNaN(clientIdNum) ? null : clientIdNum;

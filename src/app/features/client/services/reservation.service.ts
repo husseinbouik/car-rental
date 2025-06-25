@@ -77,9 +77,9 @@ export class ReservationService {
     return throwError(() => new Error(errorMessage));
   }
 
-  getUserReservations(userId: number): Observable<Reservation[]> {
+  getUserReservations(clientId: number): Observable<Reservation[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get(`${this.apiUrl}/user/${userId}`, { headers, responseType: 'text' }).pipe(
+    return this.http.get(`${this.apiUrl}/client/${clientId}`, { headers, responseType: 'text' }).pipe(
       map(text => {
         let correctedText = text;
         if (text.includes('"missions":]')) {
