@@ -4,28 +4,23 @@ import { CommonModule } from '@angular/common';
 import { ClientRoutingModule } from './client-routing.module';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AdminLayoutComponent } from '../../core/layout/admin-layout/admin-layout.component';
-import { NavbarComponent } from '../../core/layout/navbar/navbar.component';
-import { SidebarComponent } from '../../core/layout/sidebar/sidebar.component';
-import { AdminRoutingModule } from '../admin/admin-routing.module';
-import { RouterModule } from '@angular/router';
-
-import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ResetPasswordRequestComponent } from './reset-password-request/reset-password-request.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { LandingComponent } from './landing/landing.component';
-import { TranslateModule } from '@ngx-translate/core';
 import { VehicleBrowserComponent } from './vehicle-browser/vehicle-browser.component';
 import { ProfilInfoComponent } from './profil-info/profil-info.component';
-
+import { MyReservationsComponent } from './my-reservations/my-reservations.component';
+import { PaymentComponent } from './payment/payment.component';
+import { PaymentSuccessComponent } from './payment/payment-success.component';
 
 @NgModule({
   declarations: [
@@ -35,28 +30,26 @@ import { ProfilInfoComponent } from './profil-info/profil-info.component';
     ResetPasswordComponent,
     VerifyEmailComponent,
     LandingComponent,
-    VehicleBrowserComponent,
-    ProfilInfoComponent
+    VehicleBrowserComponent
   ],
   imports: [
     CommonModule,
     ClientRoutingModule,
-    CommonModule,
-    AdminRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    FontAwesomeModule,
     MatSidenavModule,
     MatListModule,
     MatIconModule,
     MatToolbarModule,
     MatButtonModule,
-    FormsModule,
-    AdminLayoutComponent,
-    SidebarComponent,
-    NavbarComponent,
-    FontAwesomeModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    TranslateModule
+    // Standalone components
+    ProfilInfoComponent,
+    MyReservationsComponent,
+    PaymentComponent,
+    PaymentSuccessComponent
   ],
 })
 export class ClientModule { }

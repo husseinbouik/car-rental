@@ -1,11 +1,14 @@
 // src/app/features/profil/profil-info/profil-info.component.ts
 import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
 import { ClientService } from '../../admin/clients/client.service';
 import { AuthService } from '../auth.service';
-import { catchError, of, Subscription } from 'rxjs';
+import { ClientInfoService } from '../services/client-info.service';
+import { isPlatformBrowser } from '@angular/common';
+import { Subscription, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 // Dummy Client model for frontend structure
 export interface ClientProfile {
@@ -30,23 +33,39 @@ export interface ClientProfile {
 
 @Component({
   selector: 'app-profil-info',
-  standalone: false, // Set to true if you want to use this as a standalone component
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './profil-info.component.html',
-  styleUrls: ['./profil-info.component.css']
-  // If you generated as standalone, uncomment these:
-  // standalone: true,
-  // imports: [CommonModule, FormsModule] // Add FormsModule and CommonModule
+  styleUrl: './profil-info.component.css'
 })
 export class ProfilInfoComponent implements OnInit, OnDestroy {
   pageTitle: string = 'My Profile Information';
   client: ClientProfile = {
-    // Initialize with empty data
+    id: null,
+    userId: null,
+    cname: '',
+    tel: '',
+    email: '',
+    adresse: '',
+    nationalite: '',
+    adresseEtranger: '',
+    cin: '',
+    cinDelivreLe: '',
+    passeport: '',
+    delivreLePasseport: '',
+    permis: '',
+    permisDelivreLe: '',
+    permisDelivreAu: '',
+    photoCINUrl: undefined,
+    photoPermisUrl: undefined
   };
+
   isLoading: boolean = true;
   isSaving: boolean = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
+  // File preview and upload handling
   photoCINPreview: string | ArrayBuffer | null = null;
   photoPermisPreview: string | ArrayBuffer | null = null;
   photoCINFile: File | null = null;
@@ -58,35 +77,28 @@ export class ProfilInfoComponent implements OnInit, OnDestroy {
     private router: Router,
     private clientService: ClientService,
     private authService: AuthService,
+    private clientInfoService: ClientInfoService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      // Check if user is logged in
-      if (!this.authService.isLoggedIn()) {
-        this.errorMessage = 'Please log in to view your profile.';
-        this.isLoading = false;
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
-        return;
-      }
-
-      this.loadClientProfile();
+    if (!this.authService.isLoggedIn()) {
+      this.errorMessage = 'Please log in to view your profile.';
+      return;
     }
+
+    this.loadClientProfile();
   }
 
   ngOnDestroy(): void {
-    this.photoSubscriptions.forEach(subscription => subscription.unsubscribe());
-    if (isPlatformBrowser(this.platformId)) {
-      // Clean up blob URLs if they exist
-      if (this.client.photoCINUrl && this.client.photoCINUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(this.client.photoCINUrl);
-      }
-      if (this.client.photoPermisUrl && this.client.photoPermisUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(this.client.photoPermisUrl);
-      }
+    // Clean up photo subscriptions and revoke object URLs
+    this.photoSubscriptions.forEach(sub => sub.unsubscribe());
+
+    if (this.client.photoCINUrl && this.client.photoCINUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(this.client.photoCINUrl);
+    }
+    if (this.client.photoPermisUrl && this.client.photoPermisUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(this.client.photoPermisUrl);
     }
   }
 
@@ -277,6 +289,9 @@ export class ProfilInfoComponent implements OnInit, OnDestroy {
           this.photoCINFile = null;
           this.photoPermisFile = null;
 
+          // Refresh the shared client info so sidebar and navbar update
+          this.clientInfoService.refreshClientInfo();
+
           // Reload the profile to get updated photos
           setTimeout(() => {
             this.loadClientProfile();
@@ -293,9 +308,14 @@ export class ProfilInfoComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    console.log('Cancel button clicked. Navigating to home (simulation).');
-    // In a real app, you might reload original data or navigate
-    this.router.navigate(['/']); // Example navigation
+    // Clear file previews and files
+    this.photoCINPreview = null;
+    this.photoPermisPreview = null;
+    this.photoCINFile = null;
+    this.photoPermisFile = null;
+
+    // Reload the original profile data
+    this.loadClientProfile();
   }
 
   refreshProfile(): void {

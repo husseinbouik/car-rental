@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { isPlatformBrowser } from '@angular/common';
+import { ClientInfoService } from '../services/client-info.service';
 
 // Define an interface for your expected JWT payload to get type safety
 interface MyTokenPayload {
@@ -31,7 +32,8 @@ export class LoginService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
+    private clientInfoService: ClientInfoService
   ) {}
 
   // Helper method to safely access localStorage
@@ -47,12 +49,13 @@ export class LoginService {
 
     try {
       const decodedToken = this.jwtHelper.decodeToken<MyTokenPayload>(token); // Specify payload type
+
       if (decodedToken && decodedToken.authorities) {
         return decodedToken.authorities.includes(roleName);
       }
       return false;
     } catch (error) {
-      console.error('Error decoding token for role check:', error);
+      console.error('LoginService - Error decoding token for role check:', error);
       return false;
     }
   }
@@ -111,6 +114,9 @@ export class LoginService {
               // Optionally remove the token if it's invalid and cannot be decoded
               // storage.removeItem(this.TOKEN_KEY);
             }
+
+            // Load client info after successful login
+            this.clientInfoService.loadClientInfo().subscribe();
           } else {
             console.warn('No token found or token is not a string in the login response:', response);
           }
@@ -126,6 +132,9 @@ export class LoginService {
       storage.removeItem(this.CLIENT_ID_KEY); // Remove client_id on logout
       console.log('Logged out, token, user_id and client_id removed from localStorage');
     }
+
+    // Clear client info on logout
+    this.clientInfoService.clearClientInfo();
   }
 
   getToken(): string | null {

@@ -1,9 +1,10 @@
 // auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,15 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private apiUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) { }
+
+  // Helper method to safely access localStorage
+  private getLocalStorage(): Storage | null {
+    return isPlatformBrowser(this.platformId) ? localStorage : null;
+  }
 
   // Request password reset
   requestPasswordReset(email: string): Observable<any> {
@@ -20,12 +29,18 @@ export class AuthService {
 
   logout(): void {
     // Clear authentication tokens or user data here
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('client_id');
+    const storage = this.getLocalStorage();
+    if (storage) {
+      storage.removeItem('access_token');
+      storage.removeItem('authToken');
+      storage.removeItem('user_id');
+      storage.removeItem('client_id');
+    }
+
     // Redirect to login or home page
-    window.location.href = '/login';
+    if (isPlatformBrowser(this.platformId)) {
+      window.location.href = '/login';
+    }
   }
 
   // Reset password with token
@@ -74,7 +89,9 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token') || localStorage.getItem('authToken');
+    const storage = this.getLocalStorage();
+    if (!storage) return null;
+    return storage.getItem('access_token') || storage.getItem('authToken');
   }
 
   decodeToken(token: string): any {
@@ -92,12 +109,16 @@ export class AuthService {
   }
 
   getCurrentUserId(): number | null {
-    const userId = localStorage.getItem('user_id');
+    const storage = this.getLocalStorage();
+    if (!storage) return null;
+    const userId = storage.getItem('user_id');
     return userId ? parseInt(userId, 10) : null;
   }
 
   getCurrentClientId(): number | null {
-    const clientId = localStorage.getItem('client_id');
+    const storage = this.getLocalStorage();
+    if (!storage) return null;
+    const clientId = storage.getItem('client_id');
     return clientId ? parseInt(clientId, 10) : null;
   }
 

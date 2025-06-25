@@ -24,10 +24,45 @@ const routes: Routes = [
     path: '',
     component: LandingComponent
   },
-      // { path: 'client-dashboard', component: ClientDashboardComponent, title: 'Dashboard' }, // Child routes are path segments
-      { path: 'vehicles', component: VehicleBrowserComponent, title: 'Browse Vehicles' },
-      { path: 'my-reservations', component: MyReservationsComponent, title: 'My Reservations' },
-      { path: 'profile', component: ProfilInfoComponent, title: 'Profile' },
+  // Client dashboard route - redirect to landing for now since no dashboard component exists
+  {
+    path: 'client-dashboard',
+    component: LandingComponent,
+    title: 'Dashboard',
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_CLIENT', 'ROLE_USER'] }
+  },
+  {
+    path: 'vehicles',
+    component: VehicleBrowserComponent,
+    title: 'Browse Vehicles',
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_CLIENT', 'ROLE_USER'] }
+  },
+  {
+    path: 'vehicle-browser',
+    redirectTo: 'vehicles',
+    pathMatch: 'full'
+  },
+  {
+    path: 'my-reservations',
+    component: MyReservationsComponent,
+    title: 'My Reservations',
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_CLIENT', 'ROLE_USER'] }
+  },
+  {
+    path: 'profile',
+    component: ProfilInfoComponent,
+    title: 'Profile',
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_CLIENT', 'ROLE_USER'] }
+  },
+  {
+    path: 'profil-info',
+    redirectTo: 'profile',
+    pathMatch: 'full'
+  },
 
   { path: 'reset-password-request', component: ResetPasswordRequestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
@@ -40,10 +75,6 @@ const routes: Routes = [
     path: 'payment-success',
     component: PaymentSuccessComponent
   },
-
-
-
-
 
   // { path: 'vehicles', loadChildren: () => import('./vehicles/vehicles.module').then(m => m.VehiclesModule) },
   // { path: 'reservations', loadChildren: () => import('./reservations/reservations.module').then(m => m.ReservationsModule) },

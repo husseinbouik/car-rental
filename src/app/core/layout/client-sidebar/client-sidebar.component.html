@@ -5,7 +5,7 @@
 
   <!-- Sidebar Header -->
   <div class="flex items-center justify-between p-4 border-b flex-shrink-0" style="border-color: var(--border-color);">
-    <a routerLink="/client-dashboard"
+    <a routerLink="vehicles"
        class="flex items-center"
        [class.justify-center]="isCollapsed"
        title="{{ 'brand' | translate }}">
@@ -25,53 +25,7 @@
   <nav class="flex-1 px-3 py-4 overflow-y-auto">
     <ul class="space-y-2">
       <li>
-        <a routerLink="/client-dashboard"
-           routerLinkActive="active"
-           [routerLinkActiveOptions]="{exact: true}"
-           class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
-           style="color: var(--text-color);"
-           [class.justify-center]="isCollapsed">
-
-          <!-- Hover Background Effect -->
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"></div>
-
-          <!-- Icon and Label -->
-          <div class="relative z-10 flex items-center">
-            <fa-icon
-              [icon]="faHome"
-              class="text-lg transition-all duration-200 group-hover:scale-110"
-              [style.color]="isActive('/client-dashboard') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
-            </fa-icon>
-            <span
-              *ngIf="!isCollapsed"
-              class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
-              [style.color]="isActive('/client-dashboard') ? 'var(--primary-color)' : 'var(--text-color)'">
-              {{ 'SIDEBAR.DASHBOARD' | translate }}
-            </span>
-          </div>
-
-          <!-- Active Indicator -->
-          <div
-            *ngIf="isActive('/client-dashboard')"
-            class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
-            style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
-          </div>
-
-          <!-- Tooltip for Collapsed State -->
-          <div
-            *ngIf="isCollapsed"
-            class="absolute left-full ml-3 px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap"
-            style="background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color);">
-            {{ 'SIDEBAR.DASHBOARD' | translate }}
-            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
-                 style="background-color: var(--card-background); border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-            </div>
-          </div>
-        </a>
-      </li>
-
-      <li>
-        <a routerLink="/vehicle-browser"
+        <a routerLink="vehicles"
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}"
            class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
@@ -86,19 +40,19 @@
             <fa-icon
               [icon]="faCar"
               class="text-lg transition-all duration-200 group-hover:scale-110"
-              [style.color]="isActive('/vehicle-browser') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+              [style.color]="isActive('/vehicles') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
             </fa-icon>
             <span
               *ngIf="!isCollapsed"
               class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
-              [style.color]="isActive('/vehicle-browser') ? 'var(--primary-color)' : 'var(--text-color)'">
+              [style.color]="isActive('/vehicles') ? 'var(--primary-color)' : 'var(--text-color)'">
               {{ 'SIDEBAR.VEHICLES' | translate }}
             </span>
           </div>
 
           <!-- Active Indicator -->
           <div
-            *ngIf="isActive('/vehicle-browser')"
+            *ngIf="isActive('/vehicles')"
             class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
             style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
           </div>
@@ -117,7 +71,7 @@
       </li>
 
       <li>
-        <a routerLink="/my-reservations"
+        <a routerLink="my-reservations"
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}"
            class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
@@ -163,7 +117,7 @@
       </li>
 
       <li>
-        <a routerLink="/profil-info"
+        <a routerLink="profile"
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}"
            class="flex items-center p-3 rounded-xl transition-all duration-200 group relative overflow-hidden"
@@ -178,19 +132,19 @@
             <fa-icon
               [icon]="faUser"
               class="text-lg transition-all duration-200 group-hover:scale-110"
-              [style.color]="isActive('/profil-info') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
+              [style.color]="isActive('/profile') ? 'var(--primary-color)' : 'var(--text-color-muted)'">
             </fa-icon>
             <span
               *ngIf="!isCollapsed"
               class="ml-3 font-medium transition-all duration-200 group-hover:translate-x-1"
-              [style.color]="isActive('/profil-info') ? 'var(--primary-color)' : 'var(--text-color)'">
+              [style.color]="isActive('/profile') ? 'var(--primary-color)' : 'var(--text-color)'">
               {{ 'SIDEBAR.PROFILE' | translate }}
             </span>
           </div>
 
           <!-- Active Indicator -->
           <div
-            *ngIf="isActive('/profil-info')"
+            *ngIf="isActive('/profile')"
             class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-l-full transition-all duration-200"
             style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark-color));">
           </div>
@@ -217,7 +171,7 @@
         <i class="fas fa-user text-white text-sm"></i>
       </div>
       <div *ngIf="!isCollapsed" class="ml-3">
-        <p class="text-sm font-medium" style="color: var(--text-color);">Client User</p>
+        <p class="text-sm font-medium" style="color: var(--text-color);">{{ getUserDisplayName() }}</p>
         <p class="text-xs" style="color: var(--text-color-muted);">Customer</p>
       </div>
     </div>

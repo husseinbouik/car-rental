@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, EventEmitter, Output, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Import specific icons needed
@@ -6,8 +6,10 @@ import { faBars, faSun, faMoon, faUserCircle } from '@fortawesome/free-solid-svg
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router'; // Import Router
 import { AuthService } from '../../../features/client/auth.service'; // Import Auth Service (Adjust path)
+import { ClientInfoService, ClientInfo } from '../../../features/client/services/client-info.service';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-client-navbar',
@@ -16,7 +18,7 @@ import { NgModule } from '@angular/core';
   templateUrl: './client-navbar.component.html',
   styleUrl: './client-navbar.component.css' // Your custom CSS for var(--primary-color) etc.
 })
-export class ClientNavbarComponent {
+export class ClientNavbarComponent implements OnInit, OnDestroy {
   // Font Awesome Icons
   faBars = faBars;
   faSun = faSun;
@@ -32,11 +34,16 @@ export class ClientNavbarComponent {
   // Language State
   currentLang: string; // Initialize in constructor or ngOnInit
 
+  // Client Info
+  clientInfo: ClientInfo | null = null;
+  private clientInfoSubscription: Subscription | null = null;
+
   constructor(
     private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: object,
     private router: Router, // Inject Router
-    private authService: AuthService // Inject Auth Service
+    private authService: AuthService, // Inject Auth Service
+    private clientInfoService: ClientInfoService // Inject ClientInfoService
   ) {
       // Initialize currentLang with default before ngOnInit check
       this.currentLang = this.translate.getDefaultLang() || 'en';
@@ -61,7 +68,29 @@ export class ClientNavbarComponent {
          this.currentLang = browserLang && availableLangs.includes(browserLang) ? browserLang : this.translate.getDefaultLang() || 'en';
       }
        this.translate.use(this.currentLang);
+
+      // Load client info if user is logged in
+      if (this.isLoggedIn()) {
+        this.loadClientInfo();
+      }
     }
+  }
+
+  ngOnDestroy() {
+    if (this.clientInfoSubscription) {
+      this.clientInfoSubscription.unsubscribe();
+    }
+  }
+
+  loadClientInfo() {
+    this.clientInfoSubscription = this.clientInfoService.clientInfo$.subscribe(
+      clientInfo => {
+        this.clientInfo = clientInfo;
+      }
+    );
+
+    // Load client info from API
+    this.clientInfoService.loadClientInfo().subscribe();
   }
 
   toggleDarkMode() {
@@ -98,14 +127,13 @@ export class ClientNavbarComponent {
   logout(): void {
     // Implement logout logic here (e.g., clear token, navigate to login)
     this.authService.logout(); // Use your Auth Service
+    this.clientInfoService.clearClientInfo(); // Clear client info on logout
     this.router.navigate(['/login']); // Redirect after logout (adjust route)
   }
 
-   // Optional: Get display name for the logged-in user
+   // Get display name for the logged-in user
    getUserDisplayName(): string {
-     // Replace with logic to get the logged-in user's name/email from authService
-     // e.g., return this.authService.getCurrentUser()?.name || 'User';
-      return 'Client User'; // Placeholder
+     return this.clientInfoService.getDisplayName();
    }
 
 }
