@@ -323,14 +323,14 @@
           </div>
 
           <!-- Date Display Mode -->
-          <div *ngIf="!isEditingDates" class="p-4 border theme-border rounded-lg bg-gray-50 dark:bg-gray-800 grid grid-cols-2 gap-4">
+          <div *ngIf="!isEditingDates" class="p-4 border theme-border rounded-lg theme-alternate-section-bg grid grid-cols-2 gap-4">
             <div>
               <p class="text-xs theme-text-muted">{{ 'modal.pickup_date' | translate }}</p>
-              <p class="font-medium">{{ rentalData.pickupDate | date:'mediumDate' }}</p>
+              <p class="font-medium theme-text-main">{{ rentalData.pickupDate | date:'mediumDate' }}</p>
             </div>
             <div>
               <p class="text-xs theme-text-muted">{{ 'modal.return_date' | translate }}</p>
-              <p class="font-medium">{{ rentalData.returnDate | date:'mediumDate' }}</p>
+              <p class="font-medium theme-text-main">{{ rentalData.returnDate | date:'mediumDate' }}</p>
             </div>
           </div>
 
