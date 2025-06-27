@@ -504,7 +504,7 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
     if (value === null || value === undefined) {
       return 'N/A';
     }
-    return value.toFixed(2) + ' €';
+    return value.toFixed(2) + ' MAD';
   }
 
   setViewMode(mode: 'grid' | 'list'): void {

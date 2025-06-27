@@ -1,5 +1,5 @@
 {
-  "name": "car-rental",
+  "name": "easydrive",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:car-rental": "node dist/car-rental/server/server.mjs"
+    "serve:ssr:easydrive": "node dist/easydrive/server/server.mjs"
   },
   "private": true,
   "dependencies": {

@@ -6,7 +6,7 @@
   <div class="flex items-center justify-between p-4 border-b" style="border-color: var(--border-color);">
     <div class="flex items-center">
       <i class="fas fa-car text-2xl" style="color: var(--primary-color);"></i>
-      <span *ngIf="!isCollapsed" class="ml-3 text-xl font-bold" style="color: var(--text-color);">CarRental</span>
+      <span *ngIf="!isCollapsed" class="ml-3 text-xl font-bold" style="color: var(--text-color);">{{ 'brand' | translate }}</span>
     </div>
     <button
       class="p-2 rounded-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -21,7 +21,7 @@
     "PAYMENTS": "Payments & Expenses",
     "USER_MANAGEMENT": "User Management"
   },
-  "brand": "DriveEasy",
+  "brand": "EasyDrive",
   "lang": {
     "en": "English",
     "fr": "Français",
@@ -35,6 +35,14 @@
     "testimonials": "Testimonials",
     "faq": "FAQ",
      "contact": "Contact"
+  },
+  "navbar": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "login": "Login",
+    "logout": "Logout",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
   },
   "hero": {
     "title": "Find Your Perfect Rental Car",
@@ -229,13 +237,6 @@
     "renting_vehicle": "You were trying to rent",
     "signin": "Sign In",
     "signup": "Sign Up"
-  },
-  "navbar": {
-    "login": "Login",
-    "signup": "Sign Up",
-    "logout": "Logout",
-    "light_mode": "Light Mode",
-    "dark_mode": "Dark Mode"
   },
   "reservations": {
     "title": "My Reservations",

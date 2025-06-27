@@ -21,7 +21,7 @@
     "PAYMENTS": "Paiements et dépenses",
     "USER_MANAGEMENT": "Gestion des utilisateurs"
   },
-  "brand": "DriveEasy",
+  "brand": "EasyDrive",
   "lang": {
     "en": "Anglais",
     "fr": "Français",
@@ -35,6 +35,14 @@
     "testimonials": "Témoignages",
     "faq": "FAQ",
      "contact": "Contact"
+  },
+  "navbar": {
+    "sign_in": "Se connecter",
+    "sign_up": "S'inscrire",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "dark_mode": "Mode sombre",
+    "light_mode": "Mode clair"
   },
   "hero": {
     "title": "Trouvez Votre Voiture de Location Parfaite",
@@ -228,13 +236,6 @@
     "renting_vehicle": "Vous essayiez de louer",
     "signin": "Se connecter",
     "signup": "S'inscrire"
-  },
-  "navbar": {
-    "login": "Connexion",
-    "signup": "S'inscrire",
-    "logout": "Déconnexion",
-    "light_mode": "Mode clair",
-    "dark_mode": "Mode sombre"
   },
   "reservations": {
     "title": "Mes réservations",

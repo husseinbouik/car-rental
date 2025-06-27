@@ -10,7 +10,7 @@
        [class.justify-center]="isCollapsed"
        title="{{ 'brand' | translate }}">
       <i class="fas fa-car text-2xl" style="color: var(--primary-color);"></i>
-      <span *ngIf="!isCollapsed" class="ml-3 text-xl font-bold" style="color: var(--text-color);">CarRental</span>
+      <span *ngIf="!isCollapsed" class="ml-3 text-xl font-bold" style="color: var(--text-color);">{{ 'brand' | translate }}</span>
     </a>
     <button
       *ngIf="!isCollapsed"

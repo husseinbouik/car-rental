@@ -31,8 +31,6 @@
                 class="form-input py-1 px-3 text-sm">
           <option value="en">English</option>
           <option value="fr">Français</option>
-          <option value="es">Español</option>
-          <option value="de">Deutsch</option>
         </select>
 
         <!-- Dark Mode Toggle -->
@@ -41,6 +39,18 @@
           <i class="fas fa-moon dark:hidden"></i>
           <i class="fas fa-sun hidden dark:block"></i>
         </button>
+
+        <!-- Sign In and Sign Up Buttons -->
+        <div class="hidden md:flex items-center space-x-3">
+          <a routerLink="/login" class="btn btn-secondary btn-sm">
+            <i class="fas fa-sign-in-alt mr-1"></i>
+            {{ 'navbar.sign_in' | translate }}
+          </a>
+          <a routerLink="/signup" class="btn btn-primary btn-sm">
+            <i class="fas fa-user-plus mr-1"></i>
+            {{ 'navbar.sign_up' | translate }}
+          </a>
+        </div>
 
         <!-- Mobile Menu Button -->
         <button (click)="toggleMobileMenu()" class="md:hidden btn btn-secondary btn-sm p-2">
@@ -60,6 +70,24 @@
           </a>
         </li>
       </ul>
+
+      <!-- Mobile Sign In and Sign Up Buttons -->
+      <div class="mt-6 pt-4 border-t theme-border">
+        <div class="space-y-3">
+          <a routerLink="/login"
+             class="btn btn-secondary btn-full"
+             (click)="toggleMobileMenu()">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            {{ 'navbar.sign_in' | translate }}
+          </a>
+          <a routerLink="/signup"
+             class="btn btn-primary btn-full"
+             (click)="toggleMobileMenu()">
+            <i class="fas fa-user-plus mr-2"></i>
+            {{ 'navbar.sign_up' | translate }}
+          </a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -234,7 +262,7 @@
             <!-- Vehicle Price and Action -->
             <div class="vehicle-price">
               <div>
-                <span class="price-amount">${{ vehicle.prixDeBase }}</span>
+                <span class="price-amount">{{ vehicle.prixDeBase }} MAD</span>
                 <span class="price-period">/{{ 'vehicle.day' | translate }}</span>
               </div>
               <button (click)="openRentalModal(vehicle)" class="btn btn-primary btn-sm">
@@ -438,7 +466,7 @@
             </li>
             <li class="flex items-center">
               <i class="fas fa-envelope mr-3 text-blue-500"></i>
-              <span>info&#64;driveeasy.com</span>
+              <span>info&#64;easydrive.com</span>
             </li>
           </ul>
         </div>
@@ -610,7 +638,7 @@
         <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6">
           <div class="flex justify-between items-center">
             <div>
-              <span class="text-2xl font-bold theme-primary-text">${{ selectedVehicle?.prixDeBase }}</span>
+              <span class="text-2xl font-bold theme-primary-text">{{ selectedVehicle?.prixDeBase }} MAD</span>
               <span class="theme-text-muted">/{{ 'vehicle.day' | translate }}</span>
             </div>
             <button type="submit" class="btn btn-primary">
@@ -644,7 +672,7 @@
           <i class="fas fa-robot text-lg"></i>
         </div>
         <div>
-          <h3 class="font-semibold">DriveEasy Assistant</h3>
+          <h3 class="font-semibold">EasyDrive Assistant</h3>
           <p class="text-xs text-blue-100">Online • Ready to help</p>
         </div>
       </div>

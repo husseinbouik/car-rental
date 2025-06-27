@@ -588,7 +588,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (value === null || value === undefined) {
       return 'N/A';
     }
-    return value.toFixed(2) + ' €';
+    return value.toFixed(2) + ' MAD';
   }
 
    formatPercentage(value: number | null): string {

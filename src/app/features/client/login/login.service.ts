@@ -70,10 +70,16 @@ export class LoginService {
       password: password,
     };
 
+    console.log('=== LOGIN SERVICE - LOGIN ATTEMPT ===');
+    console.log('Login payload:', loginPayload);
+    console.log('API URL:', this.apiUrl);
+
     return this.http
       .post(`${this.apiUrl}/auth/login`, loginPayload, { headers })
       .pipe(
         tap((response: any) => {
+          console.log('Login response received:', response);
+
           // Only proceed if we're in a browser environment
           const storage = this.getLocalStorage();
           if (!storage) {
@@ -85,12 +91,14 @@ export class LoginService {
           const token = response.token || response.access_token || response.jwt || response.id_token;
 
           if (token && typeof token === 'string') {
-            storage.setItem(this.TOKEN_KEY, token);
-            console.log('JWT saved to localStorage');
+            // Store token with the key that AuthService expects
+            storage.setItem('access_token', token);
+            console.log('JWT saved to localStorage with key "access_token"');
 
             // Decode the token to get user_id
             try {
               const decodedPayload = this.jwtHelper.decodeToken<MyTokenPayload>(token); // Specify payload type
+              console.log('Decoded token payload:', decodedPayload);
 
               if (decodedPayload && decodedPayload.user_id !== undefined) {
                 storage.setItem(this.USER_ID_KEY, decodedPayload.user_id.toString());
@@ -120,6 +128,8 @@ export class LoginService {
           } else {
             console.warn('No token found or token is not a string in the login response:', response);
           }
+
+          console.log('=== LOGIN SERVICE - LOGIN COMPLETED ===');
         })
       );
   }

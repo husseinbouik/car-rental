@@ -53,7 +53,8 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
 
-        localStorage.setItem('authToken', response.token);
+        // Store token with the correct key that AuthService expects
+        localStorage.setItem('access_token', response.token);
 
         this.successMessage = 'Connexion réussie ! Redirection en cours...';
 

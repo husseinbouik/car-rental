@@ -64,34 +64,59 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
+    console.log('=== AUTH SERVICE - isLoggedIn CHECK ===');
+
     const token = this.getToken();
+    console.log('Token from getToken():', token ? 'Token present' : 'No token');
+
     if (!token) {
+      console.log('No token found, user not logged in');
       return false;
     }
 
     // Check if token is expired
     try {
       const payload = this.decodeToken(token);
+      console.log('Decoded payload:', payload);
+
       if (payload && payload.exp) {
         const currentTime = Date.now() / 1000;
+        console.log('Token expiration check:', { exp: payload.exp, currentTime, isExpired: payload.exp < currentTime });
+
         if (payload.exp < currentTime) {
+          console.log('Token is expired, logging out user');
           this.logout(); // Token expired, logout user
           return false;
         }
+      } else {
+        console.log('No expiration found in token, considering valid');
       }
     } catch (error) {
       console.error('Error decoding token:', error);
+      console.log('Token decode error, logging out user');
       this.logout();
       return false;
     }
 
+    console.log('User is logged in');
+    console.log('=====================================');
     return true;
   }
 
   getToken(): string | null {
     const storage = this.getLocalStorage();
     if (!storage) return null;
-    return storage.getItem('access_token') || storage.getItem('authToken');
+
+    // Check for both possible token keys
+    const token = storage.getItem('access_token') || storage.getItem('authToken');
+
+    if (token) {
+      console.log('Token found:', token.substring(0, 20) + '...');
+    } else {
+      console.warn('No token found in localStorage');
+    }
+
+    return token;
   }
 
   decodeToken(token: string): any {

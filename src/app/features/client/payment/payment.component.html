@@ -20,7 +20,7 @@
             <!-- Payment Method Selection -->
             <div class="mb-8">
               <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{ 'payment.method.title' | translate }}</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   [class.ring-2]="selectedPaymentMethod === 'card'"
                   [class.ring-blue-500]="selectedPaymentMethod === 'card'"
@@ -70,6 +70,31 @@
                     </div>
                   </div>
                 </button>
+
+                <button
+                  [class.ring-2]="selectedPaymentMethod === 'cash'"
+                  [class.ring-blue-500]="selectedPaymentMethod === 'cash'"
+                  [class.bg-blue-50]="selectedPaymentMethod === 'cash'"
+                  [class.border-blue-500]="selectedPaymentMethod === 'cash'"
+                  class="relative p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-left"
+                  (click)="onPaymentMethodChange('cash')">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-6 bg-green-500 rounded flex items-center justify-center">
+                        <i class="fas fa-money-bill-wave text-white text-sm"></i>
+                      </div>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">Cash</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Pay at pickup location</p>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedPaymentMethod === 'cash'" class="absolute top-2 right-2">
+                    <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                      <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -105,6 +130,7 @@
                 <input
                   type="text"
                   [(ngModel)]="cardName"
+                  (input)="onCardNameChange($event)"
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
                   placeholder="John Doe">
               </div>
@@ -130,6 +156,7 @@
                   <input
                     type="password"
                     [(ngModel)]="cvv"
+                    (input)="onCvvChange($event)"
                     maxlength="4"
                     class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
                     placeholder="123">
@@ -143,6 +170,7 @@
                   <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'payment.address.country' | translate }}</label>
                     <select class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200">
+                      <option value="MA">Morocco</option>
                       <option value="US">United States</option>
                       <option value="CA">Canada</option>
                       <option value="FR">France</option>
@@ -170,6 +198,61 @@
               <p class="text-gray-600 dark:text-gray-400 mb-6">{{ 'payment.paypal.description' | translate }}</p>
               <button class="bg-[#0070ba] text-white px-8 py-3 rounded-lg hover:bg-[#003087] transition-colors duration-200 font-medium">
                 {{ 'payment.paypal.button' | translate }}
+              </button>
+            </div>
+
+            <!-- Cash Payment Section -->
+            <div *ngIf="selectedPaymentMethod === 'cash'" class="text-center py-12">
+              <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-money-bill-wave text-white text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Cash Payment</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-6">Pay with cash when you pick up your vehicle</p>
+              <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                  <i class="fas fa-info-circle mr-2"></i>
+                  A deposit may be required at pickup
+                </p>
+              </div>
+            </div>
+
+            <!-- Payment Error Display -->
+            <div *ngIf="paymentError" class="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                <div>
+                  <p class="text-sm text-red-800 dark:text-red-200 font-medium">Payment Error</p>
+                  <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ paymentError }}</p>
+                </div>
+              </div>
+              <div class="mt-3 flex space-x-2">
+                <button
+                  (click)="retryPayment()"
+                  class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                  Retry Payment
+                </button>
+                <button
+                  (click)="cancelPayment()"
+                  class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors">
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <!-- Pay Button -->
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <button
+                (click)="onSubmit()"
+                [disabled]="isProcessing"
+                class="w-full bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center font-medium">
+                <div *ngIf="!isProcessing" class="flex items-center">
+                  <i class="fas fa-lock mr-2"></i>
+                  {{ 'payment.button.pay' | translate }} {{ formatCurrency(reservationDetails.total) }}
+                </div>
+                <div *ngIf="isProcessing" class="flex items-center">
+                  <i class="fas fa-spinner fa-spin mr-2"></i>
+                  {{ 'payment.processing' | translate }}
+                </div>
               </button>
             </div>
           </div>
@@ -201,50 +284,22 @@
             <div class="space-y-3 mb-6">
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.base_price' | translate }}</span>
-                <span class="text-gray-900 dark:text-white">${{ reservationDetails.basePrice.toFixed(2) }}</span>
+                <span class="text-gray-900 dark:text-white">{{ formatCurrency(reservationDetails.basePrice) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.insurance' | translate }}</span>
-                <span class="text-gray-900 dark:text-white">${{ reservationDetails.insurancePrice.toFixed(2) }}</span>
+                <span class="text-gray-900 dark:text-white">{{ formatCurrency(reservationDetails.insurancePrice) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600 dark:text-gray-400">{{ 'payment.summary.taxes' | translate }}</span>
-                <span class="text-gray-900 dark:text-white">${{ reservationDetails.taxes.toFixed(2) }}</span>
+                <span class="text-gray-900 dark:text-white">{{ formatCurrency(reservationDetails.taxes) }}</span>
               </div>
             </div>
 
             <!-- Total -->
             <div class="flex justify-between items-center mb-6 pt-4 border-t border-gray-200 dark:border-gray-700">
               <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'payment.summary.total' | translate }}</span>
-              <span class="text-2xl font-bold text-blue-600">${{ reservationDetails.total.toFixed(2) }}</span>
-            </div>
-
-            <!-- Pay Button -->
-            <button
-              (click)="onSubmit()"
-              [disabled]="isProcessing"
-              class="w-full bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center font-medium">
-              <div *ngIf="!isProcessing" class="flex items-center">
-                <i class="fas fa-lock mr-2"></i>
-                {{ 'payment.button.pay' | translate }}
-              </div>
-              <div *ngIf="isProcessing" class="flex items-center">
-                <i class="fas fa-spinner fa-spin mr-2"></i>
-                {{ 'payment.processing' | translate }}
-              </div>
-            </button>
-
-            <!-- Security Note -->
-            <div class="mt-4 text-center">
-              <div class="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-                <i class="fas fa-shield-alt mr-2"></i>
-                {{ 'payment.security_note' | translate }}
-              </div>
-              <div class="flex items-center justify-center mt-2 space-x-4">
-                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
-                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
-                <div class="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded-sm"></div>
-              </div>
+              <span class="text-2xl font-bold text-blue-600">{{ formatCurrency(reservationDetails.total) }}</span>
             </div>
           </div>
         </div>

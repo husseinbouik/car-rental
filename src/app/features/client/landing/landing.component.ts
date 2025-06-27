@@ -603,7 +603,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       } else if (userMessage.includes('cancel') || userMessage.includes('refund')) {
         botResponse = 'You can cancel your reservation up to 24 hours before pickup for a full refund. Cancellations within 24 hours may incur a small fee.';
       } else if (userMessage.includes('help') || userMessage.includes('support')) {
-        botResponse = 'I\'m here to help! You can also contact our support team at +1 (555) 123-4567 or email us at support@driveeasy.com';
+        botResponse = 'I\'m here to help! You can also contact our support team at +1 (555) 123-4567 or email us at support@easydrive.com';
       } else {
         botResponse = 'I\'m not sure I understand. Could you please rephrase your question? I can help with pricing, availability, booking, locations, insurance, and general support.';
       }

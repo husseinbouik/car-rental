@@ -20,11 +20,24 @@
   <!-- Reservations Grid -->
   <div *ngIf="!loadingReservations && !reservationError && reservations.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div *ngFor="let reservation of reservations" class="theme-card-bg rounded-lg shadow-md overflow-hidden">
-      <!-- Vehicle Image Placeholder -->
-      <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-        <div class="text-white text-center">
-          <i class="fas fa-car text-4xl mb-2"></i>
-          <p class="text-lg font-semibold">{{ getVehicleDisplayName(reservation) }}</p>
+      <!-- Vehicle Image -->
+      <div class="relative h-48 bg-gray-200 dark:bg-gray-700">
+        <div *ngIf="reservation.isLoadingPhoto" class="absolute inset-0 flex items-center justify-center">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <img *ngIf="reservation.photoDisplayUrl && !reservation.isLoadingPhoto && !reservation.photoError"
+             [src]="reservation.photoDisplayUrl"
+             [alt]="getVehicleDisplayName(reservation)"
+             class="w-full h-full object-cover">
+
+        <div *ngIf="(!reservation.photoDisplayUrl || reservation.photoError) && !reservation.isLoadingPhoto"
+             class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
+          <div class="text-center">
+            <i class="fas fa-car text-4xl mb-2" [class.text-red-500]="reservation.photoError"></i>
+            <p class="text-lg font-semibold">{{ getVehicleDisplayName(reservation) }}</p>
+            <span *ngIf="reservation.photoError" class="text-xs">{{ 'vehicle.photo_error' | translate }}</span>
+          </div>
         </div>
       </div>
 
@@ -38,11 +51,14 @@
           </div>
           <span [ngClass]="{
             'px-3 py-1 text-xs font-semibold rounded-full': true,
-            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': reservation.statut === 'Confirmed' || reservation.statut === 'Completed',
             'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300': reservation.statut === 'Pending',
-            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': reservation.statut === 'Cancelled'
+            'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': reservation.statut === 'Confirmed',
+            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': reservation.statut === 'Completed',
+            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': reservation.statut === 'Cancelled',
+            'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300': reservation.statut === 'Expired',
+            'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300': reservation.statut === 'PaymentFailed'
           }">
-            {{ (  reservation.statut ) | translate }}
+            {{ (reservation.statut) | translate }}
           </span>
         </div>
 
@@ -93,64 +109,27 @@
           <div>
             <p class="text-sm theme-text-muted">{{ 'reservations.table.total_price' | translate }}</p>
             <p class="text-2xl font-bold theme-primary-text">{{ formatCurrency(reservation.montantTotal) }}</p>
+            <!-- Refund amount display -->
+            <p *ngIf="reservation.refundAmount && reservation.refundAmount > 0" class="text-sm text-green-600">
+              Refund: {{ formatCurrency(reservation.refundAmount) }}
+            </p>
           </div>
-          <div class="flex space-x-2">
-            <button *ngIf="reservation.statut === 'Pending'"
-                    (click)="openCancelConfirmModal(reservation)"
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              {{ 'reservations.cancel_button' | translate }}
-            </button>
-            <span class="text-xs theme-text-muted">#{{ reservation.id }}</span>
+          <div class="flex flex-col space-y-2">
+            <span class="text-xs theme-text-muted text-right">#{{ reservation.id }}</span>
           </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div *ngIf="reservation.cancelledAt || reservation.cancellationReason" class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <p *ngIf="reservation.cancellationReason" class="text-sm text-red-600 dark:text-red-400">
+            <i class="fas fa-info-circle mr-1"></i> {{ reservation.cancellationReason }}
+          </p>
+          <p *ngIf="reservation.cancelledAt" class="text-xs text-red-500 dark:text-red-400 mt-1">
+            Cancelled on: {{ formatDate(reservation.cancelledAt) }}
+          </p>
         </div>
       </div>
     </div>
   </div>
 
-</div>
-
-<!-- Cancel Confirmation Modal -->
-<div *ngIf="showCancelConfirmModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60] p-4">
-  <div class="theme-card-bg rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto transform transition-all sm:align-middle">
-    <div class="p-6">
-      <div class="flex justify-end items-start">
-        <button (click)="closeCancelConfirmModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-full theme-hover-bg transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-
-      <div class="text-center mb-6">
-         <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
-         <h3 class="text-2xl font-bold theme-text-main mb-2">{{ 'reservations.cancel_modal.title' | translate }}</h3>
-         <p class="theme-text-muted">
-           {{ 'reservations.cancel_modal.message' | translate }}
-         </p>
-         <p *ngIf="reservationToCancel" class="theme-text-muted italic mt-2">
-              {{ 'reservations.cancel_modal.reservation' | translate }}: #{{ reservationToCancel.id }} ({{ getVehicleDisplayName(reservationToCancel) }})
-         </p>
-      </div>
-
-       <!-- Cancellation Loading/Error -->
-      <div *ngIf="isCancelling" class="text-center text-blue-500 mb-4">
-           <i class="fas fa-spinner fa-spin mr-2"></i> {{ 'reservations.cancel_modal.cancelling' | translate }}
-      </div>
-       <div *ngIf="cancelError" class="text-center text-red-600 dark:text-red-400 mb-4">
-           <i class="fas fa-exclamation-circle mr-2"></i> {{ cancelError }}
-      </div>
-
-      <div class="flex justify-around gap-4">
-        <button (click)="closeCancelConfirmModal()"
-                class="theme-secondary-button font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                [disabled]="isCancelling">
-          {{ 'reservations.cancel_modal.no_button' | translate }}
-        </button>
-        <button (click)="confirmCancelReservation()"
-                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                 [disabled]="isCancelling">
-           {{ 'reservations.cancel_modal.yes_button' | translate }}
-        </button>
-      </div>
-
-    </div>
-  </div>
 </div>
