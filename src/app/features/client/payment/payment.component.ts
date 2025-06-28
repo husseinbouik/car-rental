@@ -91,21 +91,21 @@ export class PaymentComponent implements OnInit {
     const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
 
     // Enhanced pricing calculation with insurance options
-    const basePrice = (vehicle.prixDeBase || 60) * daysDiff;
+    const basePrice = (vehicle.prixDeBase || 450) * daysDiff;
     let insurancePrice = 0;
 
     switch (this.reservationData.insuranceOption) {
       case 'basic':
-        insurancePrice = 15 * daysDiff;
-        break;
-      case 'premium':
         insurancePrice = 25 * daysDiff;
         break;
+      case 'premium':
+        insurancePrice = 45 * daysDiff;
+        break;
       case 'full':
-        insurancePrice = 35 * daysDiff;
+        insurancePrice = 65 * daysDiff;
         break;
       default:
-        insurancePrice = 15 * daysDiff;
+        insurancePrice = 25 * daysDiff;
     }
 
     const taxes = basePrice * 0.125; // 12.5% tax

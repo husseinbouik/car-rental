@@ -79,8 +79,8 @@
               {{ reservation.voiture?.marque ?? '' }} {{ reservation.voiture?.modele ?? reservation.voiture?.vname ?? '' }}
               <span class="text-xs text-gray-400 block">({{ reservation.voiture?.matricule ?? 'ID: ' + reservation.voiture_id }})</span>
           </td>
-          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.montantTotal | number:'1.2-2' }} €</td>
-          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.acompte | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.montantTotal | number:'1.2-2' }} MAD</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ reservation.acompte | number:'1.2-2' }} MAD</td>
           <td class="py-2 px-4">
               <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full"
                     [ngClass]="{

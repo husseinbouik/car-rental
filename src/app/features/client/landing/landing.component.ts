@@ -78,7 +78,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   features: Feature[] = [
      { title: 'features.wide_selection', description: 'features.wide_selection_desc', icon: 'fa-car-side', color: 'blue' },
      { title: 'features.easy_booking', description: 'features.easy_booking_desc', icon: 'fa-calendar-check', color: 'green' },
-     { title: 'features.affordable_prices', description: 'features.affordable_prices_desc', icon: 'fa-dollar-sign', color: 'teal' },
+     { title: 'features.affordable_prices', description: 'features.affordable_prices_desc', icon: 'fa-tags', color: 'teal' },
      { title: 'features.24_7_support', description: 'features.24_7_support_desc', icon: 'fa-headset', color: 'indigo' },
      { title: 'features.multiple_locations', description: 'features.multiple_locations_desc', icon: 'fa-map-marker-alt', color: 'orange' },
      { title: 'features.flexible_options', description: 'features.flexible_options_desc', icon: 'fa-sliders-h', color: 'pink' }
@@ -591,7 +591,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       if (userMessage.includes('hello') || userMessage.includes('hi') || userMessage.includes('hey')) {
         botResponse = 'Hello! How can I assist you with your car rental needs today?';
       } else if (userMessage.includes('price') || userMessage.includes('cost') || userMessage.includes('rate')) {
-        botResponse = 'Our car rental rates start from $25/day for economy cars. Premium vehicles range from $50-100/day. Would you like to see our current vehicle selection?';
+        botResponse = 'Our car rental rates start from 250 MAD/day for economy cars. Premium vehicles range from 450-750 MAD/day. Would you like to see our current vehicle selection?';
       } else if (userMessage.includes('available') || userMessage.includes('car') || userMessage.includes('vehicle')) {
         botResponse = 'We have a wide selection of vehicles including economy, compact, SUV, and luxury cars. You can browse our fleet in the vehicles section above!';
       } else if (userMessage.includes('book') || userMessage.includes('reserve') || userMessage.includes('rent')) {
@@ -599,7 +599,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       } else if (userMessage.includes('location') || userMessage.includes('pickup') || userMessage.includes('where')) {
         botResponse = 'We have multiple pickup locations across the city. You can select your preferred location during the booking process.';
       } else if (userMessage.includes('insurance') || userMessage.includes('coverage')) {
-        botResponse = 'We offer three insurance options: Basic ($10/day), Premium ($20/day), and Full Coverage ($30/day). Each provides different levels of protection.';
+        botResponse = 'We offer three insurance options: Basic (25 MAD/day), Premium (45 MAD/day), and Full Coverage (65 MAD/day). Each provides different levels of protection.';
       } else if (userMessage.includes('cancel') || userMessage.includes('refund')) {
         botResponse = 'You can cancel your reservation up to 24 hours before pickup for a full refund. Cancellations within 24 hours may incur a small fee.';
       } else if (userMessage.includes('help') || userMessage.includes('support')) {

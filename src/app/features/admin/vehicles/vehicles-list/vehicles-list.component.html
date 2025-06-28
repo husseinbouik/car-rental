@@ -78,7 +78,7 @@
           <td class="py-2 px-4">{{ voiture.type ?? 'N/A' }}</td>
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.carburant ?? 'N/A' }}</td>
           <td class="py-2 px-4 whitespace-nowrap">{{ voiture.estAutomate ? ('modal.transmission_auto' | translate) : ('modal.transmission_manual' | translate) }}</td>
-          <td class="py-2 px-4 text-right whitespace-nowrap">{{ voiture.prixDeBase | number:'1.2-2' }} €</td>
+          <td class="py-2 px-4 text-right whitespace-nowrap">{{ voiture.prixDeBase | number:'1.2-2' }} MAD</td>
           <!-- Photo column -->
           <td class="py-2 px-4 text-center">
             <img *ngIf="getVehiclePhotoUrl(voiture.id)"

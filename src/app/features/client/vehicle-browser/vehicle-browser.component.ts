@@ -502,7 +502,7 @@ export class VehicleBrowserComponent implements OnInit, OnDestroy {
 
   formatCurrency(value: number | null | undefined): string {
     if (value === null || value === undefined) {
-      return 'N/A';
+      return '0.00 MAD';
     }
     return value.toFixed(2) + ' MAD';
   }

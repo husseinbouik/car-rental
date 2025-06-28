@@ -1,25 +1,58 @@
 <!-- verify-email.component.html -->
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-center">
-    <h1 class="text-2xl font-bold text-center mb-6">Locauto</h1>
+<div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style="background: linear-gradient(135deg, var(--page-background) 0%, var(--alternate-section-background) 50%, var(--page-background) 100%);">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-5 bg-pattern"></div>
 
-    <div *ngIf="isLoading" class="flex flex-col items-center">
-      <svg class="animate-spin h-8 w-8 text-indigo-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <p>{{ message }}</p>
-    </div>
+  <div class="card w-full max-w-md relative z-10">
+    <div class="card-body p-8">
+      <!-- Logo and Brand -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-6 shadow-lg">
+          <i class="fas fa-car text-3xl text-white"></i>
+        </div>
+        <h1 class="text-3xl font-bold theme-text-main mb-3">Easydrive</h1>
+        <p class="theme-text-muted text-lg">Email Verification</p>
+      </div>
 
-    <div *ngIf="!isLoading" class="flex flex-col items-center">
-      <svg *ngIf="isSuccess" class="h-8 w-8 text-green-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <svg *ngIf="!isSuccess" class="h-8 w-8 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-      <p class="mb-4">{{ message }}</p>
-      <a routerLink="/login" class="text-indigo-600 hover:text-indigo-500">Retour à la page de connexion</a>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="flex flex-col items-center space-y-4">
+        <div class="loading-spinner"></div>
+        <p class="theme-text-muted text-center">{{ message }}</p>
+      </div>
+
+      <!-- Success State -->
+      <div *ngIf="!isLoading && isSuccess" class="flex flex-col items-center space-y-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
+          <i class="fas fa-check text-2xl text-green-600"></i>
+        </div>
+        <h2 class="text-xl font-semibold theme-text-main">Verification Successful!</h2>
+        <p class="theme-text-muted text-center">{{ message }}</p>
+        <div class="mt-6">
+          <a routerLink="/login" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Go to Login
+          </a>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="!isLoading && !isSuccess" class="flex flex-col items-center space-y-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+          <i class="fas fa-times text-2xl text-red-600"></i>
+        </div>
+        <h2 class="text-xl font-semibold theme-text-main">Verification Failed</h2>
+        <p class="theme-text-muted text-center">{{ message }}</p>
+        <div class="mt-6 space-y-3">
+          <a routerLink="/login" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Go to Login
+          </a>
+          <a routerLink="/signup" class="btn btn-secondary">
+            <i class="fas fa-user-plus mr-2"></i>
+            Create New Account
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

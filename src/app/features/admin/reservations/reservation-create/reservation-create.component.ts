@@ -21,6 +21,9 @@ interface CarOption {
   matricule?: string;
   type?: string;
   daily_rate?: number;
+  photoUrl?: string;
+  isLoadingPhoto?: boolean;
+  photoError?: boolean;
 }
 
 @Component({
@@ -111,9 +114,16 @@ ngOnInit(): void {
   this.loadClientsAndProceed();
 }
 ngOnDestroy(): void {
+  // Clean up object URLs to prevent memory leaks
+  this.cars.forEach(car => {
+    if (car.photoUrl) {
+      URL.revokeObjectURL(car.photoUrl);
+    }
+  });
+
   this.destroy$.next();
   this.destroy$.complete();
-  this.dateChangeSubject.complete(); // Add this line
+  this.dateChangeSubject.complete();
 }
 
   loadClientsAndProceed(): void {
@@ -181,7 +191,16 @@ ngOnDestroy(): void {
           display_name: `${car.marque || ''} ${car.modele || car.vname || ''}`.trim(),
           matricule: car.matricule,
           type: car.type,
+          daily_rate: car.prixDeBase,
+          photoUrl: undefined,
+          isLoadingPhoto: true,
+          photoError: false
         }));
+
+        // Load photos for each vehicle
+        this.cars.forEach(car => {
+          this.loadVehiclePhoto(car);
+        });
 
         // If in edit mode and we have a selected vehicle, try to find it in the new list
         if (this.isEditMode && this.reservation.voiture_id) {
@@ -396,5 +415,25 @@ ngOnDestroy(): void {
 
   cancel(): void {
     this.router.navigate(['/admin/reservations']);
+  }
+
+  private loadVehiclePhoto(car: CarOption): void {
+    car.isLoadingPhoto = true;
+    car.photoError = false;
+
+    this.vehicleService.getVehiclePhoto(car.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (blob: Blob) => {
+        car.photoUrl = URL.createObjectURL(blob);
+        car.isLoadingPhoto = false;
+        car.photoError = false;
+      },
+      error: (error) => {
+        console.error(`Error loading photo for vehicle ${car.id}:`, error);
+        car.isLoadingPhoto = false;
+        car.photoError = true;
+      }
+    });
   }
 }

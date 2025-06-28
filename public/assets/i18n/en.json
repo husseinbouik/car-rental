@@ -910,7 +910,7 @@
       "LABEL_CAPACITY": "Capacity (Seats)",
       "ERROR_CAPACITY_REQUIRED": "Capacity is required.",
       "ERROR_CAPACITY_MIN": "Capacity must be at least 1.",
-      "LABEL_PRICE": "Base Price (€)",
+      "LABEL_PRICE": "Base Price (MAD)",
       "PLACEHOLDER_PRICE": "e.g., 150.00",
       "ERROR_PRICE_REQUIRED": "Base price is required.",
       "ERROR_PRICE_MIN": "Price cannot be negative.",
